@@ -1,8 +1,21 @@
 'use client'
 import Head from 'next/head'
 import Button from '@mui/material/Button'
+import axios from 'axios'
+import { useEffect } from 'react'
 
 export default function Home() {
+
+  const fetchApiUser = async () => {
+    await axios.get("https://api-shop-lks2.onrender.com/api/users?limit=10&page=1&order=created%20asc").then((res) => {
+      console.log(res.data);
+    })
+  }
+
+  useEffect(() => {
+    fetchApiUser();
+  }, [])
+
   return (
     <>
       <Head>
