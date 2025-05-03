@@ -1,7 +1,8 @@
-// const BASE_URL = 'https://api-shop-lks2.onrender.com/api'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
 export const CONFIG_API = {
   AUTH: {
-    INDEX: `https://api-shop-lks2.onrender.com/api/auth/login`
+    INDEX: `${BASE_URL}/auth`,
+    AUTH_ME: `${BASE_URL}/auth/me`
   }
 }
