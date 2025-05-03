@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // ** React Imports
-import { ReactNode, ReactElement } from 'react'
+import { ReactNode, ReactElement, useEffect } from 'react'
+
+// ** Next
+import { useRouter } from 'next/router'
+
+// ** Helper
+import { getLocalUserData } from 'src/helpers/storage'
+
+// ** Hook
+import { useAuth } from 'src/hooks/useAuth'
 
 interface GuestGuardProps {
   children: ReactNode
@@ -8,7 +17,27 @@ interface GuestGuardProps {
 }
 
 const GuestGuard = (props: GuestGuardProps) => {
+  // ** props
   const { children, fallback } = props
+
+  // ** auth
+  const authContext = useAuth()
+
+  // ** router
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+    if (getLocalUserData().accessToken && getLocalUserData().userData) {
+      router.replace('/')
+    }
+  }, [router.route])
+
+  if (authContext.loading) {
+    return fallback
+  }
 
   return <>{children}</>
 }
