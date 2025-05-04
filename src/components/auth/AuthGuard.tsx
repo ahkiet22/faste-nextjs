@@ -6,7 +6,7 @@ import { ReactNode, ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Helper
-import { clearLocalUserData, getLocalUserData } from 'src/helpers/storage'
+import { clearLocalUserData, getLocalUserData } from 'src/helpers/storage/index'
 
 // ** Hook
 import { useAuth } from 'src/hooks/useAuth'
@@ -22,7 +22,7 @@ const AuthGuard = (props: AuthGuardProps) => {
 
   // ** auth
   const authContext = useAuth()
-  
+
   // ** router
   const router = useRouter()
 

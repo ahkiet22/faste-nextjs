@@ -4,8 +4,8 @@ import { createContext, useState, ReactNode, useEffect } from 'react'
 // ** Next Import
 import { useRouter } from 'next/router'
 
-// ** Axios
-import axios from 'axios'
+// ** Helpers
+import instanceAxios from 'src/helpers/axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
@@ -18,7 +18,7 @@ import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './ty
 import { loginAuth, logoutAuth } from 'src/services/auth'
 
 // ** Helper
-import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage'
+import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage/index'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -49,12 +49,8 @@ const AuthProvider = ({ children }: Props) => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
       if (storedToken) {
         setLoading(true)
-        await axios
-          .get(CONFIG_API.AUTH.AUTH_ME, {
-            headers: {
-              Authorization: `Bearer ${storedToken}`
-            }
-          })
+        await instanceAxios
+          .get(CONFIG_API.AUTH.AUTH_ME)
           .then(async response => {
             setLoading(false)
             setUser({ ...response.data.data })
