@@ -6,7 +6,7 @@ import { ReactNode, ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Helper
-import { getLocalUserData } from 'src/helpers/storage'
+import { getLocalUserData } from 'src/helpers/storage/index'
 
 // ** Hook
 import { useAuth } from 'src/hooks/useAuth'
