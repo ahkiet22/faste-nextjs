@@ -21,7 +21,7 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
-      <HorizoncalLayout toggleDrawer={() => {}} open={false} isHidenMenu={false} />
+      <HorizoncalLayout toggleDrawer={() => {}} open={false} isHiddenMenu={true} />
 
       <Box
         component='main'

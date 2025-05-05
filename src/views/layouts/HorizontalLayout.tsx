@@ -27,7 +27,7 @@ interface AppBarProps extends MuiAppBarProps {
 type TProps = {
   open: boolean
   toggleDrawer: () => void
-  isHidenMenu?: boolean
+  isHiddenMenu?: boolean
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -51,7 +51,7 @@ const AppBar = styled(MuiAppBar, {
   })
 }))
 
-const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidenMenu }) => {
+const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }) => {
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -59,7 +59,7 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidenMenu })
           margin: '0 24px' // keep right padding when drawer closed
         }}
       >
-        {isHidenMenu && (
+        {!isHiddenMenu && !open && (
           <IconButton
             edge='start'
             color='inherit'
@@ -68,7 +68,8 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidenMenu })
             sx={{
               marginRight: '36px',
               padding: '10px',
-              ...(open && { display: 'none' })
+              
+              // ...(open && { display: 'none' })
             }}
           >
             <IconifyIcon icon='ic:round-menu' />
