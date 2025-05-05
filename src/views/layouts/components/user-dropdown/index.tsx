@@ -19,6 +19,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Icon
 import IconifyIcon from 'src/components/Icon'
+import { useTranslation } from 'react-i18next'
 
 // import PersonAdd from '@mui/icons-material/PersonAdd';
 // import Settings from '@mui/icons-material/Settings';
@@ -27,6 +28,9 @@ import IconifyIcon from 'src/components/Icon'
 type TProps = {}
 
 const UserDropdown = (props: TProps) => {
+  // ** Translation
+  const { t } = useTranslation()
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
   const { user, logout } = useAuth()
@@ -41,12 +45,12 @@ const UserDropdown = (props: TProps) => {
     setAnchorEl(null)
   }
 
-  console.log(props);
+  console.log(props)
 
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Tooltip title='Account'>
+        <Tooltip title={t('Account')}>
           <IconButton
             onClick={handleClick}
             size='small'

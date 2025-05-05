@@ -16,6 +16,7 @@ import Badge from '@mui/material/Badge'
 import IconifyIcon from 'src/components/Icon'
 import UserDropdown from './components/user-dropdown'
 import ModeToogle from './components/mode-toggle'
+import LanguageDropdown from './components/language-dropdown'
 
 const drawerWidth: number = 240
 
@@ -76,10 +77,9 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHidenMenu })
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
-
-        <UserDropdown />
-
+        <LanguageDropdown />
         <ModeToogle />
+        <UserDropdown />
 
         <IconButton color='inherit'>
           <Badge badgeContent={4} color='primary'>
