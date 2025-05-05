@@ -68,7 +68,8 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
             sx={{
               marginRight: '36px',
               padding: '10px',
-              ...(open && { display: 'none' })
+              
+              // ...(open && { display: 'none' })
             }}
           >
             <IconifyIcon icon='ic:round-menu' />
