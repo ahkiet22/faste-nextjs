@@ -18,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Icon
-import IconifyIcon from '../Icon'
+import IconifyIcon from 'src/components/Icon'
 
 // import PersonAdd from '@mui/icons-material/PersonAdd';
 // import Settings from '@mui/icons-material/Settings';
