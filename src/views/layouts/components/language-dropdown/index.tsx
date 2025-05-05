@@ -3,11 +3,9 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** MUI Imports
-import Popover from '@mui/material/Popover'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material'
-import Box, { BoxProps } from '@mui/material/Box'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 
 // ** Icon
 import Icon from 'src/components/Icon'
@@ -16,24 +14,6 @@ import Icon from 'src/components/Icon'
 import { LANGUAGE_OPTIONS } from 'src/configs/i18n'
 
 type TProps = {}
-
-interface TStyledItem extends BoxProps {
-  selected: boolean
-}
-
-const StyledItemLanguage = styled(Box)<TStyledItem>(({ theme, selected }) => ({
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: selected ? theme.palette.action.selected : 'transparent',
-  color: selected ? theme.palette.text.secondary : 'inherit',
-  '.MuiTypography-root': {
-    padding: '8px 12px'
-  },
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover
-  }
-}))
 
 const LanguageDropdown = (props: TProps) => {
   // ** State
@@ -61,27 +41,55 @@ const LanguageDropdown = (props: TProps) => {
       <IconButton color='inherit' id='language-dropdow' onClick={handleOpen}>
         <Icon icon='material-symbols-light:translate-rounded' />
       </IconButton>
-      <Popover
-        id={'language-dropdow'}
-        open={open}
+      <Menu
         anchorEl={anchorEl}
+        id='account-menu'
+        open={open}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
+        onClick={handleClose}
+        slotProps={{
+          paper: {
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1
+              },
+              '&::before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0
+              }
+            }
+          }
         }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {LANGUAGE_OPTIONS.map(lang => (
-          <StyledItemLanguage
+          <MenuItem
             selected={lang.value === i18n.language}
             key={lang.value}
             onClick={() => handleOnchangeLang(lang.value)}
           >
-            <Typography>{lang.lang}</Typography>
+            {/* <Typography>{lang.lang}</Typography> */}
+            {lang.lang}
             {lang.value === i18n.language && <Icon icon='mdi:tick-circle-outline' />}
-          </StyledItemLanguage>
+          </MenuItem>
         ))}
-      </Popover>
+      </Menu>
     </>
   )
 }
