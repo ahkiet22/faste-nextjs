@@ -10,7 +10,6 @@ import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -20,6 +19,8 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Icon
 import IconifyIcon from 'src/components/Icon'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 // import PersonAdd from '@mui/icons-material/PersonAdd';
 // import Settings from '@mui/icons-material/Settings';
@@ -30,6 +31,8 @@ type TProps = {}
 const UserDropdown = (props: TProps) => {
   // ** Translation
   const { t } = useTranslation()
+
+  const router = useRouter()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -45,7 +48,10 @@ const UserDropdown = (props: TProps) => {
     setAnchorEl(null)
   }
 
-  console.log(props)
+  const handleNavigateMyProfile = () => {
+    router.push(`/${ROUTE_CONFIG.MY_PROFILE}`)
+    handleClose()
+  }
 
   return (
     <React.Fragment>
@@ -109,21 +115,10 @@ const UserDropdown = (props: TProps) => {
         <MenuItem onClick={handleClose}>
           {user?.email} {user?.firstName} {user?.middleName} {user?.lastName}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
+        <MenuItem onClick={handleNavigateMyProfile}>
+          <Avatar /> {t('my_profile')}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>{/* <PersonAdd fontSize='small' /> */}</ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>{/* <Settings fontSize='small' /> */}</ListItemIcon>
-          Settings
-        </MenuItem>
+
         <MenuItem onClick={logout}>
           <ListItemIcon>{/* <Logout fontSize='small' /> */}</ListItemIcon>
           Logout

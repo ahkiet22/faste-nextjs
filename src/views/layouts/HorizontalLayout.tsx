@@ -2,6 +2,7 @@
 import * as React from 'react'
 
 // ** Next
+import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 
 // ** Mui
@@ -11,12 +12,19 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
+import Button from '@mui/material/Button'
 
 // ** component
 import IconifyIcon from 'src/components/Icon'
 import UserDropdown from './components/user-dropdown'
 import ModeToogle from './components/mode-toggle'
 import LanguageDropdown from './components/language-dropdown'
+
+// ** Hook
+import { useAuth } from 'src/hooks/useAuth'
+
+// ** Config
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 const drawerWidth: number = 240
 
@@ -51,7 +59,11 @@ const AppBar = styled(MuiAppBar, {
   })
 }))
 
-const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }) => {
+const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }) => {
+  const { user } = useAuth()
+
+  const router = useRouter()
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -67,8 +79,8 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
             onClick={toggleDrawer}
             sx={{
               marginRight: '36px',
-              padding: '10px',
-              
+              padding: '10px'
+
               // ...(open && { display: 'none' })
             }}
           >
@@ -80,7 +92,20 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
         </Typography>
         <LanguageDropdown />
         <ModeToogle />
-        <UserDropdown />
+        {user ? (
+          <UserDropdown />
+        ) : (
+          <Button
+            type='submit'
+            variant='contained'
+            sx={{ width: 'auto', ml: 2, mr: 2 }}
+            onClick={() => {
+              router.push(ROUTE_CONFIG.LOGIN)
+            }}
+          >
+            Sign In
+          </Button>
+        )}
 
         <IconButton color='inherit'>
           <Badge badgeContent={4} color='primary'>
@@ -92,4 +117,4 @@ const HorizoncalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
   )
 }
 
-export default HorizoncalLayout
+export default HorizontalLayout

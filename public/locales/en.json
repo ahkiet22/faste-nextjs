@@ -1,3 +1,18 @@
 {
-  "Account": "Account"
+  "Account": "Account",
+  "my_profile": "My profile",
+  "enter_your_email": "Enter your Email",
+  "Role": "Role",
+  "enter_your_role": "Enter your role",
+  "Address": "Address",
+  "enter_your_address": "Enter your address",
+  "City": "City",
+  "enter_your_city": "Enter your city",
+  "phone_number": "Phone Number",
+  "enter_your_phone": "Enter your phone number",
+  "full_name": "Full name",
+  "enter_your_full_name": "Enter your full name",
+  "update_my_profile": "Updated",
+  "upload_avatar": "Upload avatar",
+  "change_avatar": "Change avatar"
 }

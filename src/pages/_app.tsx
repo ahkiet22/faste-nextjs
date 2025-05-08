@@ -49,7 +49,7 @@ import ThemeComponent from 'src/theme/ThemeComponent'
 // ** Layout
 import UserLayout from 'src/views/layouts/UserLayout'
 
-// ** axios instance  
+// ** axios instance
 import { AxiosInterceptor } from 'src/helpers/axios'
 
 type ExtendedAppProps = AppProps & {
