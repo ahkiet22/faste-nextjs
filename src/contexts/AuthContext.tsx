@@ -72,8 +72,10 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    setLoading(true)
     loginAuth({ email: params.email, password: params.password })
       .then(async response => {
+        setLoading(false)
         params.rememberMe
           ? setLocalUserData(
               JSON.stringify(response.data.user),
@@ -88,6 +90,7 @@ const AuthProvider = ({ children }: Props) => {
       })
 
       .catch(err => {
+        setLoading(false)
         if (errorCallback) errorCallback(err)
       })
   }
