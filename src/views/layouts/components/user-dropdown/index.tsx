@@ -19,7 +19,7 @@ import { Badge, Divider, styled, Typography } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Icon
-import IconifyIcon from 'src/components/Icon'
+import Icon from 'src/components/Icon'
 
 // ** Configs
 import { ROUTE_CONFIG } from 'src/configs/route'
@@ -113,7 +113,7 @@ const UserDropdown = (props: TProps) => {
                     style={{ height: '32px', width: '32px' }}
                   />
                 ) : (
-                  <IconifyIcon icon='uil:user' />
+                  <Icon icon='uil:user' />
                 )}
               </Avatar>
             </StyledBadge>
@@ -169,7 +169,7 @@ const UserDropdown = (props: TProps) => {
                   style={{ height: '32px', width: '32px' }}
                 />
               ) : (
-                <IconifyIcon icon='uil:user' />
+                <Icon icon='uil:user' />
               )}
             </Avatar>
           </StyledBadge>
@@ -182,11 +182,16 @@ const UserDropdown = (props: TProps) => {
         </Box>
         <Divider />
         <MenuItem onClick={handleNavigateMyProfile}>
-          <Avatar /> {t('my_profile')}
+          <ListItemIcon>
+            <Icon icon='uil:user' />
+          </ListItemIcon>{' '}
+          {t('my_profile')}
         </MenuItem>
 
         <MenuItem onClick={logout}>
-          <ListItemIcon>{/* <Logout fontSize='small' /> */}</ListItemIcon>
+          <ListItemIcon>
+            <Icon icon='material-symbols-light:logout' />
+          </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>

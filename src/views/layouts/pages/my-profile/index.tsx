@@ -20,7 +20,7 @@ import CustomTextField from 'src/components/text-field'
 import Icon from 'src/components/Icon'
 import IconifyIcon from 'src/components/Icon'
 import WrapperFileUpload from 'src/components/wrapper-file-upload/idnex'
-import FallbackSpinner from 'src/components/fall-back'
+import Spinner from 'src/components/spinner'
 
 // ** form
 import { Controller, useForm } from 'react-hook-form'
@@ -170,7 +170,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   return (
     <>
-      {loading || (isLoading && <FallbackSpinner />)}
+      {loading || (isLoading && <Spinner />)}
       <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate>
         <Grid container>
           <Grid
