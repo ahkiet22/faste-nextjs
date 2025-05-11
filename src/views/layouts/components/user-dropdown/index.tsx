@@ -90,6 +90,11 @@ const UserDropdown = (props: TProps) => {
     handleClose()
   }
 
+  const handleNavigateChangePassword = () => {
+    router.push(ROUTE_CONFIG.CHANGE_PASSWORD)
+    handleClose()
+  }
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -187,12 +192,17 @@ const UserDropdown = (props: TProps) => {
           </ListItemIcon>{' '}
           {t('my_profile')}
         </MenuItem>
-
+        <MenuItem onClick={handleNavigateChangePassword}>
+          <ListItemIcon>
+            <Icon icon='formkit:password' />
+          </ListItemIcon>
+          {t('change_password')}
+        </MenuItem>
         <MenuItem onClick={logout}>
           <ListItemIcon>
-            <Icon icon='material-symbols-light:logout' />
+            <Icon icon='material-symbols:logout' />
           </ListItemIcon>
-          Logout
+          {t('Logout')}
         </MenuItem>
       </Menu>
     </React.Fragment>

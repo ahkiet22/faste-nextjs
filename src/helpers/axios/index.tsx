@@ -11,7 +11,7 @@ import { clearLocalUserData, getLocalUserData } from '../storage'
 // ** React
 import { FC } from 'react'
 
-// ** Next 
+// ** Next
 import { NextRouter, useRouter } from 'next/router'
 
 // ** Type
@@ -41,10 +41,10 @@ const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | 
 
 const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
   const router = useRouter()
-  const { accessToken, refreshToken } = getLocalUserData()
   const { setUser } = useAuth()
 
   instanceAxios.interceptors.request.use(async config => {
+    const { accessToken, refreshToken } = getLocalUserData()
     if (accessToken) {
       const decodedAccessToken: any = jwtDecode(accessToken)
 

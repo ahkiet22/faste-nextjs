@@ -4,3 +4,8 @@ export type TLoginAuth = {
 }
 
 export interface TRegisterAuth extends TLoginAuth {}
+
+export type TChangePassword = {
+  currentPassword: string
+  newPassword: string
+}
