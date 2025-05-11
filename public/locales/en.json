@@ -14,5 +14,17 @@
   "enter_your_full_name": "Enter your full name",
   "update_my_profile": "Updated",
   "upload_avatar": "Upload avatar",
-  "change_avatar": "Change avatar"
+  "change_avatar": "Change avatar",
+  "change_password": "Change password",
+  "Logout": "Logout",
+  "Update": "Update",
+  "the_email_or_password_wrong": "The email or password wrong",
+  "login_success": "Login success!",
+  "current_password": "Current password",
+  "enter_current_password": "Enter current password",
+  "new_password": "New password",
+  "enter_new_password": "Enter new password",
+  "confirm_new_password": "Confirm new password",
+  "enter_confirm_new_password": "Enter confirm new password",
+  "Change": "Change"
 }

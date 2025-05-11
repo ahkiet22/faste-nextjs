@@ -39,6 +39,8 @@ import LoginLight from '/public/images/login-light.png'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 type TProps = {}
 
@@ -57,6 +59,9 @@ const LoginPage: NextPage<TProps> = () => {
 
   // ** theme
   const theme = useTheme()
+
+  // ** Translate
+  const { t } = useTranslation()
 
   const schema = yup.object().shape({
     email: yup.string().required('The field is required').matches(EMAIL_REG, 'The field is must email type'),
@@ -81,9 +86,12 @@ const LoginPage: NextPage<TProps> = () => {
   })
   const onSubmit = (data: { email: string; password: string }) => {
     if (!Object.keys(errors)?.length) {
-      login({ ...data, rememberMe: isRemember })
+      login({ ...data, rememberMe: isRemember }, err => {
+        if (err?.response?.data?.typeError === 'INVALID') {
+          toast.error(t('the_email_or_password_wrong'))
+        }
+      })
     }
-    console.log('data', { data, errors })
   }
 
   return (

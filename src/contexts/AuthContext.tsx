@@ -19,6 +19,8 @@ import { loginAuth, logoutAuth } from 'src/services/auth'
 
 // ** Helper
 import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage/index'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -43,6 +45,9 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+
+  // ** Translate
+  const { t } = useTranslation()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -72,10 +77,8 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    setLoading(true)
     loginAuth({ email: params.email, password: params.password })
       .then(async response => {
-        setLoading(false)
         params.rememberMe
           ? setLocalUserData(
               JSON.stringify(response.data.user),
@@ -83,14 +86,14 @@ const AuthProvider = ({ children }: Props) => {
               response.data.refresh_token
             )
           : null
+        toast.success(t('login_success'))
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.user })
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
         router.replace(redirectURL as string)
       })
 
-      .catch(err => {
-        setLoading(false)
+      .catch((err: any) => {
         if (errorCallback) errorCallback(err)
       })
   }
