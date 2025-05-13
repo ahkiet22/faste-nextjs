@@ -13,7 +13,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
-import { useTheme } from '@mui/material'
+import { FormHelperText, InputLabel, useTheme } from '@mui/material'
 
 //** Components
 import CustomTextField from 'src/components/text-field'
@@ -44,6 +44,7 @@ import { resetInitialState } from 'src/stores/apps/auth'
 
 // ** Other
 import toast from 'react-hot-toast'
+import CustomSelect from 'src/components/custom-select'
 
 type TProps = {}
 
@@ -283,19 +284,40 @@ const MyProfilePage: NextPage<TProps> = () => {
                       required: true
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        autoFocus
-                        fullWidth
-                        disabled
-                        label={t('Role')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        placeholder={t('enter_your_role')}
-                        error={Boolean(errors?.role)}
-                        helperText={errors?.role?.message}
-                      />
+                      <Box>
+                        <InputLabel
+                          sx={{
+                            fontSize: '13px',
+                            marginBottom: '4px',
+                            display: 'block',
+                            color: errors?.role
+                              ? theme.palette.error.main
+                              : `rbga(${theme.palette.customColors.main}, 0.42)`
+                          }}
+                        >
+                          {t('Role')}
+                        </InputLabel>
+                        <CustomSelect
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          options={[]}
+                          error={Boolean(errors?.role)}
+                          onBlur={onBlur}
+                          placeholder={t('enter_your_role')}
+                        />
+                        {errors?.role?.message && (
+                          <FormHelperText
+                            sx={{
+                              color: errors?.role
+                                ? theme.palette.error.main
+                                : `rbga(${theme.palette.customColors.main}, 0.42)`
+                            }}
+                          >
+                            {errors?.role?.message}
+                          </FormHelperText>
+                        )}
+                      </Box>
                     )}
                   />
                 </Grid>
@@ -356,15 +378,40 @@ const MyProfilePage: NextPage<TProps> = () => {
                     control={control}
                     name='city'
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('City')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        placeholder={t('enter_your_city')}
-                      />
+                      <Box>
+                        <InputLabel
+                          sx={{
+                            fontSize: '13px',
+                            marginBottom: '4px',
+                            display: 'block',
+                            color: errors?.city
+                              ? theme.palette.error.main
+                              : `rbga(${theme.palette.customColors.main}, 0.42)`
+                          }}
+                        >
+                          {t('City')}
+                        </InputLabel>
+                        <CustomSelect
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          options={[]}
+                          error={Boolean(errors?.city)}
+                          onBlur={onBlur}
+                          placeholder={t('enter_your_city')}
+                        />
+                        {errors?.city?.message && (
+                          <FormHelperText
+                            sx={{
+                              color: errors?.city
+                                ? theme.palette.error.main
+                                : `rbga(${theme.palette.customColors.main}, 0.42)`
+                            }}
+                          >
+                            {errors?.city?.message}
+                          </FormHelperText>
+                        )}
+                      </Box>
                     )}
                   />
                 </Grid>
