@@ -6,7 +6,7 @@ import { ReactNode, ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Helper
-import { clearLocalUserData, getLocalUserData } from 'src/helpers/storage/index'
+import { clearLocalUserData, clearTemporaryToken, getLocalUserData, getTemporaryToken } from 'src/helpers/storage/index'
 
 // ** Hook
 import { useAuth } from 'src/hooks/useAuth'
@@ -30,7 +30,12 @@ const AuthGuard = (props: AuthGuardProps) => {
     if (!router.isReady) {
       return
     }
-    if (authContext.user === null && !getLocalUserData().accessToken && !getLocalUserData().userData) {
+    if (
+      authContext.user === null &&
+      !getLocalUserData().accessToken &&
+      !getLocalUserData().userData &&
+      !getTemporaryToken().temporaryToken
+    ) {
       if (router.asPath !== '/' && router.asPath != '/login') {
         router.replace({
           pathname: '/login',
@@ -43,6 +48,17 @@ const AuthGuard = (props: AuthGuardProps) => {
       clearLocalUserData()
     }
   }, [router.route])
+
+  useEffect(() => {
+    const handleUnload = () => {
+      clearTemporaryToken()
+    }
+    window.addEventListener('beforeunload', handleUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+    }
+  }, [])
 
   if (authContext.loading || authContext.user === null) {
     return fallback

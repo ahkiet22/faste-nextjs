@@ -6,7 +6,14 @@ import { jwtDecode } from 'jwt-decode'
 import { BASE_URL, CONFIG_API } from 'src/configs/api'
 
 // ** Helper
-import { clearLocalUserData, getLocalUserData } from '../storage'
+import {
+  clearLocalUserData,
+  clearTemporaryToken,
+  getLocalUserData,
+  getTemporaryToken,
+  setLocalUserData,
+  setTemporaryToken
+} from '../storage'
 
 // ** React
 import { FC } from 'react'
@@ -37,19 +44,28 @@ const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | 
   }
   setUser(null)
   clearLocalUserData()
+  clearTemporaryToken()
 }
 
 const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
   const router = useRouter()
-  const { setUser } = useAuth()
+  const { setUser, user } = useAuth()
 
   instanceAxios.interceptors.request.use(async config => {
     const { accessToken, refreshToken } = getLocalUserData()
-    if (accessToken) {
-      const decodedAccessToken: any = jwtDecode(accessToken)
+
+    const { temporaryToken } = getTemporaryToken()
+
+    if (accessToken || temporaryToken) {
+      let decodedAccessToken: any = {}
+      if (accessToken) {
+        decodedAccessToken = jwtDecode(accessToken)
+      } else if (temporaryToken) {
+        decodedAccessToken = jwtDecode(temporaryToken)
+      }
 
       if (decodedAccessToken.exp > Date.now() / 1000) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+        config.headers.Authorization = `Bearer ${accessToken ? accessToken : temporaryToken}`
       } else {
         if (refreshToken) {
           const decodedRefreshToken: any = jwtDecode(refreshToken)
@@ -68,6 +84,9 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
                 if (res.data.data.access_token) {
                   const newAccessToken = res.data.data.access_token
                   config.headers.Authorization = `Bearer ${newAccessToken}`
+                  if (accessToken) {
+                    setLocalUserData(JSON.stringify(user), newAccessToken, refreshToken)
+                  }
                 } else {
                   handleRedirectLogin(router, setUser)
                 }
