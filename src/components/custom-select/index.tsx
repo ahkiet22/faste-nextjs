@@ -1,8 +1,7 @@
-import { Box, InputLabel, InputLabelProps } from '@mui/material'
-import { MenuItem, MenuItemProps, Select, SelectProps, styled } from '@mui/material'
+import { Box, InputLabel, InputLabelProps, MenuItem, MenuItemProps, Select, SelectProps, styled } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-interface TCustomSelect extends SelectProps {
+type TCustomSelect = SelectProps & {
   options: { label: string; value: string }[]
   placeholder?: string
   fullWidth?: boolean
