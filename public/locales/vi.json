@@ -26,5 +26,18 @@
   "enter_new_password": "Nhập mật khẩu mới",
   "confirm_new_password": "Xác nhận mật khẩu",
   "enter_confirm_new_password": "Nhập Nhập lại mật khẩu",
-  "Change": "Thay đổi"
+  "Change": "Thay đổi",
+  "Dashboard": "Bảng điều khiển",
+  "System": "Hệ thống",
+  "User": "Người dùng",
+  "Manage_product": "Quản lý sản phẩm",
+  "List_product": "Danh sách sản phẩm",
+  "Type_product": "Loại sản phẩm",
+  "Comment": "Bình luận",
+  "Manage_order": "Quản lý đơn hàng",
+  "List_order": "Danh sách đơn hàng",
+  "List_review": "Danh sách đánh giá",
+  "Setting": "Cài đặt",
+  "Delivery_method": "Phương thức giao hàng",
+  "Payment_method": "Phương thức thanh toán"
 }

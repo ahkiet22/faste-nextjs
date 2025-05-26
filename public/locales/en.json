@@ -26,5 +26,18 @@
   "enter_new_password": "Enter new password",
   "confirm_new_password": "Confirm new password",
   "enter_confirm_new_password": "Enter confirm new password",
-  "Change": "Change"
+  "Change": "Change",
+  "Dashboard": "Dashboard",
+  "System": "System",
+  "User": "User",
+  "Manage_product": "Manage Product",
+  "List_product": "List Product",
+  "Type_product": "Product Type",
+  "Comment": "Comment",
+  "Manage_order": "Manage Order",
+  "List_order": "Order List",
+  "List_review": "Review List",
+  "Setting": "Settings",
+  "Delivery_method": "Delivery Method",
+  "Payment_method": "Payment Method"
 }

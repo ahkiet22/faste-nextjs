@@ -12,7 +12,8 @@ import {
   getLocalUserData,
   getTemporaryToken,
   setLocalUserData,
-  setTemporaryToken
+  
+  // setTemporaryToken
 } from '../storage'
 
 // ** React
