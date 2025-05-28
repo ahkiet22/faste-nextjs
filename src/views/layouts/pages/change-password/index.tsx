@@ -31,8 +31,8 @@ import RegisterLight from '/public/images/register-light.png'
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
-import { resetInitialState } from 'src/stores/apps/auth'
-import { changePasswordMeAsync } from 'src/stores/apps/auth/actions'
+import { resetInitialState } from 'src/stores/auth'
+import { changePasswordMeAsync } from 'src/stores/auth/actions'
 
 // ** Translate
 import { useTranslation } from 'react-i18next'
@@ -72,15 +72,15 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const schema = yup.object().shape({
     currentPassword: yup
       .string()
-      .required('The field is required')
+      .required(t("required_field"))
       .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number'),
     newPassword: yup
       .string()
-      .required('The field is required')
+      .required(t("required_field"))
       .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number'),
     comfirmNewPassword: yup
       .string()
-      .required('The field is required')
+      .required(t("required_field"))
       .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number')
       .oneOf([yup.ref('newPassword'), ''], 'The comfirm is must math with new password')
   })
@@ -119,6 +119,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
       }
       dispatch(resetInitialState())
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isErrorChangePassword, isSuccessChangePassword, messageChangePassword])
 
   return (

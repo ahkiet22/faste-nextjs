@@ -1,5 +1,10 @@
+// ** Redux
 import { createAsyncThunk } from '@reduxjs/toolkit'
+
+// ** Service
 import { changePasswordMe, registerAuth, updateAuthMe } from 'src/services/auth'
+
+// ** Types
 import { TChangePassword } from 'src/types/auth'
 
 export const registerAuthAsync = createAsyncThunk('auth/register', async (data: any) => {
