@@ -39,5 +39,13 @@
   "List_review": "Danh sách đánh giá",
   "Setting": "Cài đặt",
   "Delivery_method": "Phương thức giao hàng",
-  "Payment_method": "Phương thức thanh toán"
+  "Payment_method": "Phương thức thanh toán",
+  "manage_system": "Quản trị hệ thống",
+  "Name": "Tên",
+  "Actions": "Thao tác",
+  "Create": "Tạo",
+  "Edit": "Sửa",
+  "Delete": "Xóa",
+  "required_field": "Trường này bắt buộc",
+  "create_role_success": "Tạo nhóm vai trò thành công"
 }

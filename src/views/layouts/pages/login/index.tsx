@@ -64,10 +64,10 @@ const LoginPage: NextPage<TProps> = () => {
   const { t } = useTranslation()
 
   const schema = yup.object().shape({
-    email: yup.string().required('The field is required').matches(EMAIL_REG, 'The field is must email type'),
+    email: yup.string().required(t("required_field")).matches(EMAIL_REG, 'The field is must email type'),
     password: yup
       .string()
-      .required('The field is required')
+      .required(t("required_field"))
       .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number')
   })
 
