@@ -47,5 +47,7 @@
   "Edit": "Sửa",
   "Delete": "Xóa",
   "required_field": "Trường này bắt buộc",
-  "create_role_success": "Tạo nhóm vai trò thành công"
+  "create_role_success": "Tạo nhóm vai trò thành công",
+  "title_delete_role": "Xác nhận xóa nhóm vai trò",
+  "confirm_delete_role": "Bạn có chắc xóa nhóm vai trò này?"
 }

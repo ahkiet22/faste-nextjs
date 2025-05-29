@@ -31,6 +31,7 @@ import InputSearch from 'src/components/input-search'
 import CreateEditRole from './components/CreateEditRole'
 import GridDelete from 'src/components/grid-delete'
 import Spinner from 'src/components/spinner'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
 
 // ** Others
 import toast from 'react-hot-toast'
@@ -42,6 +43,10 @@ const RoleListPage: NextPage<TProps> = () => {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[1])
   const [openCreateEdit, setOpenCreateEdit] = useState({
+    open: false,
+    id: ''
+  })
+  const [openDeleteRole, setOpenDeleteRole] = useState({
     open: false,
     id: ''
   })
@@ -77,6 +82,13 @@ const RoleListPage: NextPage<TProps> = () => {
   // handle
   const handleOnchangePagination = (page: number, pageSize: number) => {}
 
+  const handleCloseConfirmDeleteRole = () => {
+    setOpenDeleteRole({
+      open: false,
+      id: ''
+    })
+  }
+
   const handleSort = (sorts: GridSortModel) => {
     const { field, sort } = sorts[0]
     setSortBy(`${field} ${sort}`)
@@ -87,6 +99,10 @@ const RoleListPage: NextPage<TProps> = () => {
       open: false,
       id: ''
     })
+  }
+
+  const handleDeleteRole = () => {
+    dispatch(deleteRolesAsync(openDeleteRole.id))
   }
 
   const columns: GridColDef[] = [
@@ -103,17 +119,31 @@ const RoleListPage: NextPage<TProps> = () => {
       headerAlign: 'center',
       align: 'center',
       renderCell: params => {
+        const { row } = params
+        console.log('params', params)
+
         return (
           <Box>
-            <GridEdit
-              onClick={() => {
-                setOpenCreateEdit({
-                  open: true,
-                  id: String(params.id)
-                })
-              }}
-            />
-            <GridDelete onClick={() => dispatch(deleteRolesAsync(String(params.id)))} />
+            {!row?.permissions?.some((per: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(per)) && (
+              <>
+                <GridEdit
+                  onClick={() => {
+                    setOpenCreateEdit({
+                      open: true,
+                      id: String(params.id)
+                    })
+                  }}
+                />
+                <GridDelete
+                  onClick={() =>
+                    setOpenDeleteRole({
+                      open: true,
+                      id: String(params.id)
+                    })
+                  }
+                />
+              </>
+            )}
           </Box>
         )
       }
@@ -159,6 +189,7 @@ const RoleListPage: NextPage<TProps> = () => {
       toast.success(t('delete_role_success'))
       handleGetListRole()
       handleCloseCreateEdit()
+      handleCloseConfirmDeleteRole()
       dispatch(resetInitialState())
     } else if (isErrorDelete && messageErrorDelete) {
       toast.error(t(messageErrorDelete))
@@ -169,6 +200,15 @@ const RoleListPage: NextPage<TProps> = () => {
 
   return (
     <>
+      <ConfirmationDialog
+        open={openDeleteRole.open}
+        handleClose={handleCloseConfirmDeleteRole}
+        title={t('title_delete_role')}
+        description={t('confirm_delete_role')}
+        handleCancel={handleCloseConfirmDeleteRole}
+        handleConfirm={handleDeleteRole}
+      />
+
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
       {isLoading && <Spinner />}
       <Box

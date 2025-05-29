@@ -3,7 +3,6 @@ import * as React from 'react'
 
 // ** Mui
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
 import { InputBase } from '@mui/material'
 
 // ** Component
@@ -64,21 +63,19 @@ const InputSearch = (props: TInputSearch) => {
   }, [debounceSearch])
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Search>
-        <SearchIconWrapper>
-          <Icon icon={'material-symbols:search-rounded'} />
-        </SearchIconWrapper>
-        <StyledInputBase
-          value={search}
-          placeholder='Search…'
-          inputProps={{ 'aria-label': 'search' }}
-          onChange={e => {
-            setSearch(e.target.value)
-          }}
-        />
-      </Search>
-    </Box>
+    <Search>
+      <SearchIconWrapper>
+        <Icon icon={'material-symbols:search-rounded'} />
+      </SearchIconWrapper>
+      <StyledInputBase
+        value={search}
+        placeholder='Search…'
+        inputProps={{ 'aria-label': 'search' }}
+        onChange={e => {
+          setSearch(e.target.value)
+        }}
+      />
+    </Search>
   )
 }
 
