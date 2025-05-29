@@ -8,14 +8,18 @@ import { InputBase } from '@mui/material'
 
 // ** Component
 import Icon from '../Icon'
+import useDebounce from 'src/hooks/useDebounce'
 
-interface TInputSearch {}
+interface TInputSearch {
+  value: string
+  onChange: (vale: string) => void
+}
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.common.white,
-  marginLeft: "0 !important",
+  marginLeft: '0 !important',
   height: '38px',
   width: '100%',
   border: `1px solid ${theme.palette.customColors.borderColor}`,
@@ -42,18 +46,37 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     width: '100%',
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`
   }
 }))
 
 const InputSearch = (props: TInputSearch) => {
+  // ** props
+  const { value, onChange } = props
+
+  // ** state
+  const [search, setSearch] = React.useState(value)
+  const debounceSearch = useDebounce(search, 500)
+
+  React.useEffect(() => {
+    onChange(debounceSearch)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceSearch])
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Search>
         <SearchIconWrapper>
           <Icon icon={'material-symbols:search-rounded'} />
         </SearchIconWrapper>
-        <StyledInputBase placeholder='Search…' inputProps={{ 'aria-label': 'search' }} />
+        <StyledInputBase
+          value={search}
+          placeholder='Search…'
+          inputProps={{ 'aria-label': 'search' }}
+          onChange={e => {
+            setSearch(e.target.value)
+          }}
+        />
       </Search>
     </Box>
   )

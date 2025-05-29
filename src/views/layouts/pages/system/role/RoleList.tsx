@@ -8,7 +8,7 @@ import { NextPage } from 'next'
 
 // ** Mui
 import { Box, Grid, useTheme } from '@mui/material'
-import { GridColDef } from '@mui/x-data-grid'
+import { GridColDef, GridSortModel } from '@mui/x-data-grid'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -45,6 +45,8 @@ const RoleListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
+  const [sortBy, setSortBy] = useState('created asc')
+  const [searchBy, setSearchBy] = useState('')
 
   // ** redux
   const dispatch: AppDispatch = useDispatch()
@@ -69,11 +71,16 @@ const RoleListPage: NextPage<TProps> = () => {
 
   // fetch api
   const handleGetListRole = () => {
-    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1 } }))
+    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1, search: searchBy, order: sortBy } }))
   }
 
   // handle
   const handleOnchangePagination = (page: number, pageSize: number) => {}
+
+  const handleSort = (sorts: GridSortModel) => {
+    const { field, sort } = sorts[0]
+    setSortBy(`${field} ${sort}`)
+  }
 
   const handleCloseCreateEdit = () => {
     setOpenCreateEdit({
@@ -128,7 +135,7 @@ const RoleListPage: NextPage<TProps> = () => {
   useEffect(() => {
     handleGetListRole()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [sortBy, searchBy])
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
@@ -194,7 +201,7 @@ const RoleListPage: NextPage<TProps> = () => {
                   width: '200px'
                 }}
               >
-                <InputSearch />
+                <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
               </Box>
               <GridCreate
                 onClick={() =>
@@ -211,6 +218,9 @@ const RoleListPage: NextPage<TProps> = () => {
               pageSizeOptions={[5]}
               autoHeight
               hideFooter
+              sortingOrder={['desc', 'asc']}
+              sortingMode='server'
+              onSortModelChange={handleSort}
               getRowId={row => row._id}
               disableRowSelectionOnClick
               slots={{
