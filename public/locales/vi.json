@@ -48,6 +48,11 @@
   "Delete": "Xóa",
   "Required_field": "Trường này bắt buộc",
   "Create_role_success": "Tạo nhóm vai trò thành công",
+  "Update_role_success": "Cập nhật vai trò thành công",
+  "Create_role": "Tạo nhóm vai trò",
+  "Edit_role": "Chỉnh sửa nhóm vai trò",
+  "Name_role": "Tên nhóm vai trò",
+  "Enter_name": "Nhập tên",
   "Title_delete_role": "Xác nhận xóa nhóm vai trò",
   "Confirm_delete_role": "Bạn có chắc xóa nhóm vai trò này?",
   "Rules_confirm_new_password": "Mật khẩu nhập phải trùng khớp với mật khẩu mới.",
@@ -64,5 +69,9 @@
   "Remember_me": "Ghi nhớ đăng nhập",
   "Forgot_password": "Quên mật khẩu?",
   "You_have_account": "Bạn đã có tài khoản?",
-  "No_account": "Bạn chưa có tài khoản?"
+  "No_account": "Bạn chưa có tài khoản?",
+  "Data_existed_in_system": "Dữ liệu đã tồn tại trong hệ thống",
+  "Server_is_error": "Hệ thống bị lỗi",
+  "Update_role_error": "Cập nhật nhóm vai trò thất bại",
+  "Create_role_error": "Tạo nhóm vai trò thất bại"
 }

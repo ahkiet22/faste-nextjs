@@ -36,6 +36,7 @@ import ConfirmationDialog from 'src/components/confirmation-dialog'
 // ** Others
 import toast from 'react-hot-toast'
 import Icon from 'src/components/Icon'
+import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/error'
 
 type TProps = {}
 
@@ -64,7 +65,8 @@ const RoleListPage: NextPage<TProps> = () => {
     messageErrorCreateEdit,
     isSuccessDelete,
     isErrorDelete,
-    messageErrorDelete
+    messageErrorDelete,
+    typeError
   } = useSelector((state: RootState) => state.role)
 
   // console.log('roles', roles)
@@ -172,19 +174,28 @@ const RoleListPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (openCreateEdit.id) {
-        toast.success(t('update_role_success'))
+        toast.success(t('Update_role_success'))
       } else {
         toast.success(t('Create_role_success'))
       }
       handleGetListRole()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
-    } else if (isErrorCreateEdit && messageErrorCreateEdit) {
-      toast.error(t(messageErrorCreateEdit))
+    } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_ROLE[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        if (openCreateEdit.id) {
+          toast.error(t('Update_role_error'))
+        } else {
+          toast.error(t('Create_role_error'))
+        }
+      }
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit])
+  }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit, typeError])
 
   useEffect(() => {
     if (isSuccessDelete) {

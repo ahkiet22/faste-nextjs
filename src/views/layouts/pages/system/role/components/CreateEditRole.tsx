@@ -134,7 +134,7 @@ const CreateEditRole = (props: TCreateEditRole) => {
                 fontWeight: 600
               }}
             >
-              {idRole ? t('Chỉnh sửa nhóm vai trò') : t('Tạo nhóm vai trò')}
+              {idRole ? t('Edit_role') : t('Create_role')}
             </Typography>
             <IconButton
               sx={{
@@ -170,7 +170,7 @@ const CreateEditRole = (props: TCreateEditRole) => {
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}
-                    placeholder={t('enter_name')}
+                    placeholder={t('Enter_name')}
                     error={Boolean(errors?.name)}
                     helperText={errors?.name?.message}
                   />
