@@ -35,6 +35,7 @@ import ConfirmationDialog from 'src/components/confirmation-dialog'
 
 // ** Others
 import toast from 'react-hot-toast'
+import Icon from 'src/components/Icon'
 
 type TProps = {}
 
@@ -120,11 +121,10 @@ const RoleListPage: NextPage<TProps> = () => {
       align: 'center',
       renderCell: params => {
         const { row } = params
-        console.log('params', params)
 
         return (
           <Box>
-            {!row?.permissions?.some((per: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(per)) && (
+            {!row?.permissions?.some((per: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(per)) ? (
               <>
                 <GridEdit
                   onClick={() => {
@@ -143,6 +143,8 @@ const RoleListPage: NextPage<TProps> = () => {
                   }
                 />
               </>
+            ) : (
+              <Icon icon='si:lock-line' fontSize={27} />
             )}
           </Box>
         )
@@ -172,7 +174,7 @@ const RoleListPage: NextPage<TProps> = () => {
       if (openCreateEdit.id) {
         toast.success(t('update_role_success'))
       } else {
-        toast.success(t('create_role_success'))
+        toast.success(t('Create_role_success'))
       }
       handleGetListRole()
       handleCloseCreateEdit()
@@ -203,8 +205,8 @@ const RoleListPage: NextPage<TProps> = () => {
       <ConfirmationDialog
         open={openDeleteRole.open}
         handleClose={handleCloseConfirmDeleteRole}
-        title={t('title_delete_role')}
-        description={t('confirm_delete_role')}
+        title={t('Title_delete_role')}
+        description={t('Confirm_delete_role')}
         handleCancel={handleCloseConfirmDeleteRole}
         handleConfirm={handleDeleteRole}
       />

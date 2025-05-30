@@ -45,6 +45,7 @@ import { resetInitialState } from 'src/stores/auth'
 // ** Other
 import toast from 'react-hot-toast'
 import CustomSelect from 'src/components/custom-select'
+import { getAllRoles } from 'src/services/role'
 
 type TProps = {}
 
@@ -61,7 +62,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState('')
-  const [roleId, setRoleId] = useState('')
+  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
 
   // ** theme
   const theme = useTheme()
@@ -76,10 +77,10 @@ const MyProfilePage: NextPage<TProps> = () => {
   )
 
   const schema = yup.object().shape({
-    email: yup.string().required(t("required_field")).matches(EMAIL_REG, 'The field is must email type'),
+    email: yup.string().required(t('Required_field')).matches(EMAIL_REG, 'The field is must email type'),
     fullName: yup.string().notRequired(),
-    phoneNumber: yup.string().required(t("required_field")).min(8, 'The phone number is min 8 number'),
-    role: yup.string().required(t("required_field")),
+    phoneNumber: yup.string().required(t('Required_field')).min(8, 'The phone number is min 8 number'),
+    role: yup.string().required(t('Required_field')),
     city: yup.string().notRequired(),
     address: yup.string().notRequired()
   })
@@ -104,6 +105,7 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(schema)
   })
 
+  // fetch api
   const fetchGetAuthMe = async () => {
     setLoading(true)
     await getAuthMe()
@@ -111,14 +113,13 @@ const MyProfilePage: NextPage<TProps> = () => {
         setLoading(false)
         const data = response?.data
         if (data) {
-          setRoleId(data?.role?._id)
           setAvatar(data?.avatar)
           reset({
             email: data?.email,
             address: data?.address,
             city: data?.city,
             phoneNumber: data?.phoneNumber,
-            role: data?.role.name,
+            role: data?.role._id,
             fullName: toFullName(data?.firstName, data?.middleName, data?.lastName, i18n.language)
           })
         }
@@ -128,9 +129,24 @@ const MyProfilePage: NextPage<TProps> = () => {
       })
   }
 
+  const fetchAllRoles = async () => {
+    setLoading(true)
+    await getAllRoles({ params: { limit: -1, page: -1 } })
+      .then(res => {
+        const data = res?.data.roles
+        if (data) {
+          setOptionRoles(data.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
+        }
+        setLoading(false)
+      })
+      .catch(e => {
+        setLoading(false)
+      })
+  }
+
   useEffect(() => {
     fetchGetAuthMe()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language])
 
   // console.log('user', user)
@@ -145,8 +161,12 @@ const MyProfilePage: NextPage<TProps> = () => {
       }
       dispatch(resetInitialState())
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isErrorUpdateMe, isSuccessUpdateMe, messageUpdateMe])
+
+  useEffect(() => {
+    fetchAllRoles()
+  }, [])
 
   const onSubmit = (data: any) => {
     const { firstName, middleName, lastName } = separationFullName(data.fullName, i18n.language)
@@ -156,7 +176,7 @@ const MyProfilePage: NextPage<TProps> = () => {
         firstName: firstName,
         middleName: middleName,
         lastName: lastName,
-        role: roleId,
+        role: data.role,
         phoneNumber: data.phoneNumber,
         avatar: avatar,
         address: data.address
@@ -303,12 +323,12 @@ const MyProfilePage: NextPage<TProps> = () => {
                           fullWidth
                           onChange={onChange}
                           value={value}
-                          options={[]}
+                          options={optionRoles}
                           error={Boolean(errors?.role)}
                           onBlur={onBlur}
                           placeholder={t('enter_your_role')}
                         />
-                        {errors?.role?.message && (
+                        {!errors?.role?.message && (
                           <FormHelperText
                             sx={{
                               color: errors?.role

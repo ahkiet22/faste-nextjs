@@ -195,7 +195,7 @@ const UserDropdown = (props: TProps) => {
           <ListItemIcon>
             <Icon icon='carbon:manage-protection' />
           </ListItemIcon>{' '}
-          {t('manage_system')}
+          {t('Manage_system')}
         </MenuItem>
         <MenuItem onClick={handleNavigateMyProfile}>
           <ListItemIcon>

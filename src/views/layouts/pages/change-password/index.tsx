@@ -70,19 +70,13 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const { logout } = useAuth()
 
   const schema = yup.object().shape({
-    currentPassword: yup
-      .string()
-      .required(t("required_field"))
-      .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number'),
-    newPassword: yup
-      .string()
-      .required(t("required_field"))
-      .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number'),
+    currentPassword: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
+    newPassword: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
     comfirmNewPassword: yup
       .string()
-      .required(t("required_field"))
-      .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number')
-      .oneOf([yup.ref('newPassword'), ''], 'The comfirm is must math with new password')
+      .required(t('Required_field'))
+      .matches(PASSWORD_REG, t('Rules_password'))
+      .oneOf([yup.ref('newPassword'), ''], t('Rules_confirm_new_password'))
   })
 
   const defaultValues: TDefaultValue = {
@@ -119,7 +113,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
       }
       dispatch(resetInitialState())
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isErrorChangePassword, isSuccessChangePassword, messageChangePassword])
 
   return (
@@ -260,7 +254,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder={t('enter_confirm_new_password')}
+                      placeholder={t('Enter_confirm_new_password')}
                       error={Boolean(errors?.comfirmNewPassword)}
                       helperText={errors?.comfirmNewPassword?.message}
                       type={showComfirmNewPassword ? 'text' : 'password'}
