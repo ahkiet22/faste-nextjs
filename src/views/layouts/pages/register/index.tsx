@@ -66,16 +66,13 @@ const RegisterPage: NextPage<TProps> = () => {
   const { t } = useTranslation()
 
   const schema = yup.object().shape({
-    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'The field is must email type'),
-    password: yup
-      .string()
-      .required(t('required_field'))
-      .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number'),
+    email: yup.string().required(t('Required_field')).matches(EMAIL_REG, t('Rules_email')),
+    password: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
     comfirmPassword: yup
       .string()
-      .required(t('required_field'))
-      .matches(PASSWORD_REG, 'The password is contain charactor, special charactor, number')
-      .oneOf([yup.ref('password'), ''], 'The comfirm is must math with password')
+      .required(t('Required_field'))
+      .matches(PASSWORD_REG, t('Rules_password'))
+      .oneOf([yup.ref('password'), ''], t('Rules_confirm_password'))
   })
 
   const defaultValues: TDefaultValue = {
@@ -160,7 +157,7 @@ const RegisterPage: NextPage<TProps> = () => {
             }}
           >
             <Typography component='h1' variant='h5'>
-              Register
+              {t('Register')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate>
               <Box sx={{ mt: 2, width: '300px' }}>
@@ -174,11 +171,11 @@ const RegisterPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label='Email'
+                      label={t('Email')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder='Input Email'
+                      placeholder={t('Enter_email')}
                       error={Boolean(errors?.email)}
                       helperText={errors?.email?.message}
                     />
@@ -197,11 +194,11 @@ const RegisterPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label='Password'
+                      label={t('Password')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder='Input Password'
+                      placeholder={t('Enter_password')}
                       error={Boolean(errors?.password)}
                       helperText={errors?.password?.message}
                       type={showPassword ? 'text' : 'password'}
@@ -234,11 +231,11 @@ const RegisterPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label='Comfirm password'
+                      label={t('Confirm_password')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder='Enter comfirm password'
+                      placeholder={t('Enter_confirm_password')}
                       error={Boolean(errors?.comfirmPassword)}
                       helperText={errors?.comfirmPassword?.message}
                       type={showComfirmPassword ? 'text' : 'password'}
@@ -264,14 +261,14 @@ const RegisterPage: NextPage<TProps> = () => {
                 Register
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                <Typography>{'Do you have aldready account?'}</Typography>
+                <Typography>{t('You_have_account')}</Typography>
                 <Link
                   style={{
                     color: theme.palette.primary.main
                   }}
                   href='/login'
                 >
-                  {'Login'}
+                  {t('Login')}
                 </Link>
               </Box>
               <Typography sx={{ textAlign: 'center', mt: 2, mb: 2 }}>OR</Typography>

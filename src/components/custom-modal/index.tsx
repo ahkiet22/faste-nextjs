@@ -4,7 +4,7 @@ import React from 'react'
 interface TCustomModal extends ModalProps {}
 
 const StyleModal = styled(Modal)<ModalProps>(({ theme }) => ({
-  zIndex: 1300
+  zIndex: 1200
 }))
 
 const CustomModal = (props: TCustomModal) => {

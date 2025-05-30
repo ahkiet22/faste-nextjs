@@ -25,7 +25,7 @@
   "new_password": "New password",
   "enter_new_password": "Enter new password",
   "confirm_new_password": "Confirm new password",
-  "enter_confirm_new_password": "Enter confirm new password",
+  "Enter_confirm_new_password": "Enter confirm new password",
   "Change": "Change",
   "Dashboard": "Dashboard",
   "System": "System",
@@ -40,12 +40,12 @@
   "Setting": "Settings",
   "Delivery_method": "Delivery Method",
   "Payment_method": "Payment Method",
-  "manage_system": "Manage system",
+  "Manage_system": "Manage system",
   "Name": "Name",
   "Actions": "Action",
   "Create": "Create",
   "Edit": "Edit",
   "Delete": "Delete",
-  "required_field": "The field is required",
-  "create_role_success": "Created role success"
+  "Required_field": "The field is required",
+  "Create_role_success": "Created role success"
 }
