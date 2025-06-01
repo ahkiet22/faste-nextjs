@@ -83,11 +83,7 @@ const TablePermission = (props: TTablePermission) => {
 
       // setPermissionSelected(Array.from(new Set([...permissionSelected, ...allValue])));
     }
-
-    // console.log('ischecked', { isChecked }, 'allValue', { allValue })
   }
-
-  console.log('permissions', { permissionSelected })
 
   const columns: GridColDef[] = [
     {

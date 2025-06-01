@@ -37,7 +37,8 @@ export const updateAuthMeAsync = createAsyncThunk('auth/update-me', async (data:
 
 export const changePasswordMeAsync = createAsyncThunk('auth/change-password-me', async (data: TChangePassword) => {
   const response = await changePasswordMe(data)
-  console.log('response', { response })
+  
+  // console.log('response', { response })
 
   if (response?.status === 'Success') {
     return { ...response, data: 1 }

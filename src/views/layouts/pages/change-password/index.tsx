@@ -98,7 +98,8 @@ const ChangePasswordPage: NextPage<TProps> = () => {
     if (!Object.keys(errors).length) {
       dispatch(changePasswordMeAsync({ currentPassword: data.currentPassword, newPassword: data.newPassword }))
     }
-    console.log(data)
+    
+    // console.log(data)
   }
 
   useEffect(() => {

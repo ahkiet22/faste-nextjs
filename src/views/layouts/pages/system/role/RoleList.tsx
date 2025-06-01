@@ -35,11 +35,13 @@ import GridDelete from 'src/components/grid-delete'
 import Spinner from 'src/components/spinner'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import Icon from 'src/components/Icon'
-
-// ** Service 
 import TablePermission from './components/TablePermission'
+
+// ** Service
 import { getDetailRoles } from 'src/services/role'
 
+// ** Hooks
+import { usePermission } from 'src/hooks/usePermission'
 
 // ** Others
 import toast from 'react-hot-toast'
@@ -69,6 +71,9 @@ const RoleListPage: NextPage<TProps> = () => {
   })
   const [loading, setLoading] = useState(false)
   const [isDisablePermission, setIsDisabledPermission] = useState(false)
+
+  // ** permission
+  const { CREATE, VIEW, UPDATE, DELETE } = usePermission('SYSTEM.ROLE', ['CREATE', 'VIEW', 'UPDATE', 'DELETE'])
 
   // ** redux
   const dispatch: AppDispatch = useDispatch()

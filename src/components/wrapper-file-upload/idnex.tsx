@@ -14,7 +14,8 @@ const WrapperFileUpload = (props: TProps) => {
     accept: objectAcceptFile ? objectAcceptFile : {},
     onDrop: acceptedFiles => {
       upLoadFunc(acceptedFiles[0])
-      console.log(acceptedFiles)
+      
+      // console.log(acceptedFiles)
     }
   })
 

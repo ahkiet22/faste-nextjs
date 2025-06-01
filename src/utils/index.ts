@@ -30,11 +30,9 @@ export const separationFullName = (fullName: string, language: string) => {
     }
   } else if (arrFullName.length === 2) {
     if (language === 'vi') {
-      console.log('vi lenght 2')
       result.lastName = arrFullName[0]
       result.firstName = arrFullName[1]
     } else if (language === 'en') {
-      console.log('en lenght 2')
       result.lastName = arrFullName[1]
       result.firstName = arrFullName[0]
     }
