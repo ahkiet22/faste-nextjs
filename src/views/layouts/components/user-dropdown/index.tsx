@@ -74,6 +74,7 @@ const UserDropdown = (props: TProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
   const { user, logout } = useAuth()
+  const permissionUser = user?.role?.permissions || []
 
   const open = Boolean(anchorEl)
 
@@ -191,12 +192,14 @@ const UserDropdown = (props: TProps) => {
           </Box>
         </Box>
         <Divider />
-        <MenuItem onClick={handleNavigateManageSystem}>
-          <ListItemIcon>
-            <Icon icon='carbon:manage-protection' />
-          </ListItemIcon>{' '}
-          {t('Manage_system')}
-        </MenuItem>
+        {permissionUser.length > 0 && (
+          <MenuItem onClick={handleNavigateManageSystem}>
+            <ListItemIcon>
+              <Icon icon='carbon:manage-protection' />
+            </ListItemIcon>{' '}
+            {t('Manage_system')}
+          </MenuItem>
+        )}
         <MenuItem onClick={handleNavigateMyProfile}>
           <ListItemIcon>
             <Icon icon='uil:user' />

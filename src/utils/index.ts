@@ -30,11 +30,9 @@ export const separationFullName = (fullName: string, language: string) => {
     }
   } else if (arrFullName.length === 2) {
     if (language === 'vi') {
-      console.log('vi lenght 2')
       result.lastName = arrFullName[0]
       result.firstName = arrFullName[1]
     } else if (language === 'en') {
-      console.log('en lenght 2')
       result.lastName = arrFullName[1]
       result.firstName = arrFullName[0]
     }
@@ -51,4 +49,23 @@ export const separationFullName = (fullName: string, language: string) => {
   }
 
   return result
+}
+
+export const getAllValueOfObject  = (obj: any, arrExlude?: string[]) => {
+  try {
+    const values: string[] = []
+    for (const key in obj) {
+      if (typeof obj[key] === 'object') {
+        values.push(...getAllValueOfObject (obj[key], arrExlude))
+      } else {
+        if (!arrExlude?.includes(obj[key])) {
+          values.push(obj[key])
+        }
+      }
+    }
+
+    return values
+  } catch (error) {
+    return []
+  }
 }

@@ -1,11 +1,11 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 // ** Next
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-//** Mui
+// ** Mui
 import List from '@mui/material/List'
 import { Collapse, ListItemButton, ListItemIcon, ListItemText, styled, Tooltip, useTheme } from '@mui/material'
 import { ListItemTextProps } from '@mui/material'
@@ -15,9 +15,13 @@ import Icon from 'src/components/Icon'
 
 // ** Config
 import { TVertical, VerticalItems } from 'src/configs/layout'
+import { PERMISSIONS } from 'src/configs/permission'
 
-// Utils
+// ** Utils
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
 
 type TProps = {
   open: boolean
@@ -61,6 +65,8 @@ const RecursiveListItems: NextPage<TListItems> = ({
 }) => {
   // const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
   const theme = useTheme()
+
+  // ** router
   const router = useRouter()
   const handleClick = (title: string) => {
     if (!disabled) {
@@ -198,11 +204,86 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const [activePath, setActivePath] = useState<null | string>('')
   const ListVerticalItems = VerticalItems()
 
+  const router = useRouter()
+  const { user } = useAuth()
+
+  // ** permission
+  const permissionUser = user?.role?.permissions
+    ? user?.role?.permissions?.includes(PERMISSIONS.BASIC)
+      ? [PERMISSIONS.DASHBOARD]
+      : user?.role?.permissions
+    : []
+
+  // const permissionUser = ['SYSTEM.ROLE.VIEW']
+
+  const hasPermission = (item: any, permissionUser: string[]) => {
+    return permissionUser.includes(item.permission) || !item.permission
+  }
+
+  const findParentActivePath = (items: TVertical[], activePath: string) => {
+    for (const item of items) {
+      if (item.path === activePath) {
+        return item.title
+      }
+      if (item.childrens && item.childrens.length > 0) {
+        const child: any = findParentActivePath(item.childrens, activePath)
+        if (child) {
+          return item.title
+        }
+      }
+    }
+
+    return null
+  }
+
+  const formatMenuByPermission = (menu: any[], permissionUser: string[]) => {
+    if (menu) {
+      return menu.filter(item => {
+        if (hasPermission(item, permissionUser)) {
+          if (item.childrens && item.childrens.length > 0) {
+            item.childrens = formatMenuByPermission(item.childrens, permissionUser)
+          }
+          if (!item?.childrens?.length && !item.path) {
+            return false
+          }
+
+          return true
+        }
+
+        return false
+      })
+    }
+
+    return []
+  }
+
   useEffect(() => {
     if (!open) {
       setOpenItems({})
     }
   }, [open])
+
+  const memoFormatMenu = useMemo(() => {
+    if (permissionUser.includes(PERMISSIONS.ADMIN)) {
+      return ListVerticalItems
+    }
+
+    return formatMenuByPermission(ListVerticalItems, permissionUser)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ListVerticalItems, permissionUser])
+
+  useEffect(() => {
+    if (router.asPath) {
+      const parentTitle = findParentActivePath(ListVerticalItems, router.asPath)
+      if (parentTitle) {
+        setOpenItems({
+          [parentTitle]: true
+        })
+      }
+      setActivePath(router.asPath)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath])
 
   return (
     <List
@@ -212,7 +293,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     >
       <RecursiveListItems
         disabled={!open}
-        items={ListVerticalItems}
+        items={memoFormatMenu}
         level={1}
         openItems={openItems}
         setOpenItems={setOpenItems}
