@@ -129,7 +129,7 @@ const TablePermission = (props: TTablePermission) => {
         return (
           <Typography
             sx={{
-              color: row?.isParent ? theme.palette.primary.main : `rgba(${theme.palette.customColors.main}, 0.78s)`,
+              color: row?.isParent ? theme.palette.primary.main : `rgba(${theme.palette.customColors.main}, 0.78)`,
               paddingLeft: row?.isParent ? '0' : '20px',
               textTransform: row?.isParent ? 'uppercase' : 'normal'
             }}
