@@ -308,7 +308,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 2
+                mb: 4
               }}
             >
               <Box

@@ -36,7 +36,7 @@ const initialState = {
 }
 
 export const roleSlice = createSlice({
-  name: 'auth',
+  name: 'role',
   initialState,
   reducers: {
     resetInitialState: state => {
