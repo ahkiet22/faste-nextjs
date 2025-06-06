@@ -1,4 +1,4 @@
-export const toFullName = (firstName: string, middleName: string, lastName: string, language: string) => {
+export const toFullName = (lastName: string, middleName: string, firstName: string, language: string) => {
   if (language === 'vi') {
     return [lastName, middleName, firstName].filter(Boolean).join(' ')
   } else {
@@ -51,12 +51,12 @@ export const separationFullName = (fullName: string, language: string) => {
   return result
 }
 
-export const getAllValueOfObject  = (obj: any, arrExlude?: string[]) => {
+export const getAllValueOfObject = (obj: any, arrExlude?: string[]) => {
   try {
     const values: string[] = []
     for (const key in obj) {
       if (typeof obj[key] === 'object') {
-        values.push(...getAllValueOfObject (obj[key], arrExlude))
+        values.push(...getAllValueOfObject(obj[key], arrExlude))
       } else {
         if (!arrExlude?.includes(obj[key])) {
           values.push(obj[key])

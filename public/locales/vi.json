@@ -88,5 +88,10 @@
   "Title_delete_user": "Xác nhận xóa người dùng",
   "Confirm_delete_user": "Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.",
   "Confirm": "Xác nhận",
-  "Cancel": "Hủy"
+  "Cancel": "Hủy",
+  "Selected": "Đã chọn",
+  "Title_delete_multiple_user": "Xóa nhiều người dùng",
+  "Confirm_delete_multiple_user": "Bạn có chắc chắn muốn xóa các người dùng đã chọn không? Hành động này không thể hoàn tác.",
+  "Delete_multiple_user_success": "Xóa nhiều người dùng thành công!",
+  "Delete_multiple_user_error": "Không thể xóa người dùng. Vui lòng thử lại."
 }
