@@ -1,10 +1,10 @@
 // ** Import Next
 import { NextPage } from 'next'
 import { ReactNode } from 'react'
-import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
 
 // * views
-import ChangePasswordPage from 'src/views/layouts/pages/change-password'
+import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
+import ChangePasswordPage from 'src/views/pages/change-password'
 
 type TProps = {}
 

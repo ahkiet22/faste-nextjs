@@ -208,7 +208,9 @@ const CreateEditUser = (props: TCreateEditUser) => {
       reset({
         ...defaultValues
       })
-    } else if (idUser) {
+      setAvatar('')
+      setShowPassword(false)
+    } else if (idUser && open) {
       fetchDetailsUser(idUser)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -372,7 +374,16 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                     : `rgba(${theme.palette.customColors.main}, 0.42)`
                                 }}
                               >
-                                {t('Role')}
+                                {t('Role')}{' '}
+                                <span
+                                  style={{
+                                    color: errors?.role
+                                      ? theme.palette.error.main
+                                      : `rgba(${theme.palette.customColors.main}, 0.42)`
+                                  }}
+                                >
+                                  *
+                                </span>
                               </InputLabel>
                               <CustomSelect
                                 fullWidth
@@ -471,6 +482,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                           name='fullName'
                           render={({ field: { onChange, onBlur, value } }) => (
                             <CustomTextField
+                              required
                               fullWidth
                               label={t('full_name')}
                               onChange={onChange}

@@ -4,9 +4,8 @@ import { NextPage } from 'next'
 // ** Config
 import { PERMISSIONS } from 'src/configs/permission'
 
-// ** Pages
-import UserListPage from 'src/views/layouts/pages/system/user/UserList'
-
+// ** views
+import UserListPage from 'src/views/pages/system/user/UserList'
 
 type TProps = {}
 

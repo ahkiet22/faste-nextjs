@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 // * views
 import BlankLayout from 'src/views/layouts/BlankLayout'
-import LoginPage from 'src/views/layouts/pages/login'
+import LoginPage from 'src/views/pages/login'
 
 type TProps = {}
 

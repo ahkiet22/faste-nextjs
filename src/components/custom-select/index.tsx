@@ -10,7 +10,7 @@ type TCustomSelect = SelectProps & {
 
 const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
   '& .MuiSelect-select.MuiSelect-outlined.MuiInputBase-input': {
-    padding: '4px 8px 8px 8px !important',
+    padding: '8px 8px 8px 8px !important',
     height: '38px',
     boxSizing: 'border-box',
     backgroundColor: theme.palette.background.paper
@@ -22,10 +22,9 @@ const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
     top: 'calc(50% - .6em) !important'
   },
   '.MuiOutlinedInput-notchedOutline': {
-    top: '-4px !important',
-    bottom: '2px !important'
-
-    // height: '38px'
+    top: '-0px !important',
+    bottom: '2px !important',
+    height: '38px'
   }
 }))
 
@@ -45,7 +44,7 @@ const CustomSelect = (props: TCustomSelect) => {
   return (
     <>
       <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-        {(Array.isArray(value) && !value.length) || (!value && <CustomPlaceholder>{placeholder}</CustomPlaceholder>)}
+        {((Array.isArray(value) && !value.length) || !value) && <CustomPlaceholder>{placeholder}</CustomPlaceholder>}
         <StyledSelect fullWidth={fullWidth} value={value} label={label} onChange={onChange} {...rest}>
           {options?.length > 0 ? (
             options?.map(opt => (
