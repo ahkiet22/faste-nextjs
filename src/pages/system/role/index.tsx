@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { PERMISSIONS } from 'src/configs/permission'
 
 // pages
-import RoleListPage from 'src/views/layouts/pages/system/role/RoleList'
+import RoleListPage from 'src/views/pages/system/role/RoleList'
 
 type TProps = {}
 

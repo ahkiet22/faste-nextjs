@@ -30,9 +30,9 @@ import { toFullName } from 'src/utils'
 // ** Translate
 import { useTranslation } from 'react-i18next'
 
-// import PersonAdd from '@mui/icons-material/PersonAdd';
-// import Settings from '@mui/icons-material/Settings';
-// import Logout from '@mui/icons-material/Logout';
+// ** Redux
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/stores'
 
 type TProps = {}
 
@@ -73,7 +73,8 @@ const UserDropdown = (props: TProps) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
-  const { user, logout } = useAuth()
+  const { user, logout, setUser } = useAuth()
+  const { userData } = useSelector((state: RootState) => state.auth)
   const permissionUser = user?.role?.permissions || []
 
   const open = Boolean(anchorEl)
@@ -100,6 +101,13 @@ const UserDropdown = (props: TProps) => {
     router.push(ROUTE_CONFIG.DASHBOARD)
     handleClose()
   }
+
+  React.useEffect(() => {
+    if (userData) {
+      setUser({ ...userData })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData])
 
   return (
     <React.Fragment>
@@ -171,9 +179,9 @@ const UserDropdown = (props: TProps) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mx: 2, px: 2, pb: 2 }}>
           <StyledBadge overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant='dot'>
             <Avatar sx={{ width: 32, height: 32 }}>
-              {user?.avatar ? (
+              {userData?.avatar ? (
                 <Image
-                  src={user?.avatar || ''}
+                  src={userData?.avatar || ''}
                   width={0}
                   height={0}
                   alt='avatar'

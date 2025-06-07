@@ -21,6 +21,7 @@ import Icon from 'src/components/Icon'
 import IconifyIcon from 'src/components/Icon'
 import WrapperFileUpload from 'src/components/wrapper-file-upload/idnex'
 import Spinner from 'src/components/spinner'
+import CustomSelect from 'src/components/custom-select'
 
 // ** form
 import { Controller, useForm } from 'react-hook-form'
@@ -32,6 +33,7 @@ import { EMAIL_REG } from 'src/configs/regex'
 
 // ** Services
 import { getAuthMe } from 'src/services/auth'
+import { getAllRoles } from 'src/services/role'
 
 // ** Utils
 import { ConvertBase64, separationFullName, toFullName } from 'src/utils'
@@ -44,8 +46,6 @@ import { resetInitialState } from 'src/stores/auth'
 
 // ** Other
 import toast from 'react-hot-toast'
-import CustomSelect from 'src/components/custom-select'
-import { getAllRoles } from 'src/services/role'
 
 type TProps = {}
 
@@ -80,7 +80,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const schema = yup.object().shape({
     email: yup.string().required(t('Required_field')).matches(EMAIL_REG, 'The field is must email type'),
     fullName: yup.string().notRequired(),
-    phoneNumber: yup.string().required(t('Required_field')).min(8, 'The phone number is min 8 number'),
+    phoneNumber: yup.string().required(t('Required_field')).min(9, 'The phone number is min 9 number'),
     role: isDisabledRole ? yup.string().notRequired() : yup.string().required(t('Required_field')),
     city: yup.string().notRequired(),
     address: yup.string().notRequired()
@@ -107,8 +107,6 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(schema)
   })
 
-  console.log('watch', watch)
-
   // fetch api
   const fetchGetAuthMe = async () => {
     setLoading(true)
@@ -117,16 +115,16 @@ const MyProfilePage: NextPage<TProps> = () => {
         setLoading(false)
         const data = response?.data
         if (data) {
-          setIsDisabledRole(!data?.role?.permissions?.lenght())
-          setAvatar(data?.avatar)
+          setIsDisabledRole(!data?.role?.permissions?.length)
           reset({
             email: data?.email,
             address: data?.address,
             city: data?.city,
             phoneNumber: data?.phoneNumber,
             role: data?.role._id,
-            fullName: toFullName(data?.firstName, data?.middleName, data?.lastName, i18n.language)
+            fullName: toFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
           })
+          setAvatar(data?.avatar)
         }
       })
       .catch(() => {
@@ -321,7 +319,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                               display: 'block',
                               color: errors?.role
                                 ? theme.palette.error.main
-                                : `rbga(${theme.palette.customColors.main}, 0.42)`
+                                : `rgba(${theme.palette.customColors.main}, 0.42)`
                             }}
                           >
                             {t('Role')}
@@ -335,12 +333,12 @@ const MyProfilePage: NextPage<TProps> = () => {
                             onBlur={onBlur}
                             placeholder={t('enter_your_role')}
                           />
-                          {!errors?.role?.message && (
+                          {errors?.role?.message && (
                             <FormHelperText
                               sx={{
                                 color: errors?.role
                                   ? theme.palette.error.main
-                                  : `rbga(${theme.palette.customColors.main}, 0.42)`
+                                  : `rgba(${theme.palette.customColors.main}, 0.42)`
                               }}
                             >
                               {errors?.role?.message}
@@ -416,7 +414,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                             display: 'block',
                             color: errors?.city
                               ? theme.palette.error.main
-                              : `rbga(${theme.palette.customColors.main}, 0.42)`
+                              : `rgba(${theme.palette.customColors.main}, 0.42)`
                           }}
                         >
                           {t('City')}
@@ -435,7 +433,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                             sx={{
                               color: errors?.city
                                 ? theme.palette.error.main
-                                : `rbga(${theme.palette.customColors.main}, 0.42)`
+                                : `rgba(${theme.palette.customColors.main}, 0.42)`
                             }}
                           >
                             {errors?.city?.message}
