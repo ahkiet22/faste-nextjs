@@ -97,5 +97,14 @@
   "Phone_number": "Số điện thoại",
   "Status": "Trạng thái",
   "User_type": "Loại người dùng",
-  "Blocking": "Tạm khóa"
+  "Blocking": "Tạm khóa",
+  "Title_delete_city": "Xác nhận xóa thành phố",
+  "Confirm_delete_city": "Bạn có chắc chắn muốn xóa thành phố này? Hành động này không thể hoàn tác.",
+  "Title_delete_multiple_city": "Xác nhận xóa nhiều thành phố",
+  "Confirm_delete_multiple_city": "Bạn có chắc chắn muốn xóa các thành phố đã chọn? Hành động này không thể hoàn tác.",
+  "Created_date": "Ngày tạo",
+  "Edit_city": "Chỉnh sửa thành phố",
+  "Create_city": "Tạo mới thành phố",
+  "Name_city": "Tên thành phố",
+  "Enter_name_city": "Nhập tên thành phố"
 }

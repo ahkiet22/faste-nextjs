@@ -454,6 +454,7 @@ const UserListPage: NextPage<TProps> = () => {
           alignItems: 'center',
           padding: '20px',
           width: '100%',
+          height: '100%',
           borderRadius: '15px'
         }}
       >
@@ -461,7 +462,6 @@ const UserListPage: NextPage<TProps> = () => {
           container
           sx={{
             height: '100%',
-            padding: '20px',
             width: '100%'
           }}
         >
