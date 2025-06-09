@@ -11,7 +11,12 @@ export const API_ENDPOINT = {
   USER: {
     INDEX: `${BASE_URL}/users`
   },
-  CITY: {
-    INDEX: `${BASE_URL}/city`
+  SETTING: {
+    CITY: {
+      INDEX: `${BASE_URL}/city`
+    },
+    DELIVERY_TYPE: {
+      INDEX: `${BASE_URL}/delivery-type`
+    }
   }
 }

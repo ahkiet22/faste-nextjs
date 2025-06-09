@@ -15,7 +15,6 @@ export type TParamsEditCity = {
 }
 
 export type TParamsDeleteCity = {
-  name: string
   id: string
 }
 

@@ -1,10 +1,13 @@
 // ** Import Next
 import { NextPage } from 'next'
 
+// ** pages
+import DeliveryTypeListPage from 'src/views/pages/settings/delivery-type/DeliveryTypeList'
+
 type TProps = {}
 
 const Index: NextPage<TProps> = () => {
-  return <h1>User</h1>
+  return <DeliveryTypeListPage />
 }
 
 export default Index

@@ -35,7 +35,6 @@ export type TParamsEditUser = {
 }
 
 export type TParamsDeleteUser = {
-  name: string
   id: string
 }
 
