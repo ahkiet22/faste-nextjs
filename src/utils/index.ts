@@ -69,3 +69,16 @@ export const getAllValueOfObject = (obj: any, arrExlude?: string[]) => {
     return []
   }
 }
+
+export const formatFilter = (filter: any) => {
+  const result: Record<string, string> = {}
+  Object.keys(filter)?.forEach((key: string) => {
+    if (Array.isArray(filter[key]) && filter[key]?.length > 0) {
+      result[key] = filter[key].join('|')
+    } else if (filter[key]) {
+      result[key] = filter[key]
+    }
+  })
+
+  return result
+}

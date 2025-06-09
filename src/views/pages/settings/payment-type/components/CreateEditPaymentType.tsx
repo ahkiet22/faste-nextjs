@@ -15,6 +15,7 @@ import Icon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
 import Spinner from 'src/components/spinner'
 import CustomTextField from 'src/components/text-field'
+import CustomSelect from 'src/components/custom-select'
 
 // ** Services
 import { getDetailsPaymentType } from 'src/services/payment-type'
@@ -23,7 +24,6 @@ import { getDetailsPaymentType } from 'src/services/payment-type'
 import { AppDispatch } from 'src/stores'
 import { useDispatch } from 'react-redux'
 import { createPaymentTypeAsync, updatePaymentTypeAsync } from 'src/stores/payment-type/actions'
-import CustomSelect from 'src/components/custom-select'
 import { PAYMENT_TYPES } from 'src/configs/payment'
 
 interface TCreateEditPaymentType {

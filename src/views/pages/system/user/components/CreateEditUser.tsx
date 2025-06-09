@@ -30,17 +30,19 @@ import { createUsersAsync, updateUsersAsync } from 'src/stores/user/actions'
 
 // ** Service
 import { getDetailUser } from 'src/services/user'
+import { getAllRoles } from 'src/services/role'
+import { getAllCities } from 'src/services/city'
 
 // ** Component
 import Icon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
 import CustomTextField from 'src/components/text-field'
 import Spinner from 'src/components/spinner'
-import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
-import { ConvertBase64, separationFullName, toFullName } from 'src/utils'
 import WrapperFileUpload from 'src/components/wrapper-file-upload/idnex'
 import CustomSelect from 'src/components/custom-select'
-import { getAllRoles } from 'src/services/role'
+
+import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
+import { ConvertBase64, separationFullName, toFullName } from 'src/utils'
 
 interface TCreateEditUser {
   open: boolean
@@ -68,6 +70,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   const [avatar, setAvatar] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [showPassword, setShowPassword] = useState(false)
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
   // ** props
   const { open, onClose, idUser } = props
@@ -199,9 +202,27 @@ const CreateEditUser = (props: TCreateEditUser) => {
       })
   }
 
+  const fetchAllCities = async () => {
+    setLoading(true)
+    await getAllCities({ params: { limit: -1, page: -1 } })
+      .then(res => {
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
+        }
+        setLoading(false)
+      })
+      .catch(e => {
+        setLoading(false)
+      })
+  }
+
   useEffect(() => {
-    fetchAllRoles()
-  }, [])
+    if (open) {
+      fetchAllRoles()
+      fetchAllCities()
+    }
+  }, [open])
 
   useEffect(() => {
     if (!open) {
@@ -534,7 +555,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                 fullWidth
                                 onChange={onChange}
                                 value={value}
-                                options={[]}
+                                options={optionCities}
                                 error={Boolean(errors?.city)}
                                 onBlur={onBlur}
                                 placeholder={t('enter_your_city')}

@@ -28,6 +28,8 @@ import Spinner from 'src/components/spinner'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CustomPagination from 'src/components/custom-pagination'
 import TableHeader from 'src/components/table-header'
+import GridCreate from 'src/components/gird-create'
+import CreateEditPaymentType from './components/CreateEditPaymentType'
 
 // ** Others
 import toast from 'react-hot-toast'
@@ -39,12 +41,10 @@ import { usePermission } from 'src/hooks/usePermission'
 
 // ** Config
 import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
+import { PAYMENT_TYPES } from 'src/configs/payment'
 
 // ** Utils
 import { formatDate } from 'src/utils/date'
-import GridCreate from 'src/components/gird-create'
-import { PAYMENT_TYPES } from 'src/configs/payment'
-import CreateEditPaymentType from './components/CreateEditPaymentType'
 
 type TProps = {}
 
