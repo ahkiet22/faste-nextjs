@@ -46,6 +46,7 @@ import { resetInitialState } from 'src/stores/auth'
 
 // ** Other
 import toast from 'react-hot-toast'
+import { getAllCities } from 'src/services/city'
 
 type TProps = {}
 
@@ -63,6 +64,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [isDisabledRole, setIsDisabledRole] = useState(false)
 
   // ** theme
@@ -147,6 +149,21 @@ const MyProfilePage: NextPage<TProps> = () => {
       })
   }
 
+  const fetchAllCities = async () => {
+    setLoading(true)
+    await getAllCities({ params: { limit: -1, page: -1 } })
+      .then(res => {
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
+        }
+        setLoading(false)
+      })
+      .catch(e => {
+        setLoading(false)
+      })
+  }
+
   useEffect(() => {
     fetchGetAuthMe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,6 +186,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   useEffect(() => {
     fetchAllRoles()
+    fetchAllCities()
   }, [])
 
   const onSubmit = (data: any) => {
@@ -423,7 +441,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           fullWidth
                           onChange={onChange}
                           value={value}
-                          options={[]}
+                          options={optionCities}
                           error={Boolean(errors?.city)}
                           onBlur={onBlur}
                           placeholder={t('enter_your_city')}

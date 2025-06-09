@@ -28,6 +28,8 @@ import Spinner from 'src/components/spinner'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CustomPagination from 'src/components/custom-pagination'
 import TableHeader from 'src/components/table-header'
+import CreateEditDeliveryType from './components/CreateEditDeliveryType'
+import GridCreate from 'src/components/gird-create'
 
 // ** Others
 import toast from 'react-hot-toast'
@@ -42,8 +44,6 @@ import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 
 // ** Utils
 import { formatDate } from 'src/utils/date'
-import CreateEditDeliveryType from './components/CreateEditDeliveryType'
-import GridCreate from 'src/components/gird-create'
 
 type TProps = {}
 

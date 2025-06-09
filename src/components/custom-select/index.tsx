@@ -53,7 +53,7 @@ const CustomSelect = (props: TCustomSelect) => {
               </StyledMenuItem>
             ))
           ) : (
-            <StyledMenuItem>{t('no_data')}</StyledMenuItem>
+            <StyledMenuItem>{t('No_data')}</StyledMenuItem>
           )}
         </StyledSelect>
       </Box>

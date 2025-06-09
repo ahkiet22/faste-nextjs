@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 import { PERMISSIONS } from 'src/configs/permission'
 import { OBJECT_TYPE_ERROR_USER } from 'src/configs/error'
+import { OBJECT_STATUS_USER, OBJECT_TYPE_USER } from 'src/configs/user'
 
 // ** Components
 import CustomDataGrid from 'src/components/custom-data-grid'
@@ -36,17 +37,19 @@ import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CreateEditUser from './components/CreateEditUser'
 import TableHeader from 'src/components/table-header'
 import Icon from 'src/components/Icon'
+import CustomSelect from 'src/components/custom-select'
 
 // ** Hooks
 import { usePermission } from 'src/hooks/usePermission'
 
+// ** Services
+import { getAllRoles } from 'src/services/role'
+import { getAllCities } from 'src/services/city'
+
 // ** Others
 import toast from 'react-hot-toast'
-import { toFullName } from 'src/utils'
+import { formatFilter, toFullName } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import CustomSelect from 'src/components/custom-select'
-import { getAllRoles } from 'src/services/role'
-import { OBJECT_STATUS_USER, OBJECT_TYPE_USER } from 'src/configs/user'
 
 type TProps = {}
 
@@ -89,6 +92,8 @@ const UserListPage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [roleSelected, setRoleSelected] = useState<string[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
+  const [citySelected, setCitySelected] = useState<string[]>([])
   const [statusSelected, setStatusSelected] = useState<string[]>([])
   const [typeSelected, setTypeSelected] = useState<string[]>([])
 
@@ -139,7 +144,7 @@ const UserListPage: NextPage<TProps> = () => {
 
   // fetch api
   const handleGetListUsers = () => {
-    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...filterBy } }
+    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) } }
     dispatch(getAllUsersAsync(query))
   }
 
@@ -150,6 +155,21 @@ const UserListPage: NextPage<TProps> = () => {
         const data = res?.data.roles
         if (data) {
           setOptionRoles(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
+        }
+        setLoading(false)
+      })
+      .catch(e => {
+        setLoading(false)
+      })
+  }
+
+  const fetchAllCities = async () => {
+    setLoading(true)
+    await getAllCities({ params: { limit: -1, page: -1 } })
+      .then(res => {
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
         }
         setLoading(false)
       })
@@ -363,11 +383,12 @@ const UserListPage: NextPage<TProps> = () => {
   }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   useEffect(() => {
-    setFilterBy({ roleId: roleSelected, status: statusSelected, userType: typeSelected })
-  }, [roleSelected, statusSelected, typeSelected])
+    setFilterBy({ roleId: roleSelected, status: statusSelected, cityId: citySelected, userType: typeSelected })
+  }, [roleSelected, statusSelected, citySelected, typeSelected])
 
   useEffect(() => {
     fetchAllRoles()
+    fetchAllCities()
   }, [])
 
   useEffect(() => {
@@ -492,6 +513,18 @@ const UserListPage: NextPage<TProps> = () => {
                 <CustomSelect
                   fullWidth
                   onChange={e => {
+                    setCitySelected(e.target.value as string[])
+                  }}
+                  multiple
+                  options={optionCities}
+                  value={citySelected}
+                  placeholder={t('City')}
+                />
+              </Box>
+              <Box sx={{ width: '200px' }}>
+                <CustomSelect
+                  fullWidth
+                  onChange={e => {
                     setStatusSelected(e.target.value as string[])
                   }}
                   multiple
@@ -500,6 +533,7 @@ const UserListPage: NextPage<TProps> = () => {
                   placeholder={t('Status')}
                 />
               </Box>
+
               <Box sx={{ width: '200px' }}>
                 <CustomSelect
                   fullWidth
