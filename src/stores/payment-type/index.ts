@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import {
-  createDeliveryTypeAsync,
-  deleteDeliveryTypeAsync,
-  deleteMultipleDeliveryTypeAsync,
-  getAllDeliveryTypesAsync,
+  createPaymentTypeAsync,
+  deletePaymentTypeAsync,
+  deleteMultiplePaymentTypeAsync,
+  getAllPaymentTypesAsync,
   serviceName,
-  updateDeliveryTypeAsync
+  updatePaymentTypeAsync
 } from './actions'
 
 const initialState = {
@@ -26,13 +26,13 @@ const initialState = {
   isSuccessMultipleDelete: false,
   isErrorMultipleDelete: false,
   messageErrorMultipleDelete: '',
-  deliveryTypes: {
+  paymentTypes: {
     data: [],
     total: 0
   }
 }
 
-export const deliveryTypeSlice = createSlice({
+export const paymentTypeSlice = createSlice({
   name: serviceName,
   initialState,
   reducers: {
@@ -54,26 +54,26 @@ export const deliveryTypeSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    // ** get all delivery-types
-    builder.addCase(getAllDeliveryTypesAsync.pending, (state, action) => {
+    // ** get all payment-types
+    builder.addCase(getAllPaymentTypesAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(getAllDeliveryTypesAsync.fulfilled, (state, action) => {
+    builder.addCase(getAllPaymentTypesAsync.fulfilled, (state, action) => {
       state.isLoading = false
-      state.deliveryTypes.data = action.payload?.data?.deliveryTypes || []
-      state.deliveryTypes.total = action.payload?.data?.totalCount
+      state.paymentTypes.data = action.payload?.data?.paymentTypes || []
+      state.paymentTypes.total = action.payload?.data?.totalCount
     })
-    builder.addCase(getAllDeliveryTypesAsync.rejected, (state, action) => {
+    builder.addCase(getAllPaymentTypesAsync.rejected, (state, action) => {
       state.isLoading = false
-      state.deliveryTypes.data = []
-      state.deliveryTypes.total = 0
+      state.paymentTypes.data = []
+      state.paymentTypes.total = 0
     })
 
-    // ** create delivery-type
-    builder.addCase(createDeliveryTypeAsync.pending, (state, action) => {
+    // ** create payment-type
+    builder.addCase(createPaymentTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(createDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(createPaymentTypeAsync.fulfilled, (state, action) => {
       // console.log('ACtion role', action)
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
@@ -82,11 +82,11 @@ export const deliveryTypeSlice = createSlice({
       state.typeError = action.payload?.typeError
     })
 
-    // ** update delivery-type
-    builder.addCase(updateDeliveryTypeAsync.pending, (state, action) => {
+    // ** update payment-type
+    builder.addCase(updatePaymentTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(updateDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(updatePaymentTypeAsync.fulfilled, (state, action) => {
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
       state.isErrorCreateEdit = !action.payload?.data?._id
@@ -94,11 +94,11 @@ export const deliveryTypeSlice = createSlice({
       state.typeError = action.payload?.typeError
     })
 
-    // ** delete delivery-type
-    builder.addCase(deleteDeliveryTypeAsync.pending, (state, action) => {
+    // ** delete payment-type
+    builder.addCase(deletePaymentTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(deleteDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(deletePaymentTypeAsync.fulfilled, (state, action) => {
       state.isLoading = false
       state.isSuccessDelete = !!action.payload?.data?._id
       state.isErrorDelete = !action.payload?.data?._id
@@ -106,11 +106,11 @@ export const deliveryTypeSlice = createSlice({
       state.typeError = action.payload?.typeError
     })
 
-    // ** delete multiple delivery-type
-    builder.addCase(deleteMultipleDeliveryTypeAsync.pending, (state, action) => {
+    // ** delete multiple payment-type
+    builder.addCase(deleteMultiplePaymentTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(deleteMultipleDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(deleteMultiplePaymentTypeAsync.fulfilled, (state, action) => {
       state.isLoading = false
       state.isSuccessMultipleDelete = !!action.payload?.data
       state.isErrorMultipleDelete = !action.payload?.data
@@ -120,6 +120,6 @@ export const deliveryTypeSlice = createSlice({
   }
 })
 
-export const { resetInitialState } = deliveryTypeSlice.actions
+export const { resetInitialState } = paymentTypeSlice.actions
 
-export default deliveryTypeSlice.reducer
+export default paymentTypeSlice.reducer
