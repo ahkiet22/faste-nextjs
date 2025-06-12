@@ -23,6 +23,7 @@ import { getDetailsDeliveryType } from 'src/services/delivery-type'
 import { AppDispatch } from 'src/stores'
 import { useDispatch } from 'react-redux'
 import { createDeliveryTypeAsync, updateDeliveryTypeAsync } from 'src/stores/delivery-type/actions'
+import { formatNumber } from 'src/utils'
 
 interface TCreateEditDeliveryType {
   open: boolean
@@ -175,26 +176,30 @@ const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
                 <Grid item md={12} xs={12}>
                   <Controller
                     control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('Price_delivery_type')}
-                        onChange={e => {
-                          const numValue = e.target.value.replace(/\D/g, '')
-                          onChange(numValue)
-                        }}
-                        inputProps={{
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*'
-                        }}
-                        onBlur={onBlur}
-                        value={value}
-                        placeholder={t('Enter_price_delivery_type')}
-                        error={Boolean(errors?.price)}
-                        helperText={errors?.price?.message}
-                      />
-                    )}
+                    render={({ field: { onChange, onBlur, value } }) => {
+                      const displayValue = formatNumber(value)
+
+                      return (
+                        <CustomTextField
+                          required
+                          fullWidth
+                          label={t('Price_delivery_type')}
+                          onChange={e => {
+                            const numValue = e.target.value.replace(/\D/g, '')
+                            onChange(numValue)
+                          }}
+                          inputProps={{
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*'
+                          }}
+                          onBlur={onBlur}
+                          value={displayValue}
+                          placeholder={t('Enter_price_delivery_type')}
+                          error={Boolean(errors?.price)}
+                          helperText={errors?.price?.message}
+                        />
+                      )
+                    }}
                     name='price'
                   />
                 </Grid>

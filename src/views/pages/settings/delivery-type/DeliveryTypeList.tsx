@@ -44,12 +44,13 @@ import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 
 // ** Utils
 import { formatDate } from 'src/utils/date'
+import { formatNumberToLocal } from 'src/utils'
 
 type TProps = {}
 
 const DeliveryTypeListPage: NextPage<TProps> = () => {
   // ** Translate
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   // State
 
@@ -178,7 +179,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
       renderCell: params => {
         const { row } = params
 
-        return <Typography>{row?.price}</Typography>
+        return <Typography>{formatNumberToLocal(row?.price, { language: i18n.language as 'vi' | 'en' })}</Typography>
       }
     },
     {

@@ -1,3 +1,10 @@
+type TLanguage = 'vi' | 'en'
+interface IFormatCurrencyOptions {
+  language?: TLanguage // 'vi' | 'en'
+  exchangeRate?: number // (1 USD = 24,500 VND)
+  minimumFractionDigits?: number
+}
+
 export const toFullName = (lastName: string, middleName: string, firstName: string, language: string) => {
   if (language === 'vi') {
     return [lastName, middleName, firstName].filter(Boolean).join(' ')
@@ -98,4 +105,60 @@ export const stringToSlug = (str: string) => {
     .replace(/-+/g, '-')
 
   return str
+}
+
+export const formatNumberToLocal = (
+  value: number | string,
+  { language = 'vi', exchangeRate = 24500, minimumFractionDigits = 0 }: IFormatCurrencyOptions = {}
+): string => {
+  const amount = Number(value)
+  if (isNaN(amount)) return String(value)
+
+  const locale = language === 'en' ? 'en-US' : 'vi-VN'
+  const currency = language === 'en' ? 'USD' : 'VND'
+
+  const finalAmount = language === 'en' ? amount / exchangeRate : amount
+
+  return finalAmount.toLocaleString(locale, {
+    style: 'currency',
+    currency,
+    currencyDisplay: 'code',
+    useGrouping: true,
+    minimumFractionDigits
+  })
+}
+
+export const formatNumber = (value: string | number) => {
+  if (!value) return ''
+
+  // C1
+  const convertValuetoArray = Array.from(String(value))
+
+  let insertPosition = convertValuetoArray.length - 3
+
+  while (insertPosition > 0) {
+    convertValuetoArray.splice(insertPosition, 0, '.')
+    insertPosition -= 3
+  }
+
+  const result = convertValuetoArray.join('')
+
+  return result
+
+  // C2
+  // return new Intl.NumberFormat('vi-VN').format(Number(value))
+}
+
+export const convertHTMLToDraft = async (html: string) => {
+  // Dynamically import required libraries
+  const { EditorState, ContentState } = await import('draft-js')
+  const { default: htmlToDraft } = await import('html-to-draftjs')
+
+  if (!html) return EditorState.createEmpty()
+
+  const blocksFromHtml = htmlToDraft(html)
+  const { contentBlocks, entityMap } = blocksFromHtml
+  const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap)
+
+  return EditorState.createWithContent(contentState)
 }
