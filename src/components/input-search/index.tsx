@@ -8,10 +8,12 @@ import { InputBase } from '@mui/material'
 // ** Component
 import Icon from '../Icon'
 import useDebounce from 'src/hooks/useDebounce'
+import { useTranslation } from 'react-i18next'
 
 interface TInputSearch {
   value: string
   onChange: (vale: string) => void
+  placeholder?: string
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -50,8 +52,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const InputSearch = (props: TInputSearch) => {
+  // translate
+  const { t } = useTranslation()
+
   // ** props
-  const { value, onChange } = props
+  const { value, onChange, placeholder = t('Search') } = props
 
   // ** state
   const [search, setSearch] = React.useState(value)
@@ -69,7 +74,7 @@ const InputSearch = (props: TInputSearch) => {
       </SearchIconWrapper>
       <StyledInputBase
         value={search}
-        placeholder='Search…'
+        placeholder={placeholder}
         inputProps={{ 'aria-label': 'search' }}
         onChange={e => {
           setSearch(e.target.value)

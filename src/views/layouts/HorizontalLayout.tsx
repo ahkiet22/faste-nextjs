@@ -4,6 +4,7 @@ import * as React from 'react'
 // ** Next
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
+import Link from 'next/link'
 
 // ** Mui
 import { styled } from '@mui/material/styles'
@@ -87,8 +88,14 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
             <IconifyIcon icon='ic:round-menu' />
           </IconButton>
         )}
-        <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-          Dashboard
+        <Typography
+          component='h1'
+          variant='h6'
+          color='primary'
+          noWrap
+          sx={{ flexGrow: 1, fontWeight: 600, cursor: 'pointer' }}
+        >
+          <Link href={ROUTE_CONFIG.HOME}>FASTE</Link>
         </Typography>
         <LanguageDropdown />
         <ModeToogle />

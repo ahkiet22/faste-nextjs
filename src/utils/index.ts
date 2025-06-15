@@ -122,7 +122,7 @@ export const formatNumberToLocal = (
   return finalAmount.toLocaleString(locale, {
     style: 'currency',
     currency,
-    currencyDisplay: 'code',
+    currencyDisplay: 'symbol',
     useGrouping: true,
     minimumFractionDigits
   })

@@ -1,0 +1,177 @@
+// ** React
+import React, { useState } from 'react'
+
+// ** Mui
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Box,
+  Snackbar,
+  Chip,
+  IconButton,
+  Rating,
+  Divider
+} from '@mui/material'
+import { styled } from '@mui/system'
+
+// ** Component
+import Icon from 'src/components/Icon'
+
+// ** Types
+import { TProduct } from 'src/types/product'
+
+// ** Other
+import { useTranslation } from 'react-i18next'
+import { formatNumberToLocal } from 'src/utils'
+
+interface TCardProduct {
+  item: TProduct
+}
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  maxWidth: 345,
+  margin: '16px',
+  position: 'relative',
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+  }
+}))
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+  border: 0,
+  flex: 1,
+  borderRadius: 10,
+  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  color: 'white',
+  height: 40,
+  padding: '0 30px',
+  transition: 'transform 0.2s ease-in-out',
+
+  '&:hover': {
+    transform: 'scale(1.05)'
+  }
+}))
+
+const DiscountBadge = styled(Chip)({
+  position: 'absolute',
+  top: 10,
+  right: 10,
+  backgroundColor: '#ff3d47',
+  color: 'white'
+})
+
+const CardProduct = (props: TCardProduct) => {
+  // ** Props
+  const { item } = props
+
+  const [cartCount, setCartCount] = useState(0)
+  const [openSnackbar, setOpenSnackbar] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const { t, i18n } = useTranslation()
+
+  const handleAddToCart = () => {
+    setCartCount(prevCount => prevCount + 1)
+    setOpenSnackbar(true)
+  }
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false)
+  }
+
+  return (
+    <StyledCard>
+      <CardMedia
+        component='img'
+        height='280'
+        image={
+          item.image
+            ? item.image
+            : 'https://www.hydroscand.kz/media/catalog/product/placeholder/default/image-placeholder-base.png'
+        }
+        alt='Luxury Watch'
+        sx={{
+          objectFit: 'cover',
+          objectPosition: 'center'
+        }}
+      />
+      {item.discount ? <DiscountBadge label={`${item.discount}% OFF`} /> : ''}
+      <Box sx={{ padding: '0 30px' }}>
+        <Divider />
+      </Box>
+      <CardContent sx={{ padding: '25px 18px !important' }}>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Typography gutterBottom variant='h5' component='div' sx={{ fontWeight: 'bold' }}>
+            {item.name}
+          </Typography>
+          <IconButton onClick={() => setIsFavorite(!isFavorite)} aria-label='add to favorites'>
+            {isFavorite ? (
+              <Icon icon='material-symbols-light:favorite' color='#ff3d47' fontSize={30} />
+            ) : (
+              <Icon icon='material-symbols-light:favorite-outline' fontSize={30} />
+            )}
+          </IconButton>
+        </Box>
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+          {item.description}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Rating value={item.averageRating} precision={0.5} readOnly size='small' />
+          <Typography variant='body2' color='text.secondary' sx={{ ml: 1 }}>
+            ({item.totalReviews})
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
+            <Typography variant='h6' color='primary' sx={{ fontWeight: 'bold' }}>
+              {formatNumberToLocal((item.price * (100 - item.discount)) / 100, {
+                language: i18n.language as 'vi' | 'en'
+              })}
+            </Typography>
+            {item.discount ? (
+              <Typography variant='body2' color='text.secondary' sx={{ textDecoration: 'line-through' }}>
+                {formatNumberToLocal(item.price, { language: i18n.language as 'vi' | 'en' })}
+              </Typography>
+            ) : (
+              ''
+            )}
+          </Box>
+          <Typography variant='body2' color='text.secondary'>
+            {t('Sold')} {item.sold ? item.sold : 0}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+
+            // flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2
+          }}
+        >
+          <Button sx={{ width: '70px' }} fullWidth variant='outlined' onClick={handleAddToCart}>
+            <Icon icon='tdesign:cart-add' />
+          </Button>
+          <StyledButton fullWidth onClick={handleAddToCart} startIcon={<Icon icon='fluent:payment-16-regular' />}>
+            {t('Buy_now')}
+          </StyledButton>
+        </Box>
+      </CardContent>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message='Item added to cart!'
+      />
+    </StyledCard>
+  )
+}
+
+export default CardProduct
