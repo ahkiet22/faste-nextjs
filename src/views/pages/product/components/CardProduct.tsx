@@ -26,6 +26,8 @@ import { TProduct } from 'src/types/product'
 // ** Other
 import { useTranslation } from 'react-i18next'
 import { formatNumberToLocal } from 'src/utils'
+import { useRouter } from 'next/navigation'
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 interface TCardProduct {
   item: TProduct
@@ -75,6 +77,12 @@ const CardProduct = (props: TCardProduct) => {
   const [isFavorite, setIsFavorite] = useState(false)
 
   const { t, i18n } = useTranslation()
+  const router = useRouter()
+
+  // ** handle
+  const handleNavigateDetails = (slug: string) => {
+    router.push(`${ROUTE_CONFIG.PRODUCT}/${slug}`)
+  }
 
   const handleAddToCart = () => {
     setCartCount(prevCount => prevCount + 1)
@@ -97,7 +105,7 @@ const CardProduct = (props: TCardProduct) => {
         }
         alt='Luxury Watch'
         sx={{
-          objectFit: 'cover',
+          objectFit: 'contain',
           objectPosition: 'center'
         }}
       />
@@ -107,7 +115,21 @@ const CardProduct = (props: TCardProduct) => {
       </Box>
       <CardContent sx={{ padding: '25px 18px !important' }}>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Typography gutterBottom variant='h5' component='div' sx={{ fontWeight: 'bold' }}>
+          <Typography
+            onClick={() => handleNavigateDetails(item.slug)}
+            gutterBottom
+            variant='h5'
+            component='div'
+            sx={{
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden'
+            }}
+          >
             {item.name}
           </Typography>
           <IconButton onClick={() => setIsFavorite(!isFavorite)} aria-label='add to favorites'>
@@ -143,7 +165,7 @@ const CardProduct = (props: TCardProduct) => {
             )}
           </Box>
           <Typography variant='body2' color='text.secondary'>
-            {t('Sold')} {item.sold ? item.sold : 0}
+            {t('Sold_product')} {item.sold ? item.sold : 0}
           </Typography>
         </Box>
         <Box

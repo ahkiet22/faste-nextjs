@@ -214,5 +214,14 @@
   "Sort_new_create": "Mới nhất",
   "Sort_best_sold": "Bán chạy",
   "Delete_filter": "Xóa bộ lọc",
-  "Sold": "Đã bán"
+  "Sold_product": "Đã bán",
+  "Product": "Sản phẩm",
+  "Product_details": "Chi tiết sản phẩm",
+  "not_review": "Chưa có đánh giá",
+  "Still": "Còn",
+  "product_in_stock": "sản phẩm",
+  "Description_product": "Mô tả sản phẩm",
+  "Specification_product": "Thông số kỹ thuật",
+  "Review_product": "Đánh giá sản phẩm",
+  "Related_product": "Sản phẩm liên quan"
 }
