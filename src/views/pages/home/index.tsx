@@ -76,7 +76,7 @@ const HomePage: NextPage<TProps> = () => {
   })
   const [productTypeSelected, setProductTypeSelected] = useState('')
 
-  const isRendered = useRef<boolean>(false)
+  const firstRender = useRef<boolean>(false)
 
   // fetch api
   const handleGetListProducts = async () => {
@@ -177,7 +177,7 @@ const HomePage: NextPage<TProps> = () => {
   }
 
   useEffect(() => {
-    if (isRendered.current) {
+    if (firstRender.current) {
       setFilterBy({ productType: productTypeSelected, minStar: reviewSelected, productLocation: locationSelected })
     }
   }, [productTypeSelected, reviewSelected, locationSelected])
@@ -187,11 +187,11 @@ const HomePage: NextPage<TProps> = () => {
     fetchAllCities()
 
     // fetchAllCountProductStatus()
-    isRendered.current = true
+    firstRender.current = true
   }, [])
 
   useEffect(() => {
-    if (isRendered.current) {
+    if (firstRender.current) {
       handleGetListProducts()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

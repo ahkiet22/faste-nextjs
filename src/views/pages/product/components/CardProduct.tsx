@@ -1,4 +1,5 @@
 // ** React
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 // ** Mui
@@ -25,9 +26,15 @@ import { TProduct } from 'src/types/product'
 
 // ** Other
 import { useTranslation } from 'react-i18next'
-import { formatNumberToLocal } from 'src/utils'
-import { useRouter } from 'next/navigation'
+import { convertUpdateProductToCart, formatNumberToLocal } from 'src/utils'
 import { ROUTE_CONFIG } from 'src/configs/route'
+import { useAuth } from 'src/hooks/useAuth'
+
+// ** Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/stores'
+import { updateProductToCart } from 'src/stores/order-product'
+import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 
 interface TCardProduct {
   item: TProduct
@@ -78,10 +85,43 @@ const CardProduct = (props: TCardProduct) => {
 
   const { t, i18n } = useTranslation()
   const router = useRouter()
+  const { user } = useAuth()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
   // ** handle
   const handleNavigateDetails = (slug: string) => {
     router.push(`${ROUTE_CONFIG.PRODUCT}/${slug}`)
+  }
+
+  const handleAddProductToCart = (item: TProduct) => {
+    const productCart = getLocalProductCart()
+    const parseData = productCart ? JSON.parse(productCart) : {}
+
+    const listOrderItems = convertUpdateProductToCart(orderItems, {
+      name: item.name,
+      amount: 1,
+      image: item.image,
+      price: item.price,
+      discount: item.discount,
+      product: item._id,
+      slug: item.slug
+    })
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setLocalProductToCart({ ...parseData, [user?._id]: listOrderItems })
+    } else {
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    }
   }
 
   const handleAddToCart = () => {
@@ -127,7 +167,8 @@ const CardProduct = (props: TCardProduct) => {
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              minHeight: '48px'
             }}
           >
             {item.name}
@@ -178,10 +219,21 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2
           }}
         >
-          <Button sx={{ width: '70px' }} fullWidth variant='outlined' onClick={handleAddToCart}>
+          <Button
+            sx={{ width: '70px' }}
+            fullWidth
+            variant='outlined'
+            disabled={item.countInStock < 1}
+            onClick={() => handleAddProductToCart(item)}
+          >
             <Icon icon='tdesign:cart-add' />
           </Button>
-          <StyledButton fullWidth onClick={handleAddToCart} startIcon={<Icon icon='fluent:payment-16-regular' />}>
+          <StyledButton
+            fullWidth
+            onClick={handleAddToCart}
+            startIcon={<Icon icon='fluent:payment-16-regular' />}
+            disabled={item.countInStock < 1}
+          >
             {t('Buy_now')}
           </StyledButton>
         </Box>

@@ -26,6 +26,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Config
 import { ROUTE_CONFIG } from 'src/configs/route'
+import CartProduct from './components/cart-product'
 
 const drawerWidth: number = 240
 
@@ -99,6 +100,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
         </Typography>
         <LanguageDropdown />
         <ModeToogle />
+        <CartProduct />
         {user ? (
           <UserDropdown />
         ) : (

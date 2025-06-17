@@ -15,3 +15,6 @@ const Index: NextPage<TProps> = () => {
 export default Index
 
 Index.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
+
+Index.guestGuard = false
+Index.authGuard = false

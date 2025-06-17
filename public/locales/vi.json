@@ -223,5 +223,8 @@
   "Description_product": "Mô tả sản phẩm",
   "Specification_product": "Thông số kỹ thuật",
   "Review_product": "Đánh giá sản phẩm",
-  "Related_product": "Sản phẩm liên quan"
+  "Related_product": "Sản phẩm liên quan",
+  "Cart_product": "Giỏ hàng",
+  "View_cart": "Xem giỏ hàng",
+  "Newly_added_product": "Sản phẩm mới thêm"
 }
