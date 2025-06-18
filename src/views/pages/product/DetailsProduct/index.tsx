@@ -2,54 +2,41 @@
 
 // ** Next
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
-import { FormHelperText, InputLabel, Rating, Typography, useTheme } from '@mui/material'
+import { Rating, Typography, useTheme } from '@mui/material'
 
 //** Components
 import CustomTextField from 'src/components/text-field'
 import Icon from 'src/components/Icon'
-import IconifyIcon from 'src/components/Icon'
-import WrapperFileUpload from 'src/components/wrapper-file-upload/idnex'
 import Spinner from 'src/components/spinner'
-import CustomSelect from 'src/components/custom-select'
-
-// ** form
-import { Controller, useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-
-// ** Config
-import { EMAIL_REG } from 'src/configs/regex'
 
 // ** Services
-import { getAuthMe } from 'src/services/auth'
-import { getAllRoles } from 'src/services/role'
+import { getDetailsProductPublicBySlug } from 'src/services/product'
 
 // ** Utils
-import { ConvertBase64, formatFilter, formatNumberToLocal, separationFullName, toFullName } from 'src/utils'
+import { convertUpdateProductToCart, formatNumberToLocal, isExpiry } from 'src/utils'
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
-import { updateAuthMeAsync } from 'src/stores/auth/actions'
-import { resetInitialState } from 'src/stores/auth'
+import { updateProductToCart } from 'src/stores/order-product'
 
 // ** Other
-import { getDetailsProductPublicBySlug } from 'src/services/product'
-import { useRouter } from 'next/router'
 import { TProduct } from 'src/types/product'
-import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import Image from 'next/image'
+import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
+import { useAuth } from 'src/hooks/useAuth'
 
 type TProps = {}
 
@@ -57,8 +44,10 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
+  const [amountProduct, setAmountProduct] = useState(1)
   const router = useRouter()
   const { productId } = router.query
+  const { user } = useAuth()
 
   // ** theme
   const theme = useTheme()
@@ -67,6 +56,39 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const { t, i18n } = useTranslation()
 
   // ** redux
+  const dispatch: AppDispatch = useDispatch()
+  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
+
+  // ** Handle
+  const handleUpdateProductToCart = (item: TProduct) => {
+    const productCart = getLocalProductCart()
+    const parseData = productCart ? JSON.parse(productCart) : {}
+    const discountItem = isExpiry(item.discountStartDate, item.discountEndDate) ? item.discount : 0
+
+    const listOrderItems = convertUpdateProductToCart(orderItems, {
+      name: item.name,
+      amount: amountProduct,
+      image: item.image,
+      price: item.price,
+      discount: discountItem,
+      product: item._id,
+      slug: item.slug
+    })
+
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setLocalProductToCart({ ...parseData, [user?._id]: listOrderItems })
+    } else {
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    }
+  }
 
   // fetch api
   // const fetchGetAllListReviewByProduct = async (id: string) => {
@@ -106,6 +128,10 @@ const DetailsProductPage: NextPage<TProps> = () => {
         setLoading(false)
       })
   }
+
+  const memoIsExpiry = useMemo(() => {
+    return isExpiry(dataProduct.discountStartDate, dataProduct.discountEndDate)
+  }, [dataProduct])
 
   useEffect(() => {
     if (productId) {
@@ -239,7 +265,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     borderRadius: '8px'
                   }}
                 >
-                  {dataProduct.discount > 0 && (
+                  {dataProduct.discount > 0 && memoIsExpiry && (
                     <Typography
                       variant='body2'
                       color='text.secondary'
@@ -261,7 +287,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       fontSize: '24px'
                     }}
                   >
-                    {dataProduct.discount > 0 ? (
+                    {dataProduct.discount > 0 && memoIsExpiry ? (
                       <>
                         {formatNumberToLocal((dataProduct.price * (100 - dataProduct.discount)) / 100, {
                           language: i18n.language as 'vi' | 'en'
@@ -275,7 +301,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       </>
                     )}{' '}
                   </Typography>
-                  {dataProduct.discount > 0 && (
+                  {dataProduct.discount > 0 && memoIsExpiry && (
                     <Box
                       sx={{
                         backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
@@ -310,7 +336,11 @@ const DetailsProductPage: NextPage<TProps> = () => {
                 >
                   <Box sx={{ flexBasis: '10%', mt: 8, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <IconButton
-                      onClick={() => {}}
+                      onClick={() => {
+                        if (amountProduct > 1) {
+                          setAmountProduct(prev => prev - 1)
+                        }
+                      }}
                       sx={{
                         backgroundColor: `${theme.palette.primary.main} !important`,
                         color: `${theme.palette.common.white}`
@@ -320,8 +350,10 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </IconButton>
                     <CustomTextField
                       type='number'
-                      value={1}
-                      onChange={() => {}}
+                      value={amountProduct}
+                      onChange={e => {
+                        setAmountProduct(+e.target.value)
+                      }}
                       inputProps={{
                         inputMode: 'numeric',
                         min: 1,
@@ -352,7 +384,11 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       }}
                     />
                     <IconButton
-                      onClick={() => {}}
+                      onClick={() => {
+                        if (amountProduct < dataProduct.countInStock) {
+                          setAmountProduct(prev => prev + 1)
+                        }
+                      }}
                       sx={{
                         backgroundColor: `${theme.palette.primary.main} !important`,
                         color: `${theme.palette.common.white}`
@@ -403,7 +439,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   }}
                 >
                   <Button
-                    onClick={() => {}}
+                    onClick={() => handleUpdateProductToCart(dataProduct)}
                     variant='outlined'
                     sx={{
                       height: 40,

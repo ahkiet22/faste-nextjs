@@ -226,5 +226,12 @@
   "Related_product": "Sản phẩm liên quan",
   "Cart_product": "Giỏ hàng",
   "View_cart": "Xem giỏ hàng",
-  "Newly_added_product": "Sản phẩm mới thêm"
+  "Newly_added_product": "Sản phẩm mới thêm",
+  "Image": "Hình ảnh",
+  "Price_original": "Giá gốc",
+  "Price_discount": "Giá giảm",
+  "Count": "Số lượng",
+  "Sum_money": "Tổng tiền",
+  "Select_all": "Chọn tất cả",
+  "Delete_all": "Xóa tất cả"
 }

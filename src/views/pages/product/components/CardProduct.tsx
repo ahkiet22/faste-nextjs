@@ -1,6 +1,6 @@
 // ** React
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 // ** Mui
 import {
@@ -26,7 +26,7 @@ import { TProduct } from 'src/types/product'
 
 // ** Other
 import { useTranslation } from 'react-i18next'
-import { convertUpdateProductToCart, formatNumberToLocal } from 'src/utils'
+import { convertUpdateProductToCart, formatNumberToLocal, isExpiry } from 'src/utils'
 import { ROUTE_CONFIG } from 'src/configs/route'
 import { useAuth } from 'src/hooks/useAuth'
 
@@ -99,13 +99,14 @@ const CardProduct = (props: TCardProduct) => {
   const handleAddProductToCart = (item: TProduct) => {
     const productCart = getLocalProductCart()
     const parseData = productCart ? JSON.parse(productCart) : {}
+    const discountItem = isExpiry(item.discountStartDate, item.discountEndDate) ? item.discount : 0
 
     const listOrderItems = convertUpdateProductToCart(orderItems, {
       name: item.name,
       amount: 1,
       image: item.image,
       price: item.price,
-      discount: item.discount,
+      discount: discountItem,
       product: item._id,
       slug: item.slug
     })
@@ -133,6 +134,10 @@ const CardProduct = (props: TCardProduct) => {
     setOpenSnackbar(false)
   }
 
+  const memoIsExpiry = useMemo(() => {
+    return isExpiry(item.discountStartDate, item.discountEndDate)
+  }, [item])
+
   return (
     <StyledCard>
       <CardMedia
@@ -149,7 +154,7 @@ const CardProduct = (props: TCardProduct) => {
           objectPosition: 'center'
         }}
       />
-      {item.discount ? <DiscountBadge label={`${item.discount}% OFF`} /> : ''}
+      {item.discount > 0 && memoIsExpiry ? <DiscountBadge label={`${item.discount}% OFF`} /> : ''}
       <Box sx={{ padding: '0 30px' }}>
         <Divider />
       </Box>
@@ -197,7 +202,7 @@ const CardProduct = (props: TCardProduct) => {
                 language: i18n.language as 'vi' | 'en'
               })}
             </Typography>
-            {item.discount ? (
+            {item.discount > 0 && memoIsExpiry ? (
               <Typography variant='body2' color='text.secondary' sx={{ textDecoration: 'line-through' }}>
                 {formatNumberToLocal(item.price, { language: i18n.language as 'vi' | 'en' })}
               </Typography>
