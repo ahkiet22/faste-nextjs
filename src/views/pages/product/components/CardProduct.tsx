@@ -1,6 +1,6 @@
 // ** React
 import { useRouter } from 'next/router'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 // ** Mui
 import {
@@ -35,6 +35,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { updateProductToCart } from 'src/stores/order-product'
 import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
+import { likeProductAsync, unLikeProductAsync } from 'src/stores/product/actions'
 
 interface TCardProduct {
   item: TProduct
@@ -78,14 +79,14 @@ const DiscountBadge = styled(Chip)({
 const CardProduct = (props: TCardProduct) => {
   // ** Props
   const { item } = props
+  const { user } = useAuth()
 
   const [cartCount, setCartCount] = useState(0)
   const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(Boolean(user && item?.likedBy?.includes(user._id)))
 
   const { t, i18n } = useTranslation()
   const router = useRouter()
-  const { user } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -96,7 +97,7 @@ const CardProduct = (props: TCardProduct) => {
     router.push(`${ROUTE_CONFIG.PRODUCT}/${slug}`)
   }
 
-  const handleAddProductToCart = (item: TProduct) => {
+  const handleUpdateProductToCart = (item: TProduct) => {
     const productCart = getLocalProductCart()
     const parseData = productCart ? JSON.parse(productCart) : {}
     const discountItem = isExpiry(item.discountStartDate, item.discountEndDate) ? item.discount : 0
@@ -124,6 +125,26 @@ const CardProduct = (props: TCardProduct) => {
       })
     }
   }
+  const handleToggleLikeProduct = useCallback(
+    (id: string, isLiked: boolean) => {
+      if (user?._id) {
+        if (isLiked) {
+          dispatch(unLikeProductAsync({ productId: id }))
+
+          setIsFavorite(false)
+        } else {
+          dispatch(likeProductAsync({ productId: id }))
+          setIsFavorite(true)
+        }
+      } else {
+        router.replace({
+          pathname: '/login',
+          query: { returnUrl: router.asPath }
+        })
+      }
+    },
+    [user, dispatch, router]
+  )
 
   const handleAddToCart = () => {
     setCartCount(prevCount => prevCount + 1)
@@ -178,7 +199,10 @@ const CardProduct = (props: TCardProduct) => {
           >
             {item.name}
           </Typography>
-          <IconButton onClick={() => setIsFavorite(!isFavorite)} aria-label='add to favorites'>
+          <IconButton
+            onClick={() => handleToggleLikeProduct(item._id, Boolean(isFavorite))}
+            aria-label='add to favorites'
+          >
             {isFavorite ? (
               <Icon icon='material-symbols-light:favorite' color='#ff3d47' fontSize={30} />
             ) : (
@@ -229,7 +253,7 @@ const CardProduct = (props: TCardProduct) => {
             fullWidth
             variant='outlined'
             disabled={item.countInStock < 1}
-            onClick={() => handleAddProductToCart(item)}
+            onClick={() => handleUpdateProductToCart(item)}
           >
             <Icon icon='tdesign:cart-add' />
           </Button>

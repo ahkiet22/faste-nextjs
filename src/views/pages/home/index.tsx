@@ -29,6 +29,7 @@ import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 import { getAllProductTypes } from 'src/services/product-type'
 import { getAllProductsPublic } from 'src/services/product'
 import { getAllCities } from 'src/services/city'
+import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
 // import { getCountProductStatus } from 'src/services/report'
 
@@ -38,6 +39,12 @@ import { formatFilter } from 'src/utils'
 // ** Others
 import CardProduct from 'src/views/pages/product/components/CardProduct'
 import { TProduct } from 'src/types/product'
+
+// ** Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/stores'
+import { resetInitialState } from 'src/stores/product'
+import toast from 'react-hot-toast'
 
 // import CardCountProduct from 'src/views/pages/manage-product/product/component/CardCountProduct'
 
@@ -75,6 +82,10 @@ const HomePage: NextPage<TProps> = () => {
     total: 0
   })
   const [productTypeSelected, setProductTypeSelected] = useState('')
+
+  // ** Redux
+  const { isSuccessLike, messageErrorLike, isErrorLike, typeError } = useSelector((state: RootState) => state.product)
+  const dispatch: AppDispatch = useDispatch()
 
   const firstRender = useRef<boolean>(false)
 
@@ -196,6 +207,25 @@ const HomePage: NextPage<TProps> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, searchBy, page, pageSize, filterBy])
+
+  useEffect(() => {
+    if (firstRender.current) {
+      if (isSuccessLike) {
+        toast.success(t('Like_product_success'))
+
+        dispatch(resetInitialState())
+      } else if (isErrorLike && messageErrorLike && typeError) {
+        const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
+        if (errorConfig) {
+          toast.error(t(errorConfig))
+        } else {
+          toast.error(t('Like_product_error'))
+        }
+        dispatch(resetInitialState())
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessLike, isErrorLike, messageErrorLike, typeError])
 
   return (
     <>
