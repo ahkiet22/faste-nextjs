@@ -22,7 +22,7 @@ import Icon from 'src/components/Icon'
 import Spinner from 'src/components/spinner'
 
 // ** Services
-import { getDetailsProductPublicBySlug } from 'src/services/product'
+import { getDetailsProductPublicBySlug, getListRelatedProductBySlug } from 'src/services/product'
 
 // ** Utils
 import { convertUpdateProductToCart, formatNumberToLocal, isExpiry } from 'src/utils'
@@ -37,6 +37,8 @@ import { updateProductToCart } from 'src/stores/order-product'
 import { TProduct } from 'src/types/product'
 import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 import { useAuth } from 'src/hooks/useAuth'
+import NoData from 'src/components/no-data'
+import CardRelatedProduct from '../components/CardRelatedProduct'
 
 type TProps = {}
 
@@ -44,6 +46,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
+  const [listRelatedProduct, setListRelatedProduct] = useState<TProduct[]>([])
   const [amountProduct, setAmountProduct] = useState(1)
   const router = useRouter()
   const { productId } = router.query
@@ -129,6 +132,21 @@ const DetailsProductPage: NextPage<TProps> = () => {
       })
   }
 
+  const fetchListRelatedProduct = async (slug: string) => {
+    setLoading(true)
+    await getListRelatedProductBySlug({ params: { slug: slug } })
+      .then(async response => {
+        setLoading(false)
+        const data = response?.data
+        if (data) {
+          setListRelatedProduct(data.products)
+        }
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
+
   const memoIsExpiry = useMemo(() => {
     return isExpiry(dataProduct.discountStartDate, dataProduct.discountEndDate)
   }, [dataProduct])
@@ -136,6 +154,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (productId) {
       fetchGetDetailsProduct(String(productId))
+      fetchListRelatedProduct(String(productId))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId])
@@ -604,6 +623,61 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </Box>
                   </Box>
                 </Box> */}
+              </Box>
+            </Grid>
+            <Grid container item md={3} xs={12} mt={{ md: 0, xs: 5 }}>
+              <Box
+                sx={{
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: theme.palette.background.paper,
+                  borderRadius: '15px',
+                  py: 5,
+                  px: 4
+                }}
+                marginLeft={{ md: 5, xs: 0 }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    mt: 2,
+                    backgroundColor: theme.palette.customColors.bodyBg,
+                    padding: '8px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <Typography
+                    variant='h6'
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                      fontWeight: 'bold',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {t('Product_same')}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    mt: 4
+                  }}
+                >
+                  <>
+                    {listRelatedProduct.length > 0 ? (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        {listRelatedProduct.map(item => {
+                          return <CardRelatedProduct key={item._id} item={item} />
+                        })}
+                      </Box>
+                    ) : (
+                      <Box sx={{ width: '100%', mt: 10 }}>
+                        <NoData widthImage='60px' heightImage='60px' textNodata={t('No_product')} />
+                      </Box>
+                    )}
+                  </>
+                </Box>
               </Box>
             </Grid>
           </Grid>
