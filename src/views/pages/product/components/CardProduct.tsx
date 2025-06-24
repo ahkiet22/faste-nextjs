@@ -210,13 +210,13 @@ const CardProduct = (props: TCardProduct) => {
             )}
           </IconButton>
         </Box>
-        <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+        {/* <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
           {item.description}
-        </Typography>
+        </Typography> */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Rating value={item.averageRating} precision={0.5} readOnly size='small' />
           <Typography variant='body2' color='text.secondary' sx={{ ml: 1 }}>
-            ({item.totalReviews})
+            ({item.totalReviews ? item.totalReviews : 0})
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

@@ -236,5 +236,13 @@
   "Delete_all": "Xóa tất cả",
   "Product_same": "Sản phẩm tương tự",
   "Review": "Đánh giá",
-  "Like_product_success": "Đã thêm vào yêu thích"
+  "Like_product_success": "Đã thêm vào yêu thích",
+  "Unlike_product_success": "Đã bỏ yêu thích sản phẩm",
+  "Unlike_product_error": "Không thể bỏ yêu thích sản phẩm",
+  "Delivery_type": "Hình thức giao hàng",
+  "Payment_type": "Hình thức thanh toán",
+  "Product_type": "Loại sản phẩm",
+  "My_product": "sản phẩm của tôi",
+  "Product_viewed": "Sản phẩm đã xem",
+  "Product_liked": "Sản phẩm đã thích"
 }

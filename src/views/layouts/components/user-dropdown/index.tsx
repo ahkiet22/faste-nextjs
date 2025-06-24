@@ -101,12 +101,17 @@ const UserDropdown = (props: TProps) => {
     router.push(ROUTE_CONFIG.DASHBOARD)
     handleClose()
   }
+  
+  const handleNavigateMyProduct = () => {
+    router.push(ROUTE_CONFIG.MY_PRODUCT)
+    handleClose()
+  }
 
   React.useEffect(() => {
     if (userData) {
       setUser({ ...userData })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData])
 
   return (
@@ -213,6 +218,12 @@ const UserDropdown = (props: TProps) => {
             <Icon icon='uil:user' />
           </ListItemIcon>{' '}
           {t('my_profile')}
+        </MenuItem>
+        <MenuItem onClick={handleNavigateMyProduct}>
+          <ListItemIcon>
+            <Icon icon='uil:cart' />
+          </ListItemIcon>
+          {t('My_product')}
         </MenuItem>
         <MenuItem onClick={handleNavigateChangePassword}>
           <ListItemIcon>
