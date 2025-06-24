@@ -66,6 +66,17 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
 
   const router = useRouter()
 
+  const handleNavigateLogin = () => {
+    if (router.asPath !== '/') {
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    } else {
+      router.replace('/login')
+    }
+  }
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -104,14 +115,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
         {user ? (
           <UserDropdown />
         ) : (
-          <Button
-            type='submit'
-            variant='contained'
-            sx={{ width: 'auto', ml: 2, mr: 2 }}
-            onClick={() => {
-              router.push(ROUTE_CONFIG.LOGIN)
-            }}
-          >
+          <Button type='submit' variant='contained' sx={{ width: 'auto', ml: 2, mr: 2 }} onClick={handleNavigateLogin}>
             Sign In
           </Button>
         )}

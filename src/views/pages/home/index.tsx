@@ -45,6 +45,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState } from 'src/stores/product'
 import toast from 'react-hot-toast'
+import CardSkeleton from '../product/components/CardSkeleton'
 
 // import CardCountProduct from 'src/views/pages/manage-product/product/component/CardCountProduct'
 
@@ -309,29 +310,47 @@ const HomePage: NextPage<TProps> = () => {
               </Box>
             </Grid>
             <Grid item md={10} xs={12}>
-              <Grid
-                container
-                spacing={{
-                  md: 1,
-                  xs: 1
-                }}
-              >
-                {productsPublic?.data?.length > 0 ? (
-                  <>
-                    {productsPublic?.data?.map((item: TProduct) => {
-                      return (
-                        <Grid item key={item._id} xl={2.4} lg={3} md={4} sm={6} xs={12}>
-                          <CardProduct item={item} />
-                        </Grid>
-                      )
-                    })}
-                  </>
-                ) : (
-                  <Box sx={{ width: '100%', mt: 10 }}>
-                    <NoData widthImage='60px' heightImage='60px' textNodata={t('No_product')} />
-                  </Box>
-                )}
-              </Grid>
+              {loading ? (
+                <Grid
+                  container
+                  spacing={{
+                    md: 1,
+                    xs: 1
+                  }}
+                >
+                  {Array.from({ length: 6 }).map((_, index) => {
+                    return (
+                      <Grid item key={index} xl={2.4} lg={3} md={4} sm={6} xs={12}>
+                        <CardSkeleton />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              ) : (
+                <Grid
+                  container
+                  spacing={{
+                    md: 1,
+                    xs: 1
+                  }}
+                >
+                  {productsPublic?.data?.length > 0 ? (
+                    <>
+                      {productsPublic?.data?.map((item: TProduct) => {
+                        return (
+                          <Grid item key={item._id} xl={2.4} lg={3} md={4} sm={6} xs={12}>
+                            <CardProduct item={item} />
+                          </Grid>
+                        )
+                      })}
+                    </>
+                  ) : (
+                    <Box sx={{ width: '100%', mt: 10 }}>
+                      <NoData widthImage='60px' heightImage='60px' textNodata={t('No_product')} />
+                    </Box>
+                  )}
+                </Grid>
+              )}
               {/* {totalCount && ( */}
               <Box mt={6}>
                 <CustomPagination

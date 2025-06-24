@@ -119,7 +119,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
 
   const fetchGetDetailsProduct = async (slug: string) => {
     setLoading(true)
-    await getDetailsProductPublicBySlug(slug)
+    await getDetailsProductPublicBySlug(slug, true)
       .then(async response => {
         setLoading(false)
         const data = response?.data
