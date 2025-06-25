@@ -39,6 +39,7 @@ import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 import { useAuth } from 'src/hooks/useAuth'
 import NoData from 'src/components/no-data'
 import CardRelatedProduct from '../components/CardRelatedProduct'
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 type TProps = {}
 
@@ -91,6 +92,19 @@ const DetailsProductPage: NextPage<TProps> = () => {
         query: { returnUrl: router.asPath }
       })
     }
+  }
+
+  const handleBuyProductToCart = (item: TProduct) => {
+    handleUpdateProductToCart(item)
+    router.push(
+      {
+        pathname: ROUTE_CONFIG.MY_CART,
+        query: {
+          selected: item._id
+        }
+      },
+      ROUTE_CONFIG.MY_CART
+    )
   }
 
   // fetch api
@@ -482,7 +496,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       gap: '2px',
                       fontWeight: 'bold'
                     }}
-                    onClick={() => {}}
+                    onClick={() => handleBuyProductToCart(dataProduct)}
                   >
                     <Icon icon='icon-park-outline:buy' fontSize={20} style={{ position: 'relative', top: '-2px' }} />
                     {t('Buy_now')}

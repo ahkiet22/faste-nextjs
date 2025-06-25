@@ -97,6 +97,19 @@ const CardProduct = (props: TCardProduct) => {
     router.push(`${ROUTE_CONFIG.PRODUCT}/${slug}`)
   }
 
+  const handleBuyProductToCart = (item: TProduct) => {
+    handleUpdateProductToCart(item)
+    router.push(
+      {
+        pathname: ROUTE_CONFIG.MY_CART,
+        query: {
+          selected: item._id
+        }
+      },
+      ROUTE_CONFIG.MY_CART
+    )
+  }
+
   const handleUpdateProductToCart = (item: TProduct) => {
     const productCart = getLocalProductCart()
     const parseData = productCart ? JSON.parse(productCart) : {}
@@ -259,7 +272,7 @@ const CardProduct = (props: TCardProduct) => {
           </Button>
           <StyledButton
             fullWidth
-            onClick={handleAddToCart}
+            onClick={() => handleBuyProductToCart(item)}
             startIcon={<Icon icon='fluent:payment-16-regular' />}
             disabled={item.countInStock < 1}
           >
