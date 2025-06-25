@@ -235,7 +235,7 @@ const UserListPage: NextPage<TProps> = () => {
   const columns: GridColDef[] = [
     {
       field: i18n.language === 'vi' ? 'lastName' : 'firstName',
-      headerName: t('full_name'),
+      headerName: t('Full_name'),
       flex: 1,
       minWidth: 200,
       renderCell: params => {

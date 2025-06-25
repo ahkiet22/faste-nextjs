@@ -85,7 +85,7 @@ const LoginPage: NextPage<TProps> = () => {
     if (!Object.keys(errors)?.length) {
       login({ ...data, rememberMe: isRemember }, err => {
         if (err?.response?.data?.typeError === 'INVALID') {
-          toast.error(t('the_email_or_password_wrong'))
+          toast.error(t('The_email_or_password_wrong'))
         }
       })
     }

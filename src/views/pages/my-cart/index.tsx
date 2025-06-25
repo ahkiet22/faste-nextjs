@@ -33,6 +33,7 @@ import { TItemOrderProduct } from 'src/types/order-product'
 import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 import { ROUTE_CONFIG } from 'src/configs/route'
 import ItemProductCart from 'src/views/pages/my-cart/components/ItemProductCart'
+import { encrypt } from 'src/utils/crypto'
 
 type TProps = {}
 
@@ -126,14 +127,14 @@ const MyCartPage: NextPage<TProps> = () => {
   }
 
   const handleNavigateCheckoutProduct = () => {
-    const formatData = JSON.stringify(
-      memoItemsSelectedProduct.map(item => ({ product: item.product, amount: item.amount }))
-    )
+    const formatData = memoItemsSelectedProduct.map(item => ({ product: item.product, amount: item.amount }))
     router.push({
       pathname: ROUTE_CONFIG.CHECKOUT_PRODUCT,
       query: {
-        totalPrice: memoTotalSelectedProduct,
-        productsSelected: formatData
+        state: encrypt({
+          totalPrice: memoTotalSelectedProduct,
+          productsSelected: formatData
+        })
       }
     })
   }

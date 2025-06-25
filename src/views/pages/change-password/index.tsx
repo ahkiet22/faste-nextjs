@@ -163,7 +163,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
             }}
           >
             <Typography component='h1' variant='h5'>
-              {t('change_password')}
+              {t('Change_password')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate>
               <Box sx={{ mt: 2, width: '300px' }}>
@@ -177,11 +177,11 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label={t('current_password')}
+                      label={t('Current_password')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder={t('enter_current_password')}
+                      placeholder={t('Enter_current_password')}
                       error={Boolean(errors?.currentPassword)}
                       helperText={errors?.currentPassword?.message}
                       type={showCurrentPassword ? 'text' : 'password'}
@@ -214,11 +214,11 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label={t('new_password')}
+                      label={t('New_password')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}
-                      placeholder={t('enter_new_password')}
+                      placeholder={t('Enter_new_password')}
                       error={Boolean(errors?.newPassword)}
                       helperText={errors?.newPassword?.message}
                       type={showNewPassword ? 'text' : 'password'}
@@ -251,7 +251,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
-                      label={t('confirm_new_password')}
+                      label={t('Confirm_new_password')}
                       onChange={onChange}
                       onBlur={onBlur}
                       value={value}

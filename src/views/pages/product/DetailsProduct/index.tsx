@@ -686,7 +686,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
 
       {/* <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
         <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
-          {t('update_my_profile')}
+          {t('Update_my_profile')}
         </Button>
       </Box> */}
     </>

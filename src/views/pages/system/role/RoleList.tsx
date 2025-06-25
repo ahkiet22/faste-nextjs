@@ -89,8 +89,6 @@ const RoleListPage: NextPage<TProps> = () => {
     typeError
   } = useSelector((state: RootState) => state.role)
 
-  // console.log('roles', roles)
-
   // ** theme
   const theme = useTheme()
 

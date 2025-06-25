@@ -91,7 +91,7 @@ const AuthProvider = ({ children }: Props) => {
         } else {
           setTemporaryToken(response.data.access_token)
         }
-        toast.success(t('login_success'))
+        toast.success(t('Login_success'))
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.user })
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'

@@ -129,7 +129,7 @@ const MyProfilePage: NextPage<TProps> = () => {
           setAvatar(data?.avatar)
         }
       })
-      .catch(() => {
+      .catch(e => {
         setLoading(false)
       })
   }
@@ -169,8 +169,6 @@ const MyProfilePage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language])
 
-  // console.log('user', user)
-
   useEffect(() => {
     if (messageUpdateMe) {
       if (isErrorUpdateMe) {
@@ -200,9 +198,8 @@ const MyProfilePage: NextPage<TProps> = () => {
         role: data.role,
         phoneNumber: data.phoneNumber,
         avatar: avatar,
-        address: data.address
-
-        // city: data.city
+        address: data.address,
+        city: data.city
       })
     )
   }
@@ -290,7 +287,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         variant='outlined'
                         sx={{ width: 'auto' }}
                       >
-                        {avatar ? `${t('change_avatar')}` : `${t('upload_avatar')}`}
+                        {avatar ? `${t('Change_avatar')}` : `${t('Upload_avatar')}`}
                       </Button>
                     </WrapperFileUpload>
                   </Box>
@@ -312,7 +309,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
-                        placeholder={t('enter_your_email')}
+                        placeholder={t('Enter_your_email')}
                         error={Boolean(errors?.email)}
                         helperText={errors?.email?.message}
                       />
@@ -349,7 +346,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                             options={optionRoles}
                             error={Boolean(errors?.role)}
                             onBlur={onBlur}
-                            placeholder={t('enter_your_role')}
+                            placeholder={t('Enter_your_role')}
                           />
                           {errors?.role?.message && (
                             <FormHelperText
@@ -391,11 +388,11 @@ const MyProfilePage: NextPage<TProps> = () => {
                     render={({ field: { onChange, onBlur, value } }) => (
                       <CustomTextField
                         fullWidth
-                        label={t('full_name')}
+                        label={t('Full_name')}
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
-                        placeholder={t('enter_your_full_name')}
+                        placeholder={t('Enter_your_full_name')}
                         error={Boolean(errors?.fullName)}
                         helperText={errors?.fullName?.message}
                       />
@@ -414,7 +411,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
-                        placeholder={t('enter_your_address')}
+                        placeholder={t('Enter_your_address')}
                       />
                     )}
                   />
@@ -444,7 +441,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           options={optionCities}
                           error={Boolean(errors?.city)}
                           onBlur={onBlur}
-                          placeholder={t('enter_your_city')}
+                          placeholder={t('Enter_your_city')}
                         />
                         {errors?.city?.message && (
                           <FormHelperText
@@ -469,7 +466,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                       <CustomTextField
                         required
                         fullWidth
-                        label={t('phone_number')}
+                        label={t('Phone_number')}
                         onChange={e => {
                           const numValue = e.target.value.replace(/\D/g, '')
                           onChange(numValue)
@@ -481,7 +478,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         }}
                         onBlur={onBlur}
                         value={value}
-                        placeholder={t('enter_your_phone')}
+                        placeholder={t('Enter_your_phone')}
                         error={Boolean(errors?.phoneNumber)}
                         helperText={errors?.phoneNumber?.message}
                       />
@@ -495,7 +492,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
         <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
           <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
-            {t('update_my_profile')}
+            {t('Update_my_profile')}
           </Button>
         </Box>
       </form>

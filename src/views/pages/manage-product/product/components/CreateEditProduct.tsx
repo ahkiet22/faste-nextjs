@@ -147,7 +147,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
 
         return (discountStartDate && value) || !discountStartDate
       })
-      .test('than_start_discount', t('required_than_start_discount'), (value, context: any) => {
+      .test('than_start_discount', t('Required_than_start_discount'), (value, context: any) => {
         const discountStartDate = context?.parent?.discountStartDate
         if (value && discountStartDate && discountStartDate.getTime() < value?.getTime()) {
           clearErrors('discountStartDate')

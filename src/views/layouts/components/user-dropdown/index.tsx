@@ -217,7 +217,7 @@ const UserDropdown = (props: TProps) => {
           <ListItemIcon>
             <Icon icon='uil:user' />
           </ListItemIcon>{' '}
-          {t('my_profile')}
+          {t('My_profile')}
         </MenuItem>
         <MenuItem onClick={handleNavigateMyProduct}>
           <ListItemIcon>
@@ -229,7 +229,7 @@ const UserDropdown = (props: TProps) => {
           <ListItemIcon>
             <Icon icon='formkit:password' />
           </ListItemIcon>
-          {t('change_password')}
+          {t('Change_password')}
         </MenuItem>
         <MenuItem onClick={logout}>
           <ListItemIcon>
