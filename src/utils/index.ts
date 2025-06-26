@@ -1,3 +1,5 @@
+import { TItemOrderProduct } from 'src/types/order-product'
+
 type TLanguage = 'vi' | 'en'
 interface IFormatCurrencyOptions {
   language?: TLanguage // 'vi' | 'en'
@@ -122,7 +124,7 @@ export const formatNumberToLocal = (
   return finalAmount.toLocaleString(locale, {
     style: 'currency',
     currency,
-    currencyDisplay: 'code',
+    currencyDisplay: 'symbol',
     useGrouping: true,
     minimumFractionDigits
   })
@@ -161,4 +163,43 @@ export const convertHTMLToDraft = async (html: string) => {
   const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap)
 
   return EditorState.createWithContent(contentState)
+}
+
+export const cloneDeep = (data: any) => {
+  try {
+    return JSON.parse(JSON.stringify(data))
+  } catch (error) {
+    return data
+  }
+}
+
+export const convertUpdateProductToCart = (orderItems: TItemOrderProduct[], addItem: TItemOrderProduct) => {
+  try {
+    let result = []
+    const cloneOrderItems = cloneDeep(orderItems)
+
+    const findItems = cloneOrderItems.find((item: TItemOrderProduct) => item.product === addItem.product)
+    if (findItems) {
+      findItems.amount += addItem.amount
+    } else {
+      cloneOrderItems.push(addItem)
+    }
+    result = cloneOrderItems.filter((item: TItemOrderProduct) => item.amount)
+
+    return result
+  } catch (error) {
+    return orderItems
+  }
+}
+
+export const isExpiry = (startDate: Date | null, endDate: Date | null) => {
+  if (startDate && endDate) {
+    const currentTime = new Date().getTime()
+    const startDateTime = new Date(startDate).getTime()
+    const endDateTime = new Date(endDate).getTime()
+
+    return startDateTime <= currentTime && endDateTime > currentTime
+  }
+
+  return false
 }

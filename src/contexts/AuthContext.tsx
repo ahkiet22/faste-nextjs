@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import instanceAxios from 'src/helpers/axios'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import authConfig, { LIST_PAGE_PUBLIC } from 'src/configs/auth'
 import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
@@ -21,6 +21,10 @@ import { loginAuth, logoutAuth } from 'src/services/auth'
 import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/helpers/storage/index'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import { ROUTE_CONFIG } from 'src/configs/route'
+import { updateProductToCart } from 'src/stores/order-product'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/stores'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -45,6 +49,9 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
 
   // ** Translate
   const { t } = useTranslation()
@@ -84,7 +91,7 @@ const AuthProvider = ({ children }: Props) => {
         } else {
           setTemporaryToken(response.data.access_token)
         }
-        toast.success(t('login_success'))
+        toast.success(t('Login_success'))
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.user })
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
@@ -100,7 +107,23 @@ const AuthProvider = ({ children }: Props) => {
     logoutAuth().then(res => {
       setUser(null)
       clearLocalUserData()
-      router.push('/login')
+
+      // signOut()
+      if (!LIST_PAGE_PUBLIC?.some(item => router.asPath?.startsWith(item))) {
+        if (router.asPath !== '/') {
+          router.replace({
+            pathname: ROUTE_CONFIG.LOGIN,
+            query: { returnUrl: router.asPath }
+          })
+        } else {
+          router.replace(ROUTE_CONFIG.LOGIN)
+        }
+      }
+      dispatch(
+        updateProductToCart({
+          orderItems: []
+        })
+      )
     })
   }
 

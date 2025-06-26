@@ -4,6 +4,7 @@ import * as React from 'react'
 // ** Next
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
+import Link from 'next/link'
 
 // ** Mui
 import { styled } from '@mui/material/styles'
@@ -25,6 +26,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Config
 import { ROUTE_CONFIG } from 'src/configs/route'
+import CartProduct from './components/cart-product'
 
 const drawerWidth: number = 240
 
@@ -64,6 +66,17 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
 
   const router = useRouter()
 
+  const handleNavigateLogin = () => {
+    if (router.asPath !== '/') {
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    } else {
+      router.replace('/login')
+    }
+  }
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -87,22 +100,22 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
             <IconifyIcon icon='ic:round-menu' />
           </IconButton>
         )}
-        <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-          Dashboard
+        <Typography
+          component='h1'
+          variant='h6'
+          color='primary'
+          noWrap
+          sx={{ flexGrow: 1, fontWeight: 600, cursor: 'pointer' }}
+        >
+          <Link href={ROUTE_CONFIG.HOME}>FASTE</Link>
         </Typography>
         <LanguageDropdown />
         <ModeToogle />
+        <CartProduct />
         {user ? (
           <UserDropdown />
         ) : (
-          <Button
-            type='submit'
-            variant='contained'
-            sx={{ width: 'auto', ml: 2, mr: 2 }}
-            onClick={() => {
-              router.push(ROUTE_CONFIG.LOGIN)
-            }}
-          >
+          <Button type='submit' variant='contained' sx={{ width: 'auto', ml: 2, mr: 2 }} onClick={handleNavigateLogin}>
             Sign In
           </Button>
         )}

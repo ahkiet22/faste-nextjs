@@ -348,7 +348,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               variant='outlined'
                               sx={{ width: 'auto' }}
                             >
-                              {avatar ? `${t('change_avatar')}` : `${t('upload_avatar')}`}
+                              {avatar ? `${t('Change_avatar')}` : `${t('Upload_avatar')}`}
                             </Button>
                           </WrapperFileUpload>
                         </Box>
@@ -368,7 +368,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               onChange={onChange}
                               onBlur={onBlur}
                               value={value}
-                              placeholder={t('enter_your_email')}
+                              placeholder={t('Enter_your_email')}
                               error={Boolean(errors?.email)}
                               helperText={errors?.email?.message}
                             />
@@ -413,7 +413,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                 options={optionRoles}
                                 error={Boolean(errors?.role)}
                                 onBlur={onBlur}
-                                placeholder={t('enter_your_role')}
+                                placeholder={t('Enter_your_role')}
                               />
                               {errors?.role?.message && (
                                 <FormHelperText
@@ -505,11 +505,11 @@ const CreateEditUser = (props: TCreateEditUser) => {
                             <CustomTextField
                               required
                               fullWidth
-                              label={t('full_name')}
+                              label={t('Full_name')}
                               onChange={onChange}
                               onBlur={onBlur}
                               value={value}
-                              placeholder={t('enter_your_full_name')}
+                              placeholder={t('Enter_your_full_name')}
                               error={Boolean(errors?.fullName)}
                               helperText={errors?.fullName?.message}
                             />
@@ -528,7 +528,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               onChange={onChange}
                               onBlur={onBlur}
                               value={value}
-                              placeholder={t('enter_your_address')}
+                              placeholder={t('Enter_your_address')}
                             />
                           )}
                         />
@@ -558,7 +558,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                 options={optionCities}
                                 error={Boolean(errors?.city)}
                                 onBlur={onBlur}
-                                placeholder={t('enter_your_city')}
+                                placeholder={t('Enter_your_city')}
                               />
                               {errors?.city?.message && (
                                 <FormHelperText
@@ -583,7 +583,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                             <CustomTextField
                               required
                               fullWidth
-                              label={t('phone_number')}
+                              label={t('Phone_number')}
                               onChange={e => {
                                 const numValue = e.target.value.replace(/\D/g, '')
                                 onChange(numValue)
@@ -595,7 +595,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               }}
                               onBlur={onBlur}
                               value={value}
-                              placeholder={t('enter_your_phone')}
+                              placeholder={t('Enter_your_phone')}
                               error={Boolean(errors?.phoneNumber)}
                               helperText={errors?.phoneNumber?.message}
                             />

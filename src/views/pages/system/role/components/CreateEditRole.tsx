@@ -75,8 +75,6 @@ const CreateEditRole = (props: TCreateEditRole) => {
         dispatch(createRolesAsync({ name: data?.name }))
       }
     }
-    
-    // console.log(data)
   }
 
   // fetch
