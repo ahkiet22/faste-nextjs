@@ -263,7 +263,7 @@ const CardProduct = (props: TCardProduct) => {
             startIcon={<Icon icon='fluent:payment-16-regular' />}
             disabled={item.countInStock < 1}
           >
-            {item.countInStock < 1 ? t('Buy_now') : t('Out_of_stock')}
+            {item.countInStock > 0 ? t('Buy_now') : t('Out_of_stock')}
           </StyledButton>
         </Box>
       </CardContent>
