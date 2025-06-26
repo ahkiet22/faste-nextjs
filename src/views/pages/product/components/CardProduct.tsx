@@ -10,7 +10,6 @@ import {
   Typography,
   Button,
   Box,
-  Snackbar,
   Chip,
   IconButton,
   Rating,
@@ -80,9 +79,6 @@ const CardProduct = (props: TCardProduct) => {
   // ** Props
   const { item } = props
   const { user } = useAuth()
-
-  const [cartCount, setCartCount] = useState(0)
-  const [openSnackbar, setOpenSnackbar] = useState(false)
   const [isFavorite, setIsFavorite] = useState(Boolean(user && item?.likedBy?.includes(user._id)))
 
   const { t, i18n } = useTranslation()
@@ -158,15 +154,6 @@ const CardProduct = (props: TCardProduct) => {
     },
     [user, dispatch, router]
   )
-
-  const handleAddToCart = () => {
-    setCartCount(prevCount => prevCount + 1)
-    setOpenSnackbar(true)
-  }
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false)
-  }
 
   const memoIsExpiry = useMemo(() => {
     return isExpiry(item.discountStartDate, item.discountEndDate)
@@ -276,16 +263,10 @@ const CardProduct = (props: TCardProduct) => {
             startIcon={<Icon icon='fluent:payment-16-regular' />}
             disabled={item.countInStock < 1}
           >
-            {t('Buy_now')}
+            {item.countInStock < 1 ? t('Buy_now') : t('Out_of_stock')}
           </StyledButton>
         </Box>
       </CardContent>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        message='Item added to cart!'
-      />
     </StyledCard>
   )
 }
