@@ -279,5 +279,12 @@
   "Done_order": "Đơn hàng đã hoàn thành",
   "Payment": "Thanh toán",
   "Cancel_order_success": "Đơn hàng đã được hủy thành công",
-  "Cancel_order_error": "Có lỗi xảy ra khi hủy đơn hàng"
+  "Cancel_order_error": "Có lỗi xảy ra khi hủy đơn hàng",
+  "Order_has_not_been_delivery": "Đơn hàng chưa được giao",
+  "Order_has_not_been_paid": "Đơn hàng chưa được thanh toán",
+  "Item_price": "Giá sản phẩm",
+  "Shipping_price": "Phí vận chuyển",
+  "Order_name_user": "Tên người đặt hàng",
+  "Write_review": "Viết đánh giá",
+  "Latest_Update": "Cập nhật mới nhất"
 }

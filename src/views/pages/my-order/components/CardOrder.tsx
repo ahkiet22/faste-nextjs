@@ -316,6 +316,23 @@ const CardOrder: NextPage<TProps> = props => {
               {t('Payment')}
             </Button>
           )}
+          {+dataOrder.status === +STATUS_ORDER_PRODUCT[2].value && (
+            <Button
+              startIcon={<Icon icon='material-symbols:rate-review-outline' />}
+              onClick={() => {}}
+              sx={{
+                height: 40,
+                gap: '2px',
+                backgroundColor: '#FF8C00',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#FF6A00'
+                }
+              }}
+            >
+              {t('Write_review')}
+            </Button>
+          )}
           {[0, 1].includes(dataOrder.status) && (
             <Button
               variant='outlined'

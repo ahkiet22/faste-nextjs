@@ -1,6 +1,5 @@
 // ** Next
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
 
 // ** React
 import { useEffect, useState } from 'react'
@@ -33,17 +32,25 @@ import { TItemOrderProductMe } from 'src/types/order-product'
 
 type TProps = {}
 
-const VALUE_OPTION_STATUS = {
-  WAIT_PAYMENT: 0,
-  WAIT_DELIVERY: 1,
-  DONE: 2,
-  CANCEL: 3,
-  ALL: 4
+enum VALUE_OPTION_STATUS {
+  WAIT_PAYMENT = 0,
+  WAIT_DELIVERY = 1,
+  DONE = 2,
+  CANCEL = 3,
+  ALL = 4
 }
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   '&.MuiTabs-root': {
-    borderBottom: 'none'
+    overflow: 'auto !important',
+    borderBottom: 'none',
+
+    '& .MuiTabs-scroller': {
+      overflow: 'auto !important',
+      '&::-webkit-scrollbar': {
+        opacity: 0
+      }
+    }
   }
 }))
 
