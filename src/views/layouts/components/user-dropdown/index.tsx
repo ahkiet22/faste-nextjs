@@ -101,9 +101,14 @@ const UserDropdown = (props: TProps) => {
     router.push(ROUTE_CONFIG.DASHBOARD)
     handleClose()
   }
-  
+
   const handleNavigateMyProduct = () => {
     router.push(ROUTE_CONFIG.MY_PRODUCT)
+    handleClose()
+  }
+
+  const handleNavigateMyOrder = () => {
+    router.push(ROUTE_CONFIG.MY_ORDER)
     handleClose()
   }
 
@@ -224,6 +229,12 @@ const UserDropdown = (props: TProps) => {
             <Icon icon='uil:cart' />
           </ListItemIcon>
           {t('My_product')}
+        </MenuItem>
+        <MenuItem onClick={handleNavigateMyOrder}>
+          <ListItemIcon>
+            <Icon icon='lsicon:place-order-filled' />
+          </ListItemIcon>
+          {t('My_order')}
         </MenuItem>
         <MenuItem onClick={handleNavigateChangePassword}>
           <ListItemIcon>

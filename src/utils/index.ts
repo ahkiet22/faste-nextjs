@@ -192,6 +192,27 @@ export const convertUpdateProductToCart = (orderItems: TItemOrderProduct[], addI
   }
 }
 
+export const convertUpdateMultipleProductsCart = (orderItems: TItemOrderProduct[], addItems: TItemOrderProduct[]) => {
+  try {
+    let result = []
+
+    const cloneOrderItems = cloneDeep(orderItems)
+    addItems.forEach(addItem => {
+      const findItems = cloneOrderItems.find((item: TItemOrderProduct) => item.product === addItem.product)
+      if (findItems) {
+        findItems.amount += addItem.amount
+      } else {
+        cloneOrderItems.push(addItem)
+      }
+    })
+    result = cloneOrderItems.filter((item: TItemOrderProduct) => item.amount)
+
+    return result
+  } catch (error) {
+    return orderItems
+  }
+}
+
 export const isExpiry = (startDate: Date | null, endDate: Date | null) => {
   if (startDate && endDate) {
     const currentTime = new Date().getTime()
