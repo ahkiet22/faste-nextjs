@@ -28,9 +28,8 @@ import Spinner from 'src/components/spinner'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CustomPagination from 'src/components/custom-pagination'
 import CustomSelect from 'src/components/custom-select'
-
-// import CardCountStatusOrder from 'src/views/pages/manage-order/order-product/components/CardCountOrderStatus'
-// import MoreButton from 'src/views/pages/manage-order/order-product/components/MoreButton'
+import EditOrderProduct from './components/EditOrderProduct'
+import MoreButton from './components/MoreButton'
 
 // ** Others
 import toast from 'react-hot-toast'
@@ -52,7 +51,6 @@ import { getAllCities } from 'src/services/city'
 import { TItemProductMe, TParamsStatusOrderUpdate } from 'src/types/order-product'
 
 // import { getCountOrderStatus } from 'src/services/report'
-import EditOrderProduct from './components/EditOrderProduct'
 
 type TProps = {}
 
@@ -319,6 +317,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
       sortable: false,
       align: 'left',
       renderCell: params => {
+        const { row } = params
 
         return (
           <>
@@ -340,7 +339,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
                 })
               }
             />
-            {/* <MoreButton data={row} memoOptionStatus={memoOptionStatus} /> */}
+            <MoreButton data={row} memoOptionStatus={memoOptionStatus} />
           </>
         )
       }
