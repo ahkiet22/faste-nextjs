@@ -25,7 +25,7 @@ import Spinner from 'src/components/spinner'
 import { getDetailsProductPublicBySlug, getListRelatedProductBySlug } from 'src/services/product'
 
 // ** Utils
-import { convertUpdateProductToCart, formatNumberToLocal, isExpiry } from 'src/utils'
+import { convertUpdateProductToCart, formatFilter, formatNumberToLocal, isExpiry } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 // ** Redux
@@ -40,6 +40,13 @@ import { useAuth } from 'src/hooks/useAuth'
 import NoData from 'src/components/no-data'
 import CardRelatedProduct from '../components/CardRelatedProduct'
 import { ROUTE_CONFIG } from 'src/configs/route'
+import { TReviewItem } from 'src/types/reviews'
+import { getAllReviews } from 'src/services/reviewProduct'
+import { resetInitialState } from 'src/stores/reviews'
+import toast from 'react-hot-toast'
+import { OBJECT_TYPE_ERROR_REVIEW } from 'src/configs/error'
+import CardReview from '../components/CardReview'
+import CustomCarousel from 'src/views/layouts/components/custom-carousel'
 
 type TProps = {}
 
@@ -48,6 +55,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
   const [listRelatedProduct, setListRelatedProduct] = useState<TProduct[]>([])
+  const [listReviews, setListReview] = useState<TReviewItem[]>([])
   const [amountProduct, setAmountProduct] = useState(1)
   const router = useRouter()
   const { productId } = router.query
@@ -62,6 +70,16 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // ** redux
   const dispatch: AppDispatch = useDispatch()
   const { orderItems } = useSelector((state: RootState) => state.orderProduct)
+  const {
+    isSuccessEdit,
+    isErrorEdit,
+    isLoading,
+    messageErrorEdit,
+    isErrorDelete,
+    isSuccessDelete,
+    messageErrorDelete,
+    typeError
+  } = useSelector((state: RootState) => state.reviews)
 
   // ** Handle
   const handleUpdateProductToCart = (item: TProduct) => {
@@ -108,28 +126,28 @@ const DetailsProductPage: NextPage<TProps> = () => {
   }
 
   // fetch api
-  // const fetchGetAllListReviewByProduct = async (id: string) => {
-  //   setLoading(true)
-  //   await getAllReviews({
-  //     params: {
-  //       limit: -1,
-  //       page: -1,
-  //       order: 'createdAt desc',
-  //       isPublic: true,
-  //       ...formatFilter({ productId: id })
-  //     }
-  //   })
-  //     .then(async response => {
-  //       setLoading(false)
-  //       const data = response?.data?.reviews
-  //       if (data) {
-  //         setListReview(data)
-  //       }
-  //     })
-  //     .catch(() => {
-  //       setLoading(false)
-  //     })
-  // }
+  const fetchGetAllListReviewByProduct = async (id: string) => {
+    setLoading(true)
+    await getAllReviews({
+      params: {
+        limit: -1,
+        page: -1,
+        order: 'createdAt desc',
+        isPublic: true,
+        ...formatFilter({ productId: id })
+      }
+    })
+      .then(async response => {
+        setLoading(false)
+        const data = response?.data?.reviews
+        if (data) {
+          setListReview(data)
+        }
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
 
   const fetchGetDetailsProduct = async (slug: string) => {
     setLoading(true)
@@ -166,12 +184,47 @@ const DetailsProductPage: NextPage<TProps> = () => {
   }, [dataProduct])
 
   useEffect(() => {
+    if (dataProduct._id) {
+      fetchGetAllListReviewByProduct(dataProduct._id)
+    }
+  }, [dataProduct._id])
+
+  useEffect(() => {
     if (productId) {
       fetchGetDetailsProduct(String(productId))
       fetchListRelatedProduct(String(productId))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId])
+
+  useEffect(() => {
+    if (isSuccessEdit) {
+      toast.success(t('Update_review_success'))
+      fetchGetAllListReviewByProduct(dataProduct._id)
+      dispatch(resetInitialState())
+    } else if (isErrorEdit && messageErrorEdit && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_REVIEW[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Update_review_error'))
+      }
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessEdit, isErrorEdit, messageErrorEdit, typeError])
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      toast.success(t('Delete_review_success'))
+      fetchGetAllListReviewByProduct(dataProduct._id)
+      dispatch(resetInitialState())
+    } else if (isErrorDelete && messageErrorDelete) {
+      toast.error(t('Delete_review_error'))
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
 
   return (
     <>
@@ -547,7 +600,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   />
                 </Box>
 
-                {/* <Box
+                <Box
                   display={{ md: 'block', xs: 'none' }}
                   sx={{
                     backgroundColor: theme.palette.background.paper,
@@ -567,7 +620,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     }}
                   >
                     {t('Review_product')} <b style={{ color: theme.palette.primary.main }}>{listReviews?.length}</b>{' '}
-                    {t('ratings')}
                   </Typography>
                   <Box sx={{ width: '100%' }}>
                     <CustomCarousel
@@ -595,7 +647,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     >
                       {listReviews.map((review: TReviewItem) => {
                         return (
-                          <Box key={review._id} sx={{ margin: '0 10px' }}>
+                          <Box key={review._id} sx={{ margin: '10px 10px' }}>
                             <CardReview item={review} />
                           </Box>
                         )
@@ -603,7 +655,8 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </CustomCarousel>
                   </Box>
                 </Box>
-                <Box
+
+                {/* <Box
                   display={{ md: 'block', xs: 'none' }}
                   sx={{
                     backgroundColor: theme.palette.background.paper,
@@ -697,12 +750,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      {/* <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-        <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
-          {t('Update_my_profile')}
-        </Button>
-      </Box> */}
     </>
   )
 }

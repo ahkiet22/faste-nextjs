@@ -241,7 +241,7 @@
   "Delivery_type": "Hình thức giao hàng",
   "Payment_type": "Hình thức thanh toán",
   "Product_type": "Loại sản phẩm",
-  "My_product": "sản phẩm của tôi",
+  "My_product": "Sản phẩm của tôi",
   "Product_viewed": "Sản phẩm đã xem",
   "Product_liked": "Sản phẩm đã thích",
   "Address_shipping": "Địa chỉ giao hàng",
@@ -320,5 +320,6 @@
   "Search": "Tìm kiếm",
   "Write_review_success": "Đánh giá đã được gửi thành công",
   "Write_review_error": "Có lỗi xảy ra khi gửi đánh giá",
-  "Edit_review": "Chỉnh sửa đánh giá"
+  "Edit_review": "Chỉnh sửa đánh giá",
+  "Recently": "Gần đây"
 }
