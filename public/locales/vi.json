@@ -321,5 +321,8 @@
   "Write_review_success": "Đánh giá đã được gửi thành công",
   "Write_review_error": "Có lỗi xảy ra khi gửi đánh giá",
   "Edit_review": "Chỉnh sửa đánh giá",
-  "Recently": "Gần đây"
+  "Recently": "Gần đây",
+  "Payment_success": "Thanh toán thành công",
+  "Payment_error": "Lỗi thanh toán",
+  "Back_home": "Quay lại trang chủ"
 }

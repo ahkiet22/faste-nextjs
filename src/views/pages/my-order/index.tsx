@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 
 // ** Mui
-import { Box, Tab, Tabs, TabsProps, styled, useTheme } from '@mui/material'
+import { Box, Tab, Tabs, TabsProps, styled } from '@mui/material'
 
 // ** Components
 import NoData from 'src/components/no-data'

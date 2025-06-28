@@ -47,6 +47,8 @@ import { STATUS_ORDER_PRODUCT } from 'src/configs/orderProduct'
 import { PAYMENT_TYPES } from 'src/configs/payment'
 import { formatDate } from 'src/utils/date'
 import ModalWriteReview from './components/ModalWriteReview'
+import { createURLpaymentVNPay } from 'src/services/payment'
+import { getAllPaymentTypes } from 'src/services/payment-type'
 
 type TProps = {}
 
@@ -54,6 +56,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   // State
   const [isLoading, setIsLoading] = useState(false)
   const [dataOrder, setDataOrder] = useState<TItemOrderProductMe>({} as any)
+  const [optionPayments, setOptionPayments] = useState<{ label: string; value: string; type: string }[]>([])
   const [openCancel, setOpenCancel] = useState(false)
   const [openReview, setOpenReview] = useState({
     open: false,
@@ -101,6 +104,25 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
       setDataOrder(res?.data)
       setIsLoading(false)
     })
+  }
+  const handleGetListPaymentMethod = async () => {
+    setIsLoading(true)
+    await getAllPaymentTypes({ params: { limit: -1, page: -1 } })
+      .then(res => {
+        if (res.data) {
+          setOptionPayments(
+            res?.data?.paymentTypes?.map((item: { name: string; _id: string; type: string }) => ({
+              label: item.name,
+              value: item._id,
+              type: item.type
+            }))
+          )
+        }
+        setIsLoading(false)
+      })
+      .catch(e => {
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -153,20 +175,21 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   }
 
   const handlePaymentVNPay = async () => {
-    // setIsLoading(true)
-    // await createURLpaymentVNPay({
-    //   totalPrice: dataOrder.totalPrice,
-    //   orderId: dataOrder?._id,
-    //   language: i18n.language === 'vi' ? 'vn' : i18n.language
-    // }).then(res => {
-    //   if (res?.data) {
-    //     window.open(res?.data, '_blank')
-    //   }
-    //   setIsLoading(false)
-    // })
+    setIsLoading(true)
+    await createURLpaymentVNPay({
+      totalPrice: dataOrder.totalPrice,
+      orderId: dataOrder?._id,
+      language: i18n.language === 'vi' ? 'vn' : i18n.language
+    }).then(res => {
+      if (res?.data) {
+        window.open(res?.data, '_blank')
+      }
+      setIsLoading(false)
+    })
   }
 
   const handlePaymentTypeOrder = (type: string) => {
+    console.log(type)
     switch (type) {
       case PAYMENT_DATA.VN_PAYMENT.value: {
         handlePaymentVNPay()
@@ -184,6 +207,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (orderId) {
       handleGetDetailsOrdersOfMe()
+      handleGetListPaymentMethod()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId])
@@ -465,7 +489,10 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
           {[0].includes(dataOrder.status) && dataOrder.paymentMethod.type !== PAYMENT_DATA.PAYMENT_LATER.value && (
             <Button
               variant='outlined'
-              onClick={() => handlePaymentTypeOrder(dataOrder.paymentMethod.type)}
+              onClick={() => {
+                const findTypePayment = optionPayments.find(item => item.value === String(dataOrder.paymentMethod))
+                handlePaymentTypeOrder(findTypePayment?.type as string)
+              }}
               sx={{
                 height: 40,
                 display: 'flex',
