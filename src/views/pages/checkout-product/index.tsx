@@ -51,9 +51,9 @@ import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 import { getAllPaymentTypes } from 'src/services/payment-type'
 import { getAllDeliveryTypes } from 'src/services/delivery-type'
 import { getAllCities } from 'src/services/city'
-import { ROUTE_CONFIG } from 'src/configs/route'
+import { createURLpaymentVNPay } from 'src/services/payment'
 
-// import { createURLpaymentVNPay } from 'src/services/payment'
+import { ROUTE_CONFIG } from 'src/configs/route'
 import { PAYMENT_TYPES } from 'src/configs/payment'
 import ModalWarning from './components/ModalWarning'
 import ModalAddAddress from './components/ModalAddAddress'
@@ -159,25 +159,24 @@ const CheckoutProductPage: NextPage<TProps> = () => {
     setPaymentSelected(value)
   }
 
-  // const handlePaymentVNPay = async (data: { orderId: string; totalPrice: number }) => {
-  //   setLoading(true)
-  //   await createURLpaymentVNPay({
-  //     totalPrice: data.totalPrice,
-  //     orderId: data?.orderId,
-  //     language: i18n.language === 'vi' ? 'vn' : i18n.language
-  //   }).then(res => {
-  //     if (res?.data) {
-  //       window.open(res?.data, '_blank')
-  //     }
-  //     setLoading(false)
-  //   })
-  // }
+  const handlePaymentVNPay = async (data: { orderId: string; totalPrice: number }) => {
+    setLoading(true)
+    await createURLpaymentVNPay({
+      totalPrice: data.totalPrice,
+      orderId: data?.orderId,
+      language: i18n.language === 'vi' ? 'vn' : i18n.language
+    }).then(res => {
+      if (res?.data) {
+        window.open(res?.data, '_blank')
+      }
+      setLoading(false)
+    })
+  }
 
   const handlePaymentTypeOrder = (type: string, data: { orderId: string; totalPrice: number }) => {
     switch (type) {
       case PAYMENT_DATA.VN_PAYMENT.value: {
-        // handlePaymentVNPay(data)
-        console.log('PAYMENT')
+        handlePaymentVNPay(data)
         break
       }
       default:

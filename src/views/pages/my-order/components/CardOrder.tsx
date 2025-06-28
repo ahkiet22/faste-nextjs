@@ -12,9 +12,6 @@ import { Avatar, Box, Button, Divider, Typography, useTheme } from '@mui/materia
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import Icon from 'src/components/Icon'
 
-// ** Translate
-import { t } from 'i18next'
-
 // ** Utils
 import { convertUpdateMultipleProductsCart, formatNumberToLocal } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
@@ -40,6 +37,7 @@ import { PAYMENT_TYPES } from 'src/configs/payment'
 
 // import { createURLpaymentVNPay } from 'src/services/payment'
 import Spinner from 'src/components/spinner'
+import { createURLpaymentVNPay } from 'src/services/payment'
 
 type TProps = {
   dataOrder: TItemOrderProductMe
@@ -136,17 +134,17 @@ const CardOrder: NextPage<TProps> = props => {
   }
 
   const handlePaymentVNPay = async () => {
-    // setLoading(true)
-    // await createURLpaymentVNPay({
-    //   totalPrice: dataOrder.totalPrice,
-    //   orderId: dataOrder?._id,
-    //   language: i18n.language === 'vi' ? 'vn' : i18n.language
-    // }).then(res => {
-    //   if (res?.data) {
-    //     window.open(res?.data, '_blank')
-    //   }
-    //   setLoading(false)
-    // })
+    setLoading(true)
+    await createURLpaymentVNPay({
+      totalPrice: dataOrder.totalPrice,
+      orderId: dataOrder?._id,
+      language: i18n.language === 'vi' ? 'vn' : i18n.language
+    }).then(res => {
+      if (res?.data) {
+        window.open(res?.data, '_blank')
+      }
+      setLoading(false)
+    })
   }
 
   const memeDisabledBuyAgain = useMemo(() => {
