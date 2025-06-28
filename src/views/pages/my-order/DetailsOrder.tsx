@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState, updateProductToCart } from 'src/stores/order-product'
 
-// import { resetInitialState as resetInitialReview } from 'src/stores/reviews'
+import { resetInitialState as resetInitialReview } from 'src/stores/reviews'
 
 // ** Other
 import toast from 'react-hot-toast'
@@ -43,11 +43,10 @@ import { useAuth } from 'src/hooks/useAuth'
 import { ROUTE_CONFIG } from 'src/configs/route'
 import { STATUS_ORDER_PRODUCT } from 'src/configs/orderProduct'
 
-// import ModalWriteReview from 'src/views/pages/my-order/components/ModalWriteReview'
-
 // import { createURLpaymentVNPay } from 'src/services/payment'
 import { PAYMENT_TYPES } from 'src/configs/payment'
 import { formatDate } from 'src/utils/date'
+import ModalWriteReview from './components/ModalWriteReview'
 
 type TProps = {}
 
@@ -78,12 +77,12 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     (state: RootState) => state.orderProduct
   )
 
-  // const {
-  //   isSuccessCreate,
-  //   isErrorCreate,
-  //   messageErrorCreate,
-  //   isLoading: loadingReview
-  // } = useSelector((state: RootState) => state.reviews)
+  const {
+    isSuccessCreate,
+    isErrorCreate,
+    messageErrorCreate,
+    isLoading: loadingReview
+  } = useSelector((state: RootState) => state.reviews)
 
   // ** fetch API
 
@@ -199,27 +198,27 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     }
   }, [isSuccessCancelMe, isErrorCancelMe, messageErrorCancelMe])
 
-  // useEffect(() => {
-  //   if (isSuccessCreate) {
-  //     handleGetDetailsOrdersOfMe()
-  //     toast.success(t('Write_review_success'))
-  //     dispatch(resetInitialReview())
-  //     handleCloseReview()
-  //   } else if (isErrorCreate && messageErrorCreate) {
-  //     toast.error(t('Write_review_error'))
-  //     dispatch(resetInitialReview())
-  //   }
-  // }, [isSuccessCreate, isErrorCreate, messageErrorCreate])
+  useEffect(() => {
+    if (isSuccessCreate) {
+      handleGetDetailsOrdersOfMe()
+      toast.success(t('Write_review_success'))
+      dispatch(resetInitialReview())
+      handleCloseReview()
+    } else if (isErrorCreate && messageErrorCreate) {
+      toast.error(t('Write_review_error'))
+      dispatch(resetInitialReview())
+    }
+  }, [isSuccessCreate, isErrorCreate, messageErrorCreate])
 
   return (
     <>
       {isLoading && <Spinner />}
-      {/* <ModalWriteReview
+      <ModalWriteReview
         open={openReview.open}
         productId={openReview.productId}
         userId={openReview.userId}
         onClose={handleCloseReview}
-      /> */}
+      />
       <ConfirmationDialog
         open={openCancel}
         handleClose={handleCloseDialog}

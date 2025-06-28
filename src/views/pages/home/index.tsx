@@ -238,6 +238,7 @@ const HomePage: NextPage<TProps> = () => {
         }}
       >
         <StyledTabs value={productTypeSelected} onChange={handleChange} aria-label='wrapped label tabs example'>
+          <Tab value={''} label={t('All')} />
           {optionTypes.map(opt => {
             return <Tab key={opt.value} value={opt.value} label={opt.label} />
           })}

@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 
 // ** Layouts
 import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
+import HomePage from 'src/views/pages/home'
 
 // ** Pages
 
@@ -16,6 +17,7 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      <HomePage />
     </>
   )
 }
