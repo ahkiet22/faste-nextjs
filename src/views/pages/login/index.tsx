@@ -46,7 +46,9 @@ import FallbackSpinner from 'src/components/fall-back'
 import {
   clearLocalPreTokenAuthSocial,
   getLocalPreTokenAuthSocial,
-  setLocalPreTokenAuthSocial
+  getLocalRememberLoginAuthSocial,
+  setLocalPreTokenAuthSocial,
+  setLocalRememberLoginAuthSocial
 } from 'src/helpers/storage'
 import { TSocial } from 'src/types/auth'
 
@@ -109,16 +111,23 @@ const LoginPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if ((session as any)?.accessToken && (session as any)?.accessToken !== prevTokenLocal) {
+      const rememberLocal = getLocalRememberLoginAuthSocial()
       if ((session as any)?.provider === 'facebook') {
-        loginFacebook({ idToken: (session as any)?.accessToken, rememberMe: isRemember }, err => {
-          if (err?.response?.data?.typeError === 'INVALID') toast.error(t('The_email_or_password_wrong'))
-        })
-      } else {
-        loginGoogle({ idToken: (session as any)?.accessToken, rememberMe: isRemember }, err => {
-          if (err?.response?.data?.typeError === 'INVALID') {
-            toast.error(t('The_email_or_password_wrong'))
+        loginFacebook(
+          { idToken: (session as any)?.accessToken, rememberMe: rememberLocal ? rememberLocal === 'true' : true },
+          err => {
+            if (err?.response?.data?.typeError === 'INVALID') toast.error(t('The_email_or_password_wrong'))
           }
-        })
+        )
+      } else {
+        loginGoogle(
+          { idToken: (session as any)?.accessToken, rememberMe: rememberLocal ? rememberLocal === 'true' : true },
+          err => {
+            if (err?.response?.data?.typeError === 'INVALID') {
+              toast.error(t('The_email_or_password_wrong'))
+            }
+          }
+        )
       }
       setLocalPreTokenAuthSocial((session as any)?.accessToken)
     }
@@ -241,7 +250,10 @@ const LoginPage: NextPage<TProps> = () => {
                     <Checkbox
                       name='rememberMe'
                       checked={isRemember}
-                      onChange={e => setIsRemember(e.target.checked)}
+                      onChange={e => {
+                        setIsRemember(e.target.checked)
+                        setLocalRememberLoginAuthSocial(JSON.stringify(e.target.checked))
+                      }}
                       color='primary'
                     />
                   }
