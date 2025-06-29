@@ -58,7 +58,15 @@ interface TProductPublicState {
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   '&.MuiTabs-root': {
-    borderBottom: 'none'
+    overflow: 'auto !important',
+    borderBottom: 'none',
+
+    '& .MuiTabs-scroller': {
+      overflow: 'auto !important',
+      '&::-webkit-scrollbar': {
+        opacity: 0
+      }
+    }
   }
 }))
 
@@ -244,8 +252,8 @@ const HomePage: NextPage<TProps> = () => {
           })}
         </StyledTabs>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-          <Box sx={{ display: 'flex', gap: '20px' }}>
-            <Box sx={{ width: '300px' }}>
+          <Box sx={{ display: 'flex', gap: '20px', width: { sm: 'auto', xs: '100%' } }}>
+            <Box sx={{ width: { sm: '300px', xs: '50%' } }}>
               <CustomSelect
                 fullWidth
                 onChange={e => {
@@ -273,7 +281,7 @@ const HomePage: NextPage<TProps> = () => {
                 placeholder={t('Sort_by')}
               />
             </Box>
-            <Box sx={{ width: '300px' }}>
+            <Box sx={{ width: { sm: '300px', xs: '50%' } }}>
               <InputSearch
                 placeholder={t('Search_name_product')}
                 value={searchBy}

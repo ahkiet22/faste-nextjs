@@ -10,4 +10,13 @@ export type TChangePassword = {
   newPassword: string
 }
 
+export type TForgotPasswordAuth = {
+  email: string
+}
+
+export type TResetPasswordAuth = {
+  newPassword: string
+  secretKey: string
+}
+
 export type TSocial = 'google' | 'facebook'
