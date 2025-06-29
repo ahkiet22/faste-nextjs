@@ -34,7 +34,7 @@ import RegisterLight from '/public/images/register-light.png'
 // ** Redux
 import { resetInitialState } from 'src/stores/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import { registerAuthAsync, registerAuthGoogleAsync } from 'src/stores/auth/actions'
+import { registerAuthAsync, registerAuthFacebookAsync, registerAuthGoogleAsync } from 'src/stores/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 
 // ** Others
@@ -127,7 +127,11 @@ const RegisterPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if ((session as any)?.accessToken && (session as any)?.accessToken !== prevTokenLocal) {
-      dispatch(registerAuthGoogleAsync((session as any)?.accessToken))
+      if ((session as any)?.provider === 'facebook') {
+        dispatch(registerAuthFacebookAsync((session as any)?.accessToken))
+      } else {
+        dispatch(registerAuthGoogleAsync((session as any)?.accessToken))
+      }
       setLocalPreTokenAuthSocial((session as any)?.accessToken)
     }
   }, [(session as any)?.accessToken])
@@ -296,7 +300,7 @@ const RegisterPage: NextPage<TProps> = () => {
               </Box>
               <Typography sx={{ textAlign: 'center', mt: 2, mb: 2 }}>OR</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px ' }}>
-                <IconButton sx={{ color: '#497ce2' }}>
+                <IconButton sx={{ color: '#497ce2' }} onClick={() => handleSocialRegister('facebook')}>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     aria-hidden='true'

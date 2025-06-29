@@ -12,10 +12,17 @@ import authConfig, { LIST_PAGE_PUBLIC } from 'src/configs/auth'
 import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
-import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType, LoginGoogleParams } from './types'
+import {
+  AuthValuesType,
+  LoginParams,
+  ErrCallbackType,
+  UserDataType,
+  LoginGoogleParams,
+  LoginFacebookParams
+} from './types'
 
 // ** services
-import { loginAuth, loginAuthGoogle, logoutAuth } from 'src/services/auth'
+import { loginAuth, loginAuthFacebook, loginAuthGoogle, logoutAuth } from 'src/services/auth'
 
 // ** Helper
 import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/helpers/storage/index'
@@ -25,7 +32,6 @@ import { ROUTE_CONFIG } from 'src/configs/route'
 import { updateProductToCart } from 'src/stores/order-product'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'src/stores'
-import { signOut } from 'next-auth/react'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -35,7 +41,8 @@ const defaultProvider: AuthValuesType = {
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   loginGoogle: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  logout: () => Promise.resolve(),
+  loginFacebook: () => Promise.resolve()
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -127,6 +134,29 @@ const AuthProvider = ({ children }: Props) => {
       })
   }
 
+  const handleLoginFacebook = (params: LoginFacebookParams, errorCallback?: ErrCallbackType) => {
+    loginAuthFacebook({ idToken: params.idToken, deviceToken: params.deviceToken })
+      .then(async response => {
+        if (params.rememberMe) {
+          setLocalUserData(JSON.stringify(response.data.user), response.data.access_token, response.data.refresh_token)
+        } else {
+          setTemporaryToken(response.data.access_token)
+        }
+
+        toast.success(t('Login_success'))
+
+        const returnUrl = router.query.returnUrl
+        setUser({ ...response.data.user })
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+        router.replace(redirectURL as string)
+      })
+
+      .catch(err => {
+        if (errorCallback) errorCallback(err)
+      })
+  }
+
   const handleLogout = () => {
     logoutAuth().then(res => {
       setUser(null)
@@ -159,6 +189,7 @@ const AuthProvider = ({ children }: Props) => {
     setLoading,
     login: handleLogin,
     loginGoogle: handleLoginGoogle,
+    loginFacebook: handleLoginFacebook,
     logout: handleLogout
   }
 

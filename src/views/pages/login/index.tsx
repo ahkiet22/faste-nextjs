@@ -43,7 +43,11 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { signIn, useSession } from 'next-auth/react'
 import FallbackSpinner from 'src/components/fall-back'
-import { clearLocalPreTokenAuthSocial, getLocalPreTokenAuthSocial, setLocalPreTokenAuthSocial } from 'src/helpers/storage'
+import {
+  clearLocalPreTokenAuthSocial,
+  getLocalPreTokenAuthSocial,
+  setLocalPreTokenAuthSocial
+} from 'src/helpers/storage'
 import { TSocial } from 'src/types/auth'
 
 type TProps = {}
@@ -59,7 +63,7 @@ const LoginPage: NextPage<TProps> = () => {
   const [isRemember, setIsRemember] = useState(true)
 
   // ** context
-  const { login, loginGoogle } = useAuth()
+  const { login, loginGoogle, loginFacebook } = useAuth()
 
   // ** theme
   const theme = useTheme()
@@ -105,11 +109,17 @@ const LoginPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if ((session as any)?.accessToken && (session as any)?.accessToken !== prevTokenLocal) {
-      loginGoogle({ idToken: (session as any)?.accessToken, rememberMe: isRemember }, err => {
-        if (err?.response?.data?.typeError === 'INVALID') {
-          toast.error(t('The_email_or_password_wrong'))
-        }
-      })
+      if ((session as any)?.provider === 'facebook') {
+        loginFacebook({ idToken: (session as any)?.accessToken, rememberMe: isRemember }, err => {
+          if (err?.response?.data?.typeError === 'INVALID') toast.error(t('The_email_or_password_wrong'))
+        })
+      } else {
+        loginGoogle({ idToken: (session as any)?.accessToken, rememberMe: isRemember }, err => {
+          if (err?.response?.data?.typeError === 'INVALID') {
+            toast.error(t('The_email_or_password_wrong'))
+          }
+        })
+      }
       setLocalPreTokenAuthSocial((session as any)?.accessToken)
     }
   }, [(session as any)?.accessToken])
@@ -255,7 +265,7 @@ const LoginPage: NextPage<TProps> = () => {
               </Box>
               <Typography sx={{ textAlign: 'center', mt: 2, mb: 2 }}>OR</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px ' }}>
-                <IconButton sx={{ color: '#497ce2' }}>
+                <IconButton sx={{ color: '#497ce2' }} onClick={() => handleSocialLogin('facebook')}>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     aria-hidden='true'
