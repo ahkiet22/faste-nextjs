@@ -1,5 +1,5 @@
 // ** Config
-import { ACCESS_TOKEN, REFRESH_TOKEN, TEMPORARY_TOKEN, USER_DATA } from 'src/configs/auth'
+import { ACCESS_TOKEN, PRE_AUTH_TOKEN, REFRESH_TOKEN, TEMPORARY_TOKEN, USER_DATA } from 'src/configs/auth'
 import { LOCAL_PRODUCT_CART } from 'src/configs/product'
 import { TItemOrderProduct } from 'src/types/order-product'
 
@@ -44,7 +44,7 @@ export const setTemporaryToken = (accessToken: string) => {
 export const getTemporaryToken = () => {
   if (typeof window != 'undefined') {
     return {
-      temporaryToken: window.localStorage.getItem(TEMPORARY_TOKEN) || ''
+      temporaryToken: window.localStorage.getItem(TEMPORARY_TOKEN)
     }
   }
 
@@ -68,6 +68,26 @@ export const setLocalProductToCart = (data: Record<string, TItemOrderProduct[]>)
 export const getLocalProductCart = () => {
   if (typeof window !== 'undefined') {
     return window.localStorage.getItem(LOCAL_PRODUCT_CART)
+  }
+
+  return ''
+}
+
+export const setLocalPreTokenAuthSocial = (token: string) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(PRE_AUTH_TOKEN, token)
+  }
+}
+
+export const clearLocalPreTokenAuthSocial = () => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(PRE_AUTH_TOKEN)
+  }
+}
+
+export const getLocalPreTokenAuthSocial = () => {
+  if (typeof window !== 'undefined') {
+    return window.localStorage.getItem(PRE_AUTH_TOKEN)
   }
 
   return ''

@@ -9,3 +9,5 @@ export type TChangePassword = {
   currentPassword: string
   newPassword: string
 }
+
+export type TSocial = 'google' | 'facebook'

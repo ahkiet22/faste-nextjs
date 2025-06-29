@@ -5,6 +5,7 @@ import { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { signIn, useSession } from 'next-auth/react'
 
 // ** React
 import { useEffect, useState } from 'react'
@@ -33,12 +34,18 @@ import RegisterLight from '/public/images/register-light.png'
 // ** Redux
 import { resetInitialState } from 'src/stores/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import { registerAuthAsync } from 'src/stores/auth/actions'
+import { registerAuthAsync, registerAuthGoogleAsync } from 'src/stores/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 
 // ** Others
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import {
+  clearLocalPreTokenAuthSocial,
+  getLocalPreTokenAuthSocial,
+  setLocalPreTokenAuthSocial
+} from 'src/helpers/storage'
+import { TSocial } from 'src/types/auth'
 
 type TProps = {}
 
@@ -63,7 +70,11 @@ const RegisterPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
+  // ** Translation
   const { t } = useTranslation()
+
+  const { data: session } = useSession()
+  const prevTokenLocal = getLocalPreTokenAuthSocial()
 
   const schema = yup.object().shape({
     email: yup.string().required(t('Required_field')).matches(EMAIL_REG, t('Rules_email')),
@@ -96,6 +107,11 @@ const RegisterPage: NextPage<TProps> = () => {
     }
   }
 
+  const handleSocialRegister = (type: TSocial) => {
+    signIn(type)
+    clearLocalPreTokenAuthSocial()
+  }
+
   useEffect(() => {
     if (message) {
       if (isError) {
@@ -108,6 +124,13 @@ const RegisterPage: NextPage<TProps> = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isSuccess, message])
+
+  useEffect(() => {
+    if ((session as any)?.accessToken && (session as any)?.accessToken !== prevTokenLocal) {
+      dispatch(registerAuthGoogleAsync((session as any)?.accessToken))
+      setLocalPreTokenAuthSocial((session as any)?.accessToken)
+    }
+  }, [(session as any)?.accessToken])
 
   return (
     <>
@@ -290,7 +313,7 @@ const RegisterPage: NextPage<TProps> = () => {
                     ></path>
                   </svg>
                 </IconButton>
-                <IconButton sx={{ color: theme.palette.error.main }}>
+                <IconButton sx={{ color: theme.palette.error.main }} onClick={() => handleSocialRegister('google')}>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     aria-hidden='true'
