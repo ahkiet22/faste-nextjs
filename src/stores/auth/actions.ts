@@ -2,10 +2,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Service
-import { changePasswordMe, registerAuth, registerAuthFacebook, registerAuthGoogle, updateAuthMe } from 'src/services/auth'
+import {
+  changePasswordMe,
+  forgotPasswordAuth,
+  registerAuth,
+  registerAuthFacebook,
+  registerAuthGoogle,
+  resetPasswordAuth,
+  updateAuthMe
+} from 'src/services/auth'
 
 // ** Types
-import { TChangePassword } from 'src/types/auth'
+import { TChangePassword, TForgotPasswordAuth, TResetPasswordAuth } from 'src/types/auth'
 
 export const serviceName = 'auth'
 
@@ -81,3 +89,37 @@ export const changePasswordMeAsync = createAsyncThunk('auth/change-password-me',
     typeError: response?.response?.data?.typeError
   }
 })
+
+export const forgotPasswordAuthAsync = createAsyncThunk(
+  `${serviceName}/forgot-password`,
+  async (data: TForgotPasswordAuth) => {
+    const response = await forgotPasswordAuth(data)
+
+    if (response?.data) {
+      return response
+    }
+
+    return {
+      data: null,
+      message: response?.response?.data?.message,
+      typeError: response?.response?.data?.typeError
+    }
+  }
+)
+
+export const resetPasswordAuthAsync = createAsyncThunk(
+  `${serviceName}/reset-password`,
+  async (data: TResetPasswordAuth) => {
+    const response = await resetPasswordAuth(data)
+
+    if (response?.data) {
+      return response
+    }
+
+    return {
+      data: null,
+      message: response?.response?.data?.message,
+      typeError: response?.response?.data?.typeError
+    }
+  }
+)

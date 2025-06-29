@@ -324,5 +324,12 @@
   "Recently": "Gần đây",
   "Payment_success": "Thanh toán thành công",
   "Payment_error": "Lỗi thanh toán",
-  "Back_home": "Quay lại trang chủ"
+  "Back_home": "Quay lại trang chủ",
+  "Forgot_password_success": "Đặt lại mật khẩu thành công",
+  "Forgot_password_error": "Có lỗi xảy ra khi đặt lại mật khẩu",
+  "Send_request": "Gửi yêu cầu",
+  "Back_login": "Quay lại đăng nhập",
+  "Reset_password": "Đặt lại mật khẩu",
+  "Reset_password_success": "Đặt lại mật khẩu thành công",
+  "Reset_password_error": "Có lỗi xảy ra khi đặt lại mật khẩu"
 }

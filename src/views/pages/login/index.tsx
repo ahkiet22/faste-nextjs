@@ -51,6 +51,7 @@ import {
   setLocalRememberLoginAuthSocial
 } from 'src/helpers/storage'
 import { TSocial } from 'src/types/auth'
+import { ROUTE_CONFIG } from 'src/configs/route'
 
 type TProps = {}
 
@@ -259,7 +260,9 @@ const LoginPage: NextPage<TProps> = () => {
                   }
                   label={t('Remember_me')}
                 />
-                <Typography variant='body2'>{t('Forgot_password')}</Typography>
+                <Typography variant='body2' component={Link} href={`${ROUTE_CONFIG.FORGOT_PASSWORD}`}>
+                  {t('Forgot_password')}
+                </Typography>
               </Box>
               <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
                 Sign In
