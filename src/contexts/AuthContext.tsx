@@ -12,10 +12,17 @@ import authConfig, { LIST_PAGE_PUBLIC } from 'src/configs/auth'
 import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
-import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+import {
+  AuthValuesType,
+  LoginParams,
+  ErrCallbackType,
+  UserDataType,
+  LoginGoogleParams,
+  LoginFacebookParams
+} from './types'
 
 // ** services
-import { loginAuth, logoutAuth } from 'src/services/auth'
+import { loginAuth, loginAuthFacebook, loginAuthGoogle, logoutAuth } from 'src/services/auth'
 
 // ** Helper
 import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/helpers/storage/index'
@@ -33,7 +40,9 @@ const defaultProvider: AuthValuesType = {
   setUser: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  loginGoogle: () => Promise.resolve(),
+  logout: () => Promise.resolve(),
+  loginFacebook: () => Promise.resolve()
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -103,12 +112,58 @@ const AuthProvider = ({ children }: Props) => {
       })
   }
 
+  const handleLoginGoogle = (params: LoginGoogleParams, errorCallback?: ErrCallbackType) => {
+    loginAuthGoogle({ idToken: params.idToken, deviceToken: params.deviceToken })
+      .then(async response => {
+        if (params.rememberMe) {
+          setLocalUserData(JSON.stringify(response.data.user), response.data.access_token, response.data.refresh_token)
+        } else {
+          setTemporaryToken(response.data.access_token)
+        }
+
+        toast.success(t('Login_success'))
+
+        const returnUrl = router.query.returnUrl
+        setUser({ ...response.data.user })
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+        router.replace(redirectURL as string)
+      })
+
+      .catch(err => {
+        if (errorCallback) errorCallback(err)
+      })
+  }
+
+  const handleLoginFacebook = (params: LoginFacebookParams, errorCallback?: ErrCallbackType) => {
+    loginAuthFacebook({ idToken: params.idToken, deviceToken: params.deviceToken })
+      .then(async response => {
+        if (params.rememberMe) {
+          setLocalUserData(JSON.stringify(response.data.user), response.data.access_token, response.data.refresh_token)
+        } else {
+          setTemporaryToken(response.data.access_token)
+        }
+
+        toast.success(t('Login_success'))
+
+        const returnUrl = router.query.returnUrl
+        setUser({ ...response.data.user })
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+        router.replace(redirectURL as string)
+      })
+
+      .catch(err => {
+        if (errorCallback) errorCallback(err)
+      })
+  }
+
   const handleLogout = () => {
     logoutAuth().then(res => {
       setUser(null)
       clearLocalUserData()
 
       // signOut()
+
       if (!LIST_PAGE_PUBLIC?.some(item => router.asPath?.startsWith(item))) {
         if (router.asPath !== '/') {
           router.replace({
@@ -133,6 +188,8 @@ const AuthProvider = ({ children }: Props) => {
     setUser,
     setLoading,
     login: handleLogin,
+    loginGoogle: handleLoginGoogle,
+    loginFacebook: handleLoginFacebook,
     logout: handleLogout
   }
 

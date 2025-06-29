@@ -189,9 +189,9 @@ const UserDropdown = (props: TProps) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mx: 2, px: 2, pb: 2 }}>
           <StyledBadge overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant='dot'>
             <Avatar sx={{ width: 32, height: 32 }}>
-              {userData?.avatar ? (
+              {user?.avatar ? (
                 <Image
-                  src={userData?.avatar || ''}
+                  src={user?.avatar || ''}
                   width={0}
                   height={0}
                   alt='avatar'
