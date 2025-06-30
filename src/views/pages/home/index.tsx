@@ -323,8 +323,8 @@ const HomePage: NextPage<TProps> = () => {
                 <Grid
                   container
                   spacing={{
-                    md: 1,
-                    xs: 1
+                    md: 6,
+                    xs: 6
                   }}
                 >
                   {Array.from({ length: 6 }).map((_, index) => {
