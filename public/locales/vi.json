@@ -331,5 +331,16 @@
   "Back_login": "Quay lại đăng nhập",
   "Reset_password": "Đặt lại mật khẩu",
   "Reset_password_success": "Đặt lại mật khẩu thành công",
-  "Reset_password_error": "Có lỗi xảy ra khi đặt lại mật khẩu"
+  "Reset_password_error": "Có lỗi xảy ra khi đặt lại mật khẩu",
+  "Edit_comment": "Chỉnh sửa bình luận",
+  "Update_comment_success": "Cập nhật bình luận thành công",
+  "Update_comment_error": "Cập nhật bình luận thất bại",
+  "Delete_comment_success": "Xóa bình luận thành công",
+  "Delete_comment_error": "Xóa bình luận thất bại",
+  "Delete_multiple_comment_success": "Xóa nhiều bình luận thành công",
+  "Delete_multiple_comment_error": "Xóa nhiều bình luận thất bại",
+  "Title_delete_comment": "Xác nhận xóa bình luận",
+  "Confirm_delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?",
+  "Title_delete_multiple_comment": "Xác nhận xóa nhiều bình luận",
+  "Confirm_delete_multiple_comment": "Bạn có chắc chắn muốn xóa các bình luận đã chọn?"
 }
