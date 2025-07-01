@@ -349,5 +349,18 @@
   "Create_comment_success": "Tạo bình luận thành công",
   "Create_comment_error": "Tạo bình luận thất bại",
   "Create_reply_success": "Tạo phản hồi thành công",
-  "Create_reply_error": "Tạo phản hồi thất bại"
+  "Create_reply_error": "Tạo phản hồi thất bại",
+  "Popular_products": "Sản phẩm phổ biến",
+  "Statistics": "Thống kê",
+  "Product_quantity_by_type": "Số lượng sản phẩm theo từng loại",
+  "Quantity": "Số lượng",
+  "Revenue": "Doanh số",
+  "Revenue_this_year": "Doanh số năm nay",
+  "Count_user_by_status": "Số lượng người dùng theo trạng thái",
+  "Count_order_by_status": "Số lượng đơn hàng theo trạng thái",
+  "Users": "Người dùng",
+  "Products": "Sản phẩm",
+  "Orders": "Đơn hàng",
+  "Reviews": "Đánh giá",
+  "Comments": "Bình luận"
 }
