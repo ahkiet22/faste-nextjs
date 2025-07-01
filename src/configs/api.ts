@@ -28,6 +28,9 @@ export const API_ENDPOINT = {
     },
     PRODUCT: {
       INDEX: `${BASE_URL}/products`
+    },
+    COMMENT: {
+      INDEX: `${BASE_URL}/comments`
     }
   },
   MANAGE_ORDER: {
