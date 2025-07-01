@@ -1,7 +1,7 @@
 'use client'
 
 // ** React
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // ** Next
 import { NextPage } from 'next'
@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 import { PERMISSIONS } from 'src/configs/permission'
 import { OBJECT_TYPE_ERROR_USER } from 'src/configs/error'
-import { OBJECT_STATUS_USER, OBJECT_TYPE_USER } from 'src/configs/user'
+import { CONFIG_USER_TYPE, OBJECT_STATUS_USER, OBJECT_TYPE_USER } from 'src/configs/user'
 
 // ** Components
 import CustomDataGrid from 'src/components/custom-data-grid'
@@ -50,6 +50,8 @@ import { getAllCities } from 'src/services/city'
 import toast from 'react-hot-toast'
 import { formatFilter, toFullName } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import CardCountUser from './components/CardCountUser'
+import { getCountUserType } from 'src/services/report'
 
 type TProps = {}
 
@@ -96,6 +98,12 @@ const UserListPage: NextPage<TProps> = () => {
   const [citySelected, setCitySelected] = useState<string[]>([])
   const [statusSelected, setStatusSelected] = useState<string[]>([])
   const [typeSelected, setTypeSelected] = useState<string[]>([])
+  const [countUserType, setCountUserType] = useState<{
+    data: Record<number, number>
+    totalUser: number
+  }>({} as any)
+
+  const isFirstRender = useRef<boolean>(false)
 
   // ** permission
   const { CREATE, VIEW, UPDATE, DELETE } = usePermission('SYSTEM.USER', ['CREATE', 'VIEW', 'UPDATE', 'DELETE'])
@@ -144,7 +152,9 @@ const UserListPage: NextPage<TProps> = () => {
 
   // fetch api
   const handleGetListUsers = () => {
-    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) } }
+    const query = {
+      params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
+    }
     dispatch(getAllUsersAsync(query))
   }
 
@@ -172,6 +182,22 @@ const UserListPage: NextPage<TProps> = () => {
           setOptionCities(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
         }
         setLoading(false)
+      })
+      .catch(e => {
+        setLoading(false)
+      })
+  }
+
+  const fetchAllCountUserType = async () => {
+    setLoading(true)
+    await getCountUserType()
+      .then(res => {
+        const data = res?.data
+        setLoading(false)
+        setCountUserType({
+          data: data?.data,
+          totalUser: data?.total
+        })
       })
       .catch(e => {
         setLoading(false)
@@ -383,12 +409,16 @@ const UserListPage: NextPage<TProps> = () => {
   }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   useEffect(() => {
-    setFilterBy({ roleId: roleSelected, status: statusSelected, cityId: citySelected, userType: typeSelected })
+    if (isFirstRender.current) {
+      setFilterBy({ roleId: roleSelected, status: statusSelected, cityId: citySelected, userType: typeSelected })
+    }
   }, [roleSelected, statusSelected, citySelected, typeSelected])
 
   useEffect(() => {
     fetchAllRoles()
     fetchAllCities()
+    fetchAllCountUserType()
+    isFirstRender.current = true
   }, [])
 
   useEffect(() => {
@@ -445,6 +475,26 @@ const UserListPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
 
+  const dataListUser = [
+    {
+      icon: 'tabler:user',
+      userType: 4
+    },
+    {
+      icon: 'logos:facebook',
+      userType: CONFIG_USER_TYPE.FACEBOOK
+    },
+    {
+      userType: CONFIG_USER_TYPE.GOOGLE,
+      icon: 'flat-color-icons:google'
+    },
+    {
+      icon: 'logos:google-gmail',
+      iconSize: '18',
+      userType: CONFIG_USER_TYPE.DEFAULT
+    }
+  ]
+
   return (
     <>
       {loading && <Spinner />}
@@ -468,6 +518,17 @@ const UserListPage: NextPage<TProps> = () => {
 
       <CreateEditUser open={openCreateEdit.open} onClose={handleCloseCreateEdit} idUser={openCreateEdit.id} />
       {isLoading && <Spinner />}
+      <Box sx={{ backgroundColor: 'inherit', width: '100%', mb: 4 }}>
+        <Grid container spacing={6} sx={{ height: '100%' }}>
+          {dataListUser?.map((item: any, index: number) => {
+            return (
+              <Grid item xs={12} md={3} sm={6} key={index}>
+                <CardCountUser {...item} countUserType={countUserType} />
+              </Grid>
+            )
+          })}
+        </Grid>
+      </Box>
       <Box
         sx={{
           backgroundColor: theme.palette.background.paper,
