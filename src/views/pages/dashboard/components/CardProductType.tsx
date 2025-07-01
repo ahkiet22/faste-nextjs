@@ -1,7 +1,6 @@
 import { Box, useTheme } from '@mui/material'
 import { TCountProductType } from 'src/views/pages/dashboard'
 import { Bar } from 'react-chartjs-2'
-import 'chart.js/auto'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
