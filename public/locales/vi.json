@@ -342,5 +342,12 @@
   "Title_delete_comment": "Xác nhận xóa bình luận",
   "Confirm_delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?",
   "Title_delete_multiple_comment": "Xác nhận xóa nhiều bình luận",
-  "Confirm_delete_multiple_comment": "Bạn có chắc chắn muốn xóa các bình luận đã chọn?"
+  "Confirm_delete_multiple_comment": "Bạn có chắc chắn muốn xóa các bình luận đã chọn?",
+  "Comment_product": "Bình luận sản phẩm",
+  "Reply": "Trả lời",
+  "Comment...": "BÌnh luận...",
+  "Create_comment_success": "Tạo bình luận thành công",
+  "Create_comment_error": "Tạo bình luận thất bại",
+  "Create_reply_success": "Tạo phản hồi thành công",
+  "Create_reply_error": "Tạo phản hồi thất bại"
 }
