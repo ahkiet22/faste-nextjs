@@ -45,6 +45,7 @@ import { signIn, useSession } from 'next-auth/react'
 import FallbackSpinner from 'src/components/fall-back'
 import {
   clearLocalPreTokenAuthSocial,
+  getLocalDeviceToken,
   getLocalPreTokenAuthSocial,
   getLocalRememberLoginAuthSocial,
   setLocalPreTokenAuthSocial,
@@ -52,6 +53,7 @@ import {
 } from 'src/helpers/storage'
 import { TSocial } from 'src/types/auth'
 import { ROUTE_CONFIG } from 'src/configs/route'
+import useFcmToken from 'src/hooks/useFcmToken'
 
 type TProps = {}
 
@@ -76,6 +78,7 @@ const LoginPage: NextPage<TProps> = () => {
 
   const { data: session, status } = useSession()
   const prevTokenLocal = getLocalPreTokenAuthSocial()
+  const { fcmToken } = useFcmToken()
 
   const schema = yup.object().shape({
     email: yup.string().required(t('Required_field')).matches(EMAIL_REG, t('Rules_email')),
@@ -97,7 +100,7 @@ const LoginPage: NextPage<TProps> = () => {
   })
   const onSubmit = (data: { email: string; password: string }) => {
     if (!Object.keys(errors)?.length) {
-      login({ ...data, rememberMe: isRemember }, err => {
+      login({ ...data, rememberMe: isRemember, deviceToken: fcmToken }, err => {
         if (err?.response?.data?.typeError === 'INVALID') {
           toast.error(t('The_email_or_password_wrong'))
         }
@@ -113,16 +116,25 @@ const LoginPage: NextPage<TProps> = () => {
   useEffect(() => {
     if ((session as any)?.accessToken && (session as any)?.accessToken !== prevTokenLocal) {
       const rememberLocal = getLocalRememberLoginAuthSocial()
+      const deviceToken = getLocalDeviceToken()
       if ((session as any)?.provider === 'facebook') {
         loginFacebook(
-          { idToken: (session as any)?.accessToken, rememberMe: rememberLocal ? rememberLocal === 'true' : true },
+          {
+            idToken: (session as any)?.accessToken,
+            rememberMe: rememberLocal ? rememberLocal === 'true' : true,
+            deviceToken: deviceToken ? deviceToken : ''
+          },
           err => {
             if (err?.response?.data?.typeError === 'INVALID') toast.error(t('The_email_or_password_wrong'))
           }
         )
       } else {
         loginGoogle(
-          { idToken: (session as any)?.accessToken, rememberMe: rememberLocal ? rememberLocal === 'true' : true },
+          {
+            idToken: (session as any)?.accessToken,
+            rememberMe: rememberLocal ? rememberLocal === 'true' : true,
+            deviceToken: deviceToken ? deviceToken : ''
+          },
           err => {
             if (err?.response?.data?.typeError === 'INVALID') {
               toast.error(t('The_email_or_password_wrong'))

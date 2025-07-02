@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getMessaging, getToken } from 'firebase/messaging'
 import firebaseApp from 'src/configs/firebase'
+import { clearLocalDeviceToken, getLocalDeviceToken, setLocalDeviceToken } from 'src/helpers/storage'
 
 const useFcmToken = () => {
   const [token, setToken] = useState('')
@@ -22,17 +23,22 @@ const useFcmToken = () => {
             if (currentToken) {
               setToken(currentToken)
             } else {
-              console.log('No registration token available. Request permission to generate one.')
+              // console.log('No registration token available. Request permission to generate one.')
             }
           }
         }
       } catch (error) {
-        console.log('An error occurred while retrieving token:', error)
+        // console.log('An error occurred while retrieving token:', error)
       }
     }
 
     retrieveToken()
   }, [])
+
+  if (token && token !== getLocalDeviceToken()) {
+    clearLocalDeviceToken()
+    setLocalDeviceToken(token)
+  }
 
   return { fcmToken: token }
 }

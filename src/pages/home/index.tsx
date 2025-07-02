@@ -1,41 +1,12 @@
 'use client'
-import { getMessaging, onMessage } from 'firebase/messaging'
 import Head from 'next/head'
-import { ReactNode, useEffect } from 'react'
-import firebaseApp from 'src/configs/firebase'
-import useFcmToken from 'src/hooks/useFcmToken'
+import { ReactNode } from 'react'
 
 // ** Layouts
 import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
 import HomePage from 'src/views/pages/home'
 
-// ** Pages
 export default function Home() {
-  const { fcmToken, notificationPermissionStatus } = useFcmToken()
-
-  // Use the token as needed
-  fcmToken && console.log('FCM token:', fcmToken)
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      const messaging = getMessaging(firebaseApp)
-      const unsubscribe = onMessage(messaging, payload => {
-        console.log('Foreground push notification received:', payload)
-
-        // Handle the received push notification while the app is in the foreground
-        // You can display a notification or update the UI based on the payload
-      })
-
-      return () => {
-        unsubscribe() // Unsubscribe from the onMessage event
-      }
-    }
-  }, [])
-
-  // console.log('Home')
-  // console.log('VAPID Key:', process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY)
-
   return (
     <>
       <Head>

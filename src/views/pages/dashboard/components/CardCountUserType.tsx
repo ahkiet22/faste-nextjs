@@ -2,6 +2,7 @@ import { Box, useTheme } from '@mui/material'
 
 import { useMemo } from 'react'
 import { Pie } from 'react-chartjs-2'
+import 'chart.js/auto';
 import { useTranslation } from 'react-i18next'
 import { OBJECT_TYPE_USER } from 'src/configs/user'
 

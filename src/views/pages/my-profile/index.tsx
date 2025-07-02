@@ -347,6 +347,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                             error={Boolean(errors?.role)}
                             onBlur={onBlur}
                             placeholder={t('Enter_your_role')}
+                            disabled
                           />
                           {errors?.role?.message && (
                             <FormHelperText

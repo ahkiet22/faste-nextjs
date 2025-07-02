@@ -27,6 +27,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Config
 import { ROUTE_CONFIG } from 'src/configs/route'
 import CartProduct from './components/cart-product'
+import NotificationDropdown from './components/notification-dropdown'
 
 const drawerWidth: number = 240
 
@@ -113,18 +114,15 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHiddenMenu }
         <ModeToogle />
         <CartProduct />
         {user ? (
-          <UserDropdown />
+          <>
+            <NotificationDropdown />
+            <UserDropdown />
+          </>
         ) : (
           <Button type='submit' variant='contained' sx={{ width: 'auto', ml: 2, mr: 2 }} onClick={handleNavigateLogin}>
             Sign In
           </Button>
         )}
-
-        <IconButton color='inherit'>
-          <Badge badgeContent={4} color='primary'>
-            <IconifyIcon icon='mingcute:notification-line' />
-          </Badge>
-        </IconButton>
       </Toolbar>
     </AppBar>
   )
