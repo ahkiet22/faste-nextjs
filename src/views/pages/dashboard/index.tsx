@@ -24,6 +24,8 @@ import CardCountOrderStatus from './components/CardCountStatusOrder'
 import CardCountUserType from './components/CardCountUserType'
 import CardSkeletonCountRecords from './components/CardSkeletonCountRecords'
 
+import 'chart.js/auto'
+
 export interface TCountProductType {
   typeName: string
   total: number

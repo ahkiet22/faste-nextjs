@@ -6,8 +6,6 @@ import { ReactNode } from 'react'
 import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
 import HomePage from 'src/views/pages/home'
 
-// ** Pages
-
 export default function Home() {
   return (
     <>
