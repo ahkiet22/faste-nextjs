@@ -381,5 +381,6 @@
   "Is_paid": "Paid",
   "Payment_vn_pay_success": "VNPay payment successful",
   "Payment_vn_pay_error": "VNPay payment failed",
-  "New": "New"
+  "New": "New",
+  "Support": "Support"
 }
