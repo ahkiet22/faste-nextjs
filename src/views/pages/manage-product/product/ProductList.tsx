@@ -244,13 +244,17 @@ const ProductListPage: NextPage<TProps> = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 2
+              gap: 2,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '100%'
             }}
           >
             {row.image ? (
               <Avatar src={row.image} sx={{ width: 40, height: 40 }} variant='rounded' />
             ) : (
-              <Avatar sx={{ width: 40, height: 40, backgroundColor: "transparent" }} variant='rounded'>
+              <Avatar sx={{ width: 40, height: 40, backgroundColor: 'transparent' }} variant='rounded'>
                 <Icon icon='flat-color-icons:image-file' fontSize={50} />
               </Avatar>
             )}
