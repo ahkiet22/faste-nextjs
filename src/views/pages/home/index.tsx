@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 
 // ** Mui
 import { Box, Grid, styled, Tabs, TabsProps } from '@mui/material'
-import { GridSortModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import Tab from '@mui/material/Tab'
 
@@ -19,6 +18,8 @@ import CustomPagination from 'src/components/custom-pagination'
 import CustomSelect from 'src/components/custom-select'
 import NoData from 'src/components/no-data'
 import FilterProduct from '../product/components/FilterProduct'
+import CardSkeleton from '../product/components/CardSkeleton'
+import ChatBotAI from 'src/components/chat-bot-ai'
 
 // import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
@@ -44,8 +45,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState } from 'src/stores/product'
 import toast from 'react-hot-toast'
-import CardSkeleton from '../product/components/CardSkeleton'
-import ChatBotAI from 'src/components/chat-bot-ai'
 
 // import CardCountProduct from 'src/views/pages/manage-product/product/component/CardCountProduct'
 
@@ -169,11 +168,15 @@ const HomePage: NextPage<TProps> = props => {
   }
 
   const handleOnchangePagination = (page: number, pageSize: number) => {
+    // CSR
     setPage(page)
     setPageSize(pageSize)
     if (!firstRender.current) {
       firstRender.current = true
     }
+
+    // SSR
+    // router.push(`/home?page=${page}&limit=${pageSize}`)
   }
 
   // ** fetch api
@@ -299,6 +302,11 @@ const HomePage: NextPage<TProps> = props => {
                 placeholder={t('Search_name_product')}
                 value={searchBy}
                 onChange={(value: string) => {
+                  if (!firstRender.current) {
+                    if (!!value) {
+                      firstRender.current = true
+                    }
+                  }
                   setSearchBy(value)
                 }}
               />

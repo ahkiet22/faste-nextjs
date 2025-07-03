@@ -46,12 +46,18 @@ Home.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
 Home.guesGuard = false
 Home.authGuard = false
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
+  // CSR
   const limit = 10
   const page = 1
+
   const order = 'createdAt desc'
+
+  // SSR
+  // const { page = 1, limit = 10 } = context.query
   try {
     const productTypes: TOptions[] = []
+
     await getAllProductTypes({ params: { limit: -1, page: -1 } }).then(res => {
       const data = res?.data.productTypes
       if (data) {
