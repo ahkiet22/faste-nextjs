@@ -46,6 +46,7 @@ import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState } from 'src/stores/product'
 import toast from 'react-hot-toast'
 import CardSkeleton from '../product/components/CardSkeleton'
+import ChatBotAI from 'src/components/chat-bot-ai'
 
 // import CardCountProduct from 'src/views/pages/manage-product/product/component/CardCountProduct'
 
@@ -239,6 +240,7 @@ const HomePage: NextPage<TProps> = () => {
   return (
     <>
       {loading && <Spinner />}
+      <ChatBotAI />
       <Box
         sx={{
           height: '100%',
