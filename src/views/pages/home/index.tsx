@@ -26,7 +26,6 @@ import FilterProduct from '../product/components/FilterProduct'
 import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
 
 // ** Services
-import { getAllProductTypes } from 'src/services/product-type'
 import { getAllProductsPublic } from 'src/services/product'
 import { getAllCities } from 'src/services/city'
 import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
@@ -50,7 +49,22 @@ import ChatBotAI from 'src/components/chat-bot-ai'
 
 // import CardCountProduct from 'src/views/pages/manage-product/product/component/CardCountProduct'
 
-type TProps = {}
+interface TOptions {
+  label: string
+  value: string
+}
+
+type TProps = {
+  products: TProduct[]
+  totalCount: number
+  productTypesServer: TOptions[]
+  paramsServer: {
+    limit: number
+    page: number
+    order: string
+    productType: string
+  }
+}
 
 interface TProductPublicState {
   data: TProduct[]
@@ -71,7 +85,10 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   }
 }))
 
-const HomePage: NextPage<TProps> = () => {
+const HomePage: NextPage<TProps> = props => {
+  // ** Props
+  const { products, totalCount, paramsServer, productTypesServer } = props
+
   // ** Translate
   const { t } = useTranslation()
 
@@ -93,11 +110,13 @@ const HomePage: NextPage<TProps> = () => {
   })
   const [productTypeSelected, setProductTypeSelected] = useState('')
 
+  // ** Ref
+  const firstRender = useRef<boolean>(false)
+  const isServerRendered = useRef<boolean>(false)
+
   // ** Redux
   const { isSuccessLike, messageErrorLike, isErrorLike, typeError } = useSelector((state: RootState) => state.product)
   const dispatch: AppDispatch = useDispatch()
-
-  const firstRender = useRef<boolean>(false)
 
   // fetch api
   const handleGetListProducts = async () => {
@@ -122,10 +141,16 @@ const HomePage: NextPage<TProps> = () => {
     switch (type) {
       case 'review': {
         setReviewSelected(value)
+        if (!firstRender.current) {
+          firstRender.current = true
+        }
         break
       }
       case 'location': {
         setLocationSelected(value)
+        if (!firstRender.current) {
+          firstRender.current = true
+        }
         break
       }
     }
@@ -137,39 +162,21 @@ const HomePage: NextPage<TProps> = () => {
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setProductTypeSelected(newValue)
-  }
-
-  const handleSort = (sort: GridSortModel) => {
-    const sortOption = sort[0]
-    if (sortOption) {
-      setSortBy(`${sortOption.field} ${sortOption.sort}`)
-    } else {
-      setSortBy('createdAt desc')
+    if (!firstRender.current) {
+      firstRender.current = true
     }
+    setProductTypeSelected(newValue)
   }
 
   const handleOnchangePagination = (page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
+    if (!firstRender.current) {
+      firstRender.current = true
+    }
   }
 
   // ** fetch api
-  const fetchAllTypes = async () => {
-    setLoading(true)
-    await getAllProductTypes({ params: { limit: -1, page: -1 } })
-      .then(res => {
-        const data = res?.data.productTypes
-        if (data) {
-          setOptionTypes(data?.map((item: { name: string; _id: string }) => ({ label: item.name, value: item._id })))
-        }
-        setLoading(false)
-      })
-      .catch(e => {
-        setLoading(false)
-      })
-  }
-
   const fetchAllCities = async () => {
     setLoading(true)
     await getAllCities({ params: { limit: -1, page: -1 } })
@@ -185,34 +192,35 @@ const HomePage: NextPage<TProps> = () => {
       })
   }
 
-  const PaginationComponent = () => {
-    return (
-      <CustomPagination
-        onChangePagination={handleOnchangePagination}
-        pageSizeOptions={PAGE_SIZE_OPTIONS}
-        pageSize={pageSize}
-        page={page}
-        rowLength={10}
-      />
-    )
-  }
+  useEffect(() => {
+    if (!isServerRendered.current && paramsServer && !!productTypesServer.length) {
+      setPage(paramsServer.page)
+      setPageSize(paramsServer.limit)
+      setSortBy(paramsServer.order)
+      if (paramsServer.productType) {
+        setProductTypeSelected('')
+      }
+      setProductsPublic({
+        data: products,
+        total: totalCount
+      })
+      setOptionTypes(productTypesServer)
+      isServerRendered.current = true
+    }
+  }, [paramsServer, products, totalCount, productTypesServer])
 
   useEffect(() => {
-    if (firstRender.current) {
+    if (isServerRendered.current && firstRender.current) {
       setFilterBy({ productType: productTypeSelected, minStar: reviewSelected, productLocation: locationSelected })
     }
   }, [productTypeSelected, reviewSelected, locationSelected])
 
   useEffect(() => {
-    fetchAllTypes()
     fetchAllCities()
-
-    // fetchAllCountProductStatus()
-    firstRender.current = true
   }, [])
 
   useEffect(() => {
-    if (firstRender.current) {
+    if (isServerRendered.current && firstRender.current) {
       handleGetListProducts()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -248,7 +256,7 @@ const HomePage: NextPage<TProps> = () => {
         }}
       >
         <StyledTabs value={productTypeSelected} onChange={handleChange} aria-label='wrapped label tabs example'>
-          <Tab value={''} label={t('All')} />
+          <Tab value={''} label={t('All')} defaultChecked />
           {optionTypes.map(opt => {
             return <Tab key={opt.value} value={opt.value} label={opt.label} />
           })}
@@ -259,6 +267,9 @@ const HomePage: NextPage<TProps> = () => {
               <CustomSelect
                 fullWidth
                 onChange={e => {
+                  if (!firstRender.current) {
+                    firstRender.current = true
+                  }
                   setSortBy(e.target.value as string)
                 }}
                 value={sortBy}

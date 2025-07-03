@@ -3,18 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useMemo, useState } from 'react'
 
 // ** Mui
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Box,
-  Chip,
-  IconButton,
-  Rating,
-  Divider
-} from '@mui/material'
+import { Card, CardContent, CardMedia, Typography, Button, Box, Chip, IconButton, Rating, Divider } from '@mui/material'
 import { styled } from '@mui/system'
 
 // ** Component
