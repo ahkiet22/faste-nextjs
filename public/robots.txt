@@ -1,0 +1,15 @@
+# *
+User-agent: Googlebot
+Disallow: /system/
+Disallow: /manage-product/
+
+User-agent: *
+Allow: /
+Allow: /home
+Allow: /product
+
+# Host
+Host: https://fasteshop.vercel.app/
+
+# Sitemaps
+Sitemap: https://fasteshop.vercel.app/sitemap.xml

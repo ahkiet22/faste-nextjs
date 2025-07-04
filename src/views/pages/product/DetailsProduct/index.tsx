@@ -62,9 +62,12 @@ import 'react-multi-carousel/lib/styles.css'
 import connectSocketIO from 'src/helpers/socket'
 import { ACTION_SOCKET_COMMENT } from 'src/configs/socketIo'
 
-type TProps = {}
+type TProps = {
+  productData: TProduct
+  productsRelated: TProduct[]
+}
 
-const DetailsProductPage: NextPage<TProps> = () => {
+const DetailsProductPage: NextPage<TProps> = ({ productData, productsRelated }) => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
@@ -281,36 +284,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
       })
   }
 
-  const fetchGetDetailsProduct = async (slug: string) => {
-    setLoading(true)
-    await getDetailsProductPublicBySlug(slug, true)
-      .then(async response => {
-        setLoading(false)
-        const data = response?.data
-        if (data) {
-          setDataProduct(data)
-        }
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
-
-  const fetchListRelatedProduct = async (slug: string) => {
-    setLoading(true)
-    await getListRelatedProductBySlug({ params: { slug: slug } })
-      .then(async response => {
-        setLoading(false)
-        const data = response?.data
-        if (data) {
-          setListRelatedProduct(data.products)
-        }
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
-
   const fetchListCommentProduct = async (productId: string) => {
     setLoading(true)
     await getAllCommentsPublic({
@@ -396,11 +369,17 @@ const DetailsProductPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listComment])
 
-  // useEffect(() => {
-  //   if (productData?._id) {
-  //     setDataProduct(productData)
-  //   }
-  // }, [productData])
+  useEffect(() => {
+    if (productData?._id) {
+      setDataProduct(productData)
+    }
+  }, [productData])
+
+  useEffect(() => {
+    if (productsRelated.length > 0) {
+      setListRelatedProduct(productsRelated)
+    }
+  }, [productsRelated])
 
   useEffect(() => {
     if (dataProduct._id) {
@@ -408,14 +387,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
       fetchListCommentProduct(dataProduct._id)
     }
   }, [dataProduct._id])
-
-  useEffect(() => {
-    if (productId) {
-      fetchGetDetailsProduct(String(productId))
-      fetchListRelatedProduct(String(productId))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId])
 
   useEffect(() => {
     if (isSuccessEdit) {
