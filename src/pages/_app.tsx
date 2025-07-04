@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
@@ -92,9 +92,11 @@ export default function App(props: ExtendedAppProps) {
     Component,
     pageProps: { session, ...pageProps }
   } = props
-
+  const router = useRouter()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { settings } = useSettings()
+
+  const slugProduct = (router?.query?.productId as string)?.replaceAll('-', ' ')
 
   // Variables
   const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
@@ -108,6 +110,17 @@ export default function App(props: ExtendedAppProps) {
   const aclAbilities = Component.acl ?? defaultACLObj
 
   const permission = Component.permission ?? []
+
+  const title = slugProduct
+    ? `${themeConfig.templateName} - ${slugProduct}`
+    : (Component.title ?? `${themeConfig.templateName} - Mua Sắm Online, Sản Phẩm Chất Lượng Cao`)
+
+  const description =
+    Component.description ??
+    `${themeConfig.templateName} – cung cấp các sản phẩm chất lượng cao, từ thời trang đến điện tử. Mua sắm trực tuyến với giá tốt nhất!`
+
+  const keywords = Component.keywords ?? 'mua sắm, sản phẩm chất lượng, thời trang, điện tử, FastE'
+  const urlImage = Component.urlImage ?? '/faste.png'
 
   const toastOptions = {
     success: {
@@ -127,13 +140,31 @@ export default function App(props: ExtendedAppProps) {
   return (
     <Provider store={store}>
       <Head>
-        <title>{`${themeConfig.templateName} - FastE`}</title>
-        <meta
-          name='description'
-          content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
-        />
-        <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+        <meta charSet='UTF-8' />
+        <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+        <title>{title}</title>
+        <meta name='description' content={description} />
+        <meta name='keywords' content={keywords} />
+        <meta name='author' content='FastE-Developer' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
+        <meta name='image' content={urlImage} />
+        <link rel='icon' href='/faste.ico' />
+
+        {/* facebook & instagram */}
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content={title} />
+        <meta property='og:description' content={description} />
+        <meta property='og:url' content='https://fasteshop.vercel.app/home' />
+        <meta property='og:site_name' content='FastE' />
+        <meta property='og:image' content={urlImage} />
+
+        {/* twitter */}
+        <meta property='twitter:card' content='website' />
+        <meta property='twitter:title' content={title} />
+        <meta property='twitter:description' content={description} />
+        <meta name='twitter:url' content='https://fasteshop.vercel.app/home' />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta property='twitter:image' content={urlImage} />
       </Head>
 
       <AuthProvider>
