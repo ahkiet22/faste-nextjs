@@ -35,7 +35,7 @@ export default function Home(props: TProps) {
         <title>FastE - Danh Sách Sản Phẩm</title>
         <meta
           name='description'
-          content='Khám phá danh sách sản phẩm của FastE, từ thời trang đến điện tử, với nhiều lựa chọn và giá cả hợp lý.'
+          content='Khám phá danh sách sản phẩm của FastE, từ thời trang đến điện tử, với nhiều lựa chọn và giá cả hợp lý, giao hàng nhanh chóng.'
         />
         <meta name='keywords' content='sản phẩm, thời trang, điện tử, mua sắm online, FastE' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
