@@ -1,7 +1,7 @@
 'use client'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // ** Next
 import { NextPage } from 'next'
@@ -10,23 +10,14 @@ import { NextPage } from 'next'
 import { Box, Button, Grid, useTheme } from '@mui/material'
 import { GridColDef, GridRowClassNameParams, GridSortModel } from '@mui/x-data-grid'
 
-// ** Redux
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'src/stores'
-import { deleteRolesAsync, getAllRolesAsync, updateRolesAsync } from 'src/stores/role/actions'
-import { resetInitialState } from 'src/stores/role'
-
 // ** Translate
 import { useTranslation } from 'react-i18next'
 
 // Congfigs
-import { PAGE_SIZE_OPTIONS } from 'src/configs/gridConfig'
-import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/error'
 import { PERMISSIONS } from 'src/configs/permission'
 
 // ** Components
 import CustomDataGrid from 'src/components/custom-data-grid'
-import CustomPagination from 'src/components/custom-pagination'
 import GridEdit from 'src/components/grid-edit'
 import GridCreate from 'src/components/gird-create'
 import InputSearch from 'src/components/input-search'
@@ -38,7 +29,7 @@ import Icon from 'src/components/Icon'
 import TablePermission from './components/TablePermission'
 
 // ** Service
-import { getDetailRoles } from 'src/services/role'
+import { deleteRoles, getDetailRoles } from 'src/services/role'
 
 // ** Hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -47,13 +38,14 @@ import { usePermission } from 'src/hooks/usePermission'
 import toast from 'react-hot-toast'
 import { getAllValueOfObject } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useGetListRoles, useMutationEditRole } from 'src/queries/role'
+import { queryKeys } from 'src/configs/queryKeys'
 
 type TProps = {}
 
 const RoleListPage: NextPage<TProps> = () => {
   // state
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[1])
   const [openCreateEdit, setOpenCreateEdit] = useState({
     open: false,
     id: ''
@@ -75,19 +67,8 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** permission
   const { CREATE, VIEW, UPDATE, DELETE } = usePermission('SYSTEM.ROLE', ['CREATE', 'VIEW', 'UPDATE', 'DELETE'])
 
-  // ** redux
-  const dispatch: AppDispatch = useDispatch()
-  const {
-    roles,
-    isSuccessCreateEdit,
-    isErrorCreateEdit,
-    isLoading,
-    messageErrorCreateEdit,
-    isSuccessDelete,
-    isErrorDelete,
-    messageErrorDelete,
-    typeError
-  } = useSelector((state: RootState) => state.role)
+  // ** Query
+  const queryClient = useQueryClient()
 
   // ** theme
   const theme = useTheme()
@@ -95,10 +76,52 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** translate
   const { t } = useTranslation()
 
+  // ** Ref
+  const refActionGrid = useRef<boolean>(false)
+
   // fetch api
-  const handleGetListRole = () => {
-    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1, search: searchBy, order: sortBy } }))
+  const fetchDeleteRole = async (id: string) => {
+    const res = await deleteRoles(id)
+
+    return res?.data
   }
+
+  const { isPending: isLoadingEdit, mutate: mutateEditRole } = useMutationEditRole({
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: [queryKeys.role_list, sortBy, searchBy, -1, -1] })
+      toast.success(t('Update_role_success'))
+    },
+    onError: () => {
+      toast.success(t('Update_role_error'))
+    }
+  })
+
+  const handleUpdateRole = () => {
+    mutateEditRole({ name: selectedRow.name, id: selectedRow.id, permissions: permissionSelected })
+  }
+
+  const { data: rolesList, isPending } = useGetListRoles(
+    { limit: -1, page: -1, search: searchBy, order: sortBy },
+    {
+      select: data => data?.roles,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 10000
+    }
+  )
+
+  const { isPending: isLoadingDelete, mutate: mutateDeleteRole } = useMutation({
+    mutationFn: fetchDeleteRole,
+    mutationKey: [queryKeys.delete_role],
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: [queryKeys.role_list, sortBy, searchBy, -1, -1] })
+      handleCloseConfirmDeleteRole()
+      toast.success(t('Delete_role_success'))
+    },
+    onError: () => {
+      toast.success(t('Delete_role_error'))
+    }
+  })
 
   const handleGetDetailsRole = async (id: string) => {
     setLoading(true)
@@ -123,18 +146,13 @@ const RoleListPage: NextPage<TProps> = () => {
       })
   }
 
-  const handleUpdateRole = () => {
-    dispatch(updateRolesAsync({ name: selectedRow.name, id: selectedRow.id, permissions: permissionSelected }))
-  }
-
   // handle
-  const handleOnchangePagination = (page: number, pageSize: number) => {}
-
   const handleCloseConfirmDeleteRole = () => {
     setOpenDeleteRole({
       open: false,
       id: ''
     })
+    refActionGrid.current = false
   }
 
   const handleSort = (sorts: GridSortModel) => {
@@ -147,10 +165,11 @@ const RoleListPage: NextPage<TProps> = () => {
       open: false,
       id: ''
     })
+    refActionGrid.current = false
   }
 
   const handleDeleteRole = () => {
-    dispatch(deleteRolesAsync(openDeleteRole.id))
+    mutateDeleteRole(openDeleteRole.id)
   }
 
   const columns: GridColDef[] = [
@@ -176,6 +195,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 <GridEdit
                   disabled={!UPDATE}
                   onClick={() => {
+                    refActionGrid.current = true
                     setOpenCreateEdit({
                       open: true,
                       id: String(params.id)
@@ -184,12 +204,13 @@ const RoleListPage: NextPage<TProps> = () => {
                 />
                 <GridDelete
                   disabled={!DELETE}
-                  onClick={() =>
+                  onClick={() => {
+                    refActionGrid.current = true
                     setOpenDeleteRole({
                       open: true,
                       id: String(params.id)
                     })
-                  }
+                  }}
                 />
               </>
             ) : (
@@ -207,72 +228,15 @@ const RoleListPage: NextPage<TProps> = () => {
     }
   ]
 
-  const PaginationComponent = () => {
-    return (
-      <CustomPagination
-        onChangePagination={handleOnchangePagination}
-        pageSizeOptions={PAGE_SIZE_OPTIONS}
-        pageSize={pageSize}
-        page={page}
-        rowLength={roles.total}
-      />
-    )
-  }
-
-  useEffect(() => {
-    handleGetListRole()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, searchBy])
-
   useEffect(() => {
     if (selectedRow?.id) {
       handleGetDetailsRole(selectedRow.id)
     }
   }, [selectedRow.id])
 
-  useEffect(() => {
-    if (isSuccessCreateEdit) {
-      if (!openCreateEdit.id) {
-        toast.success(t('Create_role_success'))
-      } else {
-        toast.success(t('Update_role_success'))
-      }
-      handleGetListRole()
-      handleCloseCreateEdit()
-      dispatch(resetInitialState())
-    } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
-      const errorConfig = OBJECT_TYPE_ERROR_ROLE[typeError]
-      if (errorConfig) {
-        toast.error(t(errorConfig))
-      } else {
-        if (openCreateEdit.id) {
-          toast.error(t('Update_role_error'))
-        } else {
-          toast.error(t('Create_role_error'))
-        }
-      }
-      dispatch(resetInitialState())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit, typeError])
-
-  useEffect(() => {
-    if (isSuccessDelete) {
-      toast.success(t('delete_role_success'))
-      handleGetListRole()
-      handleCloseCreateEdit()
-      handleCloseConfirmDeleteRole()
-      dispatch(resetInitialState())
-    } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t(messageErrorDelete))
-      dispatch(resetInitialState())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
-
   return (
     <>
-      {loading && <Spinner />}
+      {(isLoadingEdit || isPending || isLoadingDelete || loading) && <Spinner />}
       <ConfirmationDialog
         open={openDeleteRole.open}
         handleClose={handleCloseConfirmDeleteRole}
@@ -282,8 +246,13 @@ const RoleListPage: NextPage<TProps> = () => {
         handleConfirm={handleDeleteRole}
       />
 
-      <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
-      {isLoading && <Spinner />}
+      <CreateEditRole
+        open={openCreateEdit.open}
+        searchBy={searchBy}
+        sortBy={sortBy}
+        onClose={handleCloseCreateEdit}
+        idRole={openCreateEdit.id}
+      />
       <Box
         sx={{
           backgroundColor: theme.palette.background.paper,
@@ -328,7 +297,7 @@ const RoleListPage: NextPage<TProps> = () => {
             </Box>
             <Box sx={{ maxHeight: '100%' }}>
               <CustomDataGrid
-                rows={roles.data}
+                rows={rolesList || []}
                 columns={columns}
                 pageSizeOptions={[5]}
                 autoHeight
@@ -347,15 +316,10 @@ const RoleListPage: NextPage<TProps> = () => {
                 getRowClassName={(row: GridRowClassNameParams) => {
                   return row.id === selectedRow.id ? 'row-selected' : ''
                 }}
-                slots={{
-                  pagination: PaginationComponent
-                }}
                 onRowClick={row => {
-                  setSelectedRow({ id: String(row.id), name: row?.row?.name })
-                  setOpenCreateEdit({
-                    open: false,
-                    id: String(row.id)
-                  })
+                  if (!refActionGrid.current) {
+                    setSelectedRow({ id: String(row.id), name: row?.row?.name })
+                  }
                 }}
                 disableColumnFilter
                 disableColumnMenu

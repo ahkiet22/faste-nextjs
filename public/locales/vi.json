@@ -382,5 +382,7 @@
   "Payment_vn_pay_success": "Thanh toán VNPay thành công",
   "Payment_vn_pay_error": "Thanh toán VNPay thất bại",
   "New": "Mới",
-  "Support": "Hỗ trợ"
+  "Support": "Hỗ trợ",
+  "Delete_role_success": "Xóa nhóm vai trò thành công",
+  "Delete_role_error": "Xóa nhóm vai trò thất bại"
 }
