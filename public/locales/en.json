@@ -382,5 +382,7 @@
   "Payment_vn_pay_success": "VNPay payment successful",
   "Payment_vn_pay_error": "VNPay payment failed",
   "New": "New",
-  "Support": "Support"
+  "Support": "Support",
+  "Delete_role_success": "Delete role successfully",
+  "Delete_role_error": "Delete role failed"
 }
