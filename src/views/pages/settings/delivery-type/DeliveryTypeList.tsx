@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -106,16 +106,16 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteDelivery = () => {
+  const handleCloseConfirmDeleteDelivery = useCallback(() => {
     setOpenDeleteDeliveryType({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultipleDelivery = () => {
+  const handleCloseConfirmDeleteMultipleDelivery = useCallback(() => {
     setOpenDeleteMultipleDelivery(false)
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -126,16 +126,16 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeleteDeliveryType = () => {
+  const handleDeleteDeliveryType = useCallback(() => {
     dispatch(deleteDeliveryTypeAsync(openDeleteDeliveryType.id))
-  }
+  }, [openDeleteDeliveryType.id])
 
   const handleDeleteMultipleDelivery = () => {
     dispatch(
@@ -145,19 +145,19 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultipleDelivery(true)
         break
       }
     }
-  }
+  }, [])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -225,7 +225,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -235,7 +235,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
         rowLength={deliveryTypes.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     handleGetListDeliveryTypes()

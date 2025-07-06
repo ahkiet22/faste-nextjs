@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -314,4 +314,4 @@ const EditOrderProduct = (props: TCreateEditProduct) => {
   )
 }
 
-export default EditOrderProduct
+export default memo(EditOrderProduct)

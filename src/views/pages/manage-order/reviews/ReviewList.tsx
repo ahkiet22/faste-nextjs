@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -104,12 +104,12 @@ const ReviewListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteReview = () => {
+  const handleCloseConfirmDeleteReview = useCallback(() => {
     setOpenDeleteReview({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -120,25 +120,25 @@ const ReviewListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseEdit = () => {
+  const handleCloseEdit = useCallback(() => {
     setOpenEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeleteReview = () => {
+  const handleDeleteReview = useCallback(() => {
     dispatch(deleteReviewAsync(openDeleteReview.id))
-  }
+  }, [openDeleteReview.id])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultiple = () => {
+  const handleCloseConfirmDeleteMultiple = useCallback(() => {
     setOpenDeleteMultipleMultiple(false)
-  }
+  }, [])
 
   const handleDeleteMultipleReview = () => {
     dispatch(
@@ -148,14 +148,14 @@ const ReviewListPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultipleMultiple(true)
         break
       }
     }
-  }
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -247,7 +247,7 @@ const ReviewListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -257,7 +257,7 @@ const ReviewListPage: NextPage<TProps> = () => {
         rowLength={reviews.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     if (isRendered.current) {

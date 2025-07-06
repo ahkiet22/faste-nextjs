@@ -145,8 +145,6 @@ const Dashboard = () => {
     fetchListProductPopular()
   }, [])
 
-  console.log(countRecords.length)
-
   return (
     <Box>
       {loading && <Spinner />}

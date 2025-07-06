@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 // ** React
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 // ** Mui
 import { Avatar, Box, Button, Divider, Typography, useTheme } from '@mui/material'
@@ -12,6 +12,7 @@ import { Avatar, Box, Button, Divider, Typography, useTheme } from '@mui/materia
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import Spinner from 'src/components/spinner'
 import Icon from 'src/components/Icon'
+import ModalWriteReview from './components/ModalWriteReview'
 
 // ** Translate
 import { useTranslation } from 'react-i18next'
@@ -21,17 +22,17 @@ import { cancelOrderProductOfMeAsync } from 'src/stores/order-product/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState, updateProductToCart } from 'src/stores/order-product'
-
 import { resetInitialState as resetInitialReview } from 'src/stores/reviews'
+
 
 // ** Other
 import toast from 'react-hot-toast'
-import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { convertUpdateMultipleProductsCart, formatNumberToLocal } from 'src/utils'
 import { getLocalProductCart, setLocalProductToCart } from 'src/helpers/storage'
 
 // ** Services
 import { getDetailsOrderProductByMe } from 'src/services/order-product'
+import { createURLpaymentVNPay } from 'src/services/payment'
+import { getAllPaymentTypes } from 'src/services/payment-type'
 
 // ** Types
 import { TItemOrderProduct, TItemOrderProductMe, TItemProductMe } from 'src/types/order-product'
@@ -42,13 +43,12 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Config
 import { ROUTE_CONFIG } from 'src/configs/route'
 import { STATUS_ORDER_PRODUCT } from 'src/configs/orderProduct'
-
-// import { createURLpaymentVNPay } from 'src/services/payment'
 import { PAYMENT_TYPES } from 'src/configs/payment'
+
+// ** Utils
 import { formatDate } from 'src/utils/date'
-import ModalWriteReview from './components/ModalWriteReview'
-import { createURLpaymentVNPay } from 'src/services/payment'
-import { getAllPaymentTypes } from 'src/services/payment-type'
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { convertUpdateMultipleProductsCart, formatNumberToLocal } from 'src/utils'
 
 type TProps = {}
 
@@ -89,14 +89,14 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
 
   // ** fetch API
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = useCallback(() => {
     dispatch(cancelOrderProductOfMeAsync(dataOrder._id))
-  }
+  }, [dataOrder._id])
 
   // ** handle
-  const handleCloseDialog = () => {
+  const handleCloseDialog = useCallback(() => {
     setOpenCancel(false)
-  }
+  }, [])
 
   const handleGetDetailsOrdersOfMe = async () => {
     setIsLoading(true)
@@ -170,9 +170,9 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleCloseReview = () => {
+  const handleCloseReview = useCallback(() => {
     setOpenReview({ open: false, productId: '', userId: '' })
-  }
+  }, [])
 
   const handlePaymentVNPay = async () => {
     setIsLoading(true)
@@ -189,7 +189,6 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   }
 
   const handlePaymentTypeOrder = (type: string) => {
-    console.log(type)
     switch (type) {
       case PAYMENT_DATA.VN_PAYMENT.value: {
         handlePaymentVNPay()

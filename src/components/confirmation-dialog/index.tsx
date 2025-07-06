@@ -58,7 +58,7 @@ const ConfirmationDialog = (props: TConfirmationDialog) => {
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          marginTop: "20px"
+          marginTop: '20px'
         }}
       >
         <Icon icon='formkit:warning' fontSize={80} color={theme.palette.warning.main} />
@@ -78,7 +78,7 @@ const ConfirmationDialog = (props: TConfirmationDialog) => {
         <DialogContentText
           sx={{
             textAlign: 'center',
-            marginBottom: "20px"
+            marginBottom: '20px'
           }}
         >
           {description}
@@ -96,4 +96,4 @@ const ConfirmationDialog = (props: TConfirmationDialog) => {
   )
 }
 
-export default ConfirmationDialog
+export default React.memo(ConfirmationDialog)

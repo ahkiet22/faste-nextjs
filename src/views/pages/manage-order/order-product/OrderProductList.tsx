@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -146,12 +146,12 @@ const OrderProductListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteOrder = () => {
+  const handleCloseConfirmDeleteOrder = useCallback(() => {
     setOpenDeleteOrder({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -162,25 +162,25 @@ const OrderProductListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseEdit = () => {
+  const handleCloseEdit = useCallback(() => {
     setOpenEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
   const handleUpdateStatusOrder = (data: TParamsStatusOrderUpdate) => {
     dispatch(updateStatusOrderProductAsync(data))
   }
 
-  const handleDeleteOrderProduct = () => {
+  const handleDeleteOrderProduct = useCallback(() => {
     dispatch(deleteOrderProductAsync(openDeleteOrder.id))
-  }
+  }, [openDeleteOrder.id])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -345,7 +345,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -355,7 +355,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
         rowLength={orderProducts.total}
       />
     )
-  }
+  })
 
   // fetch api
   const fetchAllCities = async () => {

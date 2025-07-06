@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -145,16 +145,16 @@ const ProductListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteProduct = () => {
+  const handleCloseConfirmDeleteProduct = useCallback(() => {
     setOpenDeleteProduct({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultipleProduct = () => {
+  const handleCloseConfirmDeleteMultipleProduct = useCallback(() => {
     setOpenDeleteMultipleProduct(false)
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -165,16 +165,16 @@ const ProductListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeleteProduct = () => {
+  const handleDeleteProduct = useCallback(() => {
     dispatch(deleteProductAsync(openDeleteProduct.id))
-  }
+  }, [openDeleteProduct.id])
 
   const handleDeleteMultipleProduct = () => {
     dispatch(
@@ -184,19 +184,19 @@ const ProductListPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultipleProduct(true)
         break
       }
     }
-  }
+  }, [])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
   // ** fetch api
   const fetchAllTypes = async () => {
@@ -354,7 +354,7 @@ const ProductListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -364,7 +364,7 @@ const ProductListPage: NextPage<TProps> = () => {
         rowLength={products.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     if (isRendered.current) {

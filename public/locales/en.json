@@ -384,5 +384,13 @@
   "New": "New",
   "Support": "Support",
   "Delete_role_success": "Delete role successfully",
-  "Delete_role_error": "Delete role failed"
+  "Delete_role_error": "Delete role failed",
+  "Create_city_success": "Create city successfully",
+  "Create_city_error": "Create city failed",
+  "Update_city_success": "Update city successfully",
+  "Update_city_error": "Update city failed",
+  "Delete_city_success": "Delete city successfully",
+  "Delete_city_error": "Delete city failed",
+  "Delete_multiple_city_success": "Delete multiple cities successfully",
+  "Delete_multiple_city_error": "Delete multiple cities failed"
 }
