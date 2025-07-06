@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -201,4 +201,4 @@ const EditReview = (props: TCreateReview) => {
   )
 }
 
-export default EditReview
+export default memo(EditReview)

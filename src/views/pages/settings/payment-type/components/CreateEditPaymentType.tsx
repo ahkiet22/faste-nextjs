@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -238,4 +238,4 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
   )
 }
 
-export default CreateEditPaymentType
+export default memo(CreateEditPaymentType)

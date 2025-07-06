@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -102,16 +102,16 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeletePayment = () => {
+  const handleCloseConfirmDeletePayment = useCallback(() => {
     setOpenDeletePayment({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultiplePayment = () => {
+  const handleCloseConfirmDeleteMultiplePayment = useCallback(() => {
     setOpenDeleteMultiplePayment(false)
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -122,16 +122,16 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeletePayment = () => {
+  const handleDeletePayment = useCallback(() => {
     dispatch(deletePaymentTypeAsync(openDeletePayment.id))
-  }
+  }, [openDeletePayment.id])
 
   const handleDeleteMultiplePayment = () => {
     dispatch(
@@ -141,19 +141,19 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultiplePayment(true)
         break
       }
     }
-  }
+  }, [])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -221,7 +221,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -231,7 +231,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         rowLength={paymentTypes.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     handleGetListPaymentTypes()

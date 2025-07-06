@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -246,4 +246,4 @@ const CreateEditRole = (props: TCreateEditRole) => {
   )
 }
 
-export default CreateEditRole
+export default memo(CreateEditRole)

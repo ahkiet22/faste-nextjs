@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -177,4 +177,4 @@ const ModalWriteReview = (props: TCreateReview) => {
   )
 }
 
-export default ModalWriteReview
+export default memo(ModalWriteReview)

@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -175,4 +175,4 @@ const EditComment = (props: TEditComment) => {
   )
 }
 
-export default EditComment
+export default memo(EditComment)

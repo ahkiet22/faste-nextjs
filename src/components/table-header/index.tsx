@@ -3,6 +3,7 @@ import { Box, Button, IconButton, Typography } from '@mui/material'
 import { styled, useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import Icon from '../Icon'
+import { memo } from 'react'
 
 const StyledTableHeader = styled(Box)(({ theme }) => ({
   borderRadius: '15px',
@@ -72,4 +73,4 @@ const TableHeader = (props: TProps) => {
   )
 }
 
-export default TableHeader
+export default memo(TableHeader)

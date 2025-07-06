@@ -1,7 +1,7 @@
 'use client'
 
 // ** React
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // ** Next
 import { NextPage } from 'next'
@@ -205,41 +205,30 @@ const UserListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteUser = () => {
+  // useCallback "memoizes" the function, keeping the same memory reference
+  // unless dependencies change, preventing the function from being recreated on every render
+  const handleCloseConfirmDeleteUser = useCallback(() => {
     setOpenDeleteUser({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
   const handleCloseConfirmDeleteMultipleUser = useCallback(() => {
     setOpenDeleteMultipleUser(false)
   }, [])
 
-  const handleSort = (sort: GridSortModel) => {
-    const sortOption = sort[0]
-    if (sortOption) {
-      setSortBy(`${sortOption.field} ${sortOption.sort}`)
-    } else {
-      setSortBy('createdAt desc')
-    }
-  }
-
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
-  }
-
-  const handleDeleteUser = () => {
-    dispatch(deleteUsersAsync(openDeleteUser.id))
-  }
+  }, [])
 
   const handleDeleteMultipleUser = useCallback(() => {
     dispatch(
@@ -249,6 +238,19 @@ const UserListPage: NextPage<TProps> = () => {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRow])
+
+  const handleSort = useCallback((sort: GridSortModel) => {
+    const sortOption = sort[0]
+    if (sortOption) {
+      setSortBy(`${sortOption.field} ${sortOption.sort}`)
+    } else {
+      setSortBy('createdAt desc')
+    }
+  }, [])
+
+  const handleDeleteUser = useCallback(() => {
+    dispatch(deleteUsersAsync(openDeleteUser.id))
+  }, [openDeleteUser.id])
 
   const handleAction = useCallback((action: string) => {
     switch (action) {
@@ -387,7 +389,8 @@ const UserListPage: NextPage<TProps> = () => {
     }
   ]
 
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
+
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -397,16 +400,11 @@ const UserListPage: NextPage<TProps> = () => {
         rowLength={users.total}
       />
     )
-  }
+  })
 
   const memoDisabledDeleteUser = useMemo(() => {
     return selectedRow.some((item: TSelectedRow) => item?.role?.permissions?.includes(PERMISSIONS.ADMIN))
   }, [selectedRow])
-
-  useEffect(() => {
-    handleGetListUsers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -420,6 +418,13 @@ const UserListPage: NextPage<TProps> = () => {
     fetchAllCountUserType()
     isFirstRender.current = true
   }, [])
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      handleGetListUsers()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
@@ -501,8 +506,8 @@ const UserListPage: NextPage<TProps> = () => {
       <ConfirmationDialog
         open={openDeleteUser.open}
         handleClose={handleCloseConfirmDeleteUser}
-        handleConfirm={handleDeleteUser}
         handleCancel={handleCloseConfirmDeleteUser}
+        handleConfirm={handleDeleteUser}
         title={t('Title_delete_user')}
         description={t('Confirm_delete_user')}
       />

@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Form
@@ -217,4 +217,4 @@ const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
   )
 }
 
-export default CreateEditDeliveryType
+export default memo(CreateEditDeliveryType)

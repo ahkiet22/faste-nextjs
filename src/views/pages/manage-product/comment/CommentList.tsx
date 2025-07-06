@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -99,12 +99,12 @@ const CommentListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteComment = () => {
+  const handleCloseConfirmDeleteComment = useCallback(() => {
     setOpenDeleteComment({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -115,34 +115,34 @@ const CommentListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseEdit = () => {
+  const handleCloseEdit = useCallback(() => {
     setOpenEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeleteComment = () => {
+  const handleDeleteComment = useCallback(() => {
     dispatch(deleteCommentAsync(openDeleteComment.id))
-  }
+  }, [openDeleteComment.id])
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultipleMultiple(true)
         break
       }
     }
-  }
+  }, [])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultiple = () => {
+  const handleCloseConfirmDeleteMultiple = useCallback(() => {
     setOpenDeleteMultipleMultiple(false)
-  }
+  }, [])
 
   const handleDeleteMultipleComment = () => {
     dispatch(
@@ -231,7 +231,7 @@ const CommentListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -241,7 +241,7 @@ const CommentListPage: NextPage<TProps> = () => {
         rowLength={comments.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     handleGetListComments()

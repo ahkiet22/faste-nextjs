@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -96,16 +96,16 @@ const CityListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteCity = () => {
+  const handleCloseConfirmDeleteCity = useCallback(() => {
     setOpenDeleteCity({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleCloseConfirmDeleteMultipleCity = () => {
+  const handleCloseConfirmDeleteMultipleCity = useCallback(() => {
     setOpenDeleteMultipleCity(false)
-  }
+  }, [])
 
   const handleSort = (sort: GridSortModel) => {
     const sortOption = sort[0]
@@ -116,16 +116,16 @@ const CityListPage: NextPage<TProps> = () => {
     }
   }
 
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
-  }
+  }, [])
 
-  const handleDeleteCity = () => {
+  const handleDeleteCity = useCallback(() => {
     dispatch(deleteCityAsync(openDeleteCity.id))
-  }
+  }, [openDeleteCity.id])
 
   const handleDeleteMultipleCity = () => {
     dispatch(
@@ -135,19 +135,19 @@ const CityListPage: NextPage<TProps> = () => {
     )
   }
 
-  const handleAction = (action: string) => {
+  const handleAction = useCallback((action: string) => {
     switch (action) {
       case 'delete': {
         setOpenDeleteMultipleCity(true)
         break
       }
     }
-  }
+  }, [])
 
-  const handleOnchangePagination = (page: number, pageSize: number) => {
+  const handleOnchangePagination = useCallback((page: number, pageSize: number) => {
     setPage(page)
     setPageSize(pageSize)
-  }
+  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -204,7 +204,7 @@ const CityListPage: NextPage<TProps> = () => {
       }
     }
   ]
-  const PaginationComponent = () => {
+  const PaginationComponent = memo(() => {
     return (
       <CustomPagination
         onChangePagination={handleOnchangePagination}
@@ -214,7 +214,7 @@ const CityListPage: NextPage<TProps> = () => {
         rowLength={cities.total}
       />
     )
-  }
+  })
 
   useEffect(() => {
     handleGetListCities()

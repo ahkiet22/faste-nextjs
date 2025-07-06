@@ -1,7 +1,7 @@
 'use client'
 
 // ** React
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // ** Next
 import { NextPage } from 'next'
@@ -34,12 +34,14 @@ import { deleteRoles, getDetailRoles } from 'src/services/role'
 // ** Hooks
 import { usePermission } from 'src/hooks/usePermission'
 
+// ** React query
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useGetListRoles, useMutationEditRole } from 'src/queries/role'
+
 // ** Others
 import toast from 'react-hot-toast'
 import { getAllValueOfObject } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useGetListRoles, useMutationEditRole } from 'src/queries/role'
 import { queryKeys } from 'src/configs/queryKeys'
 
 type TProps = {}
@@ -147,30 +149,30 @@ const RoleListPage: NextPage<TProps> = () => {
   }
 
   // handle
-  const handleCloseConfirmDeleteRole = () => {
+  const handleCloseConfirmDeleteRole = useCallback(() => {
     setOpenDeleteRole({
       open: false,
       id: ''
     })
     refActionGrid.current = false
-  }
+  }, [])
 
   const handleSort = (sorts: GridSortModel) => {
     const { field, sort } = sorts[0]
     setSortBy(`${field} ${sort}`)
   }
 
-  const handleCloseCreateEdit = () => {
+  const handleCloseCreateEdit = useCallback(() => {
     setOpenCreateEdit({
       open: false,
       id: ''
     })
     refActionGrid.current = false
-  }
+  }, [])
 
-  const handleDeleteRole = () => {
+  const handleDeleteRole = useCallback(() => {
     mutateDeleteRole(openDeleteRole.id)
-  }
+  }, [openDeleteRole.id])
 
   const columns: GridColDef[] = [
     {

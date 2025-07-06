@@ -384,5 +384,13 @@
   "New": "Mới",
   "Support": "Hỗ trợ",
   "Delete_role_success": "Xóa nhóm vai trò thành công",
-  "Delete_role_error": "Xóa nhóm vai trò thất bại"
+  "Delete_role_error": "Xóa nhóm vai trò thất bại",
+  "Create_city_success": "Tạo thành phố thành công",
+  "Create_city_error": "Tạo thành phố thất bại",
+  "Update_city_success": "Cập nhật thành phố thành công",
+  "Update_city_error": "Cập nhật thành phố thất bại",
+  "Delete_city_success": "Xóa thành phố thành công",
+  "Delete_city_error": "Xóa thành phố thất bại",
+  "Delete_multiple_city_success": "Xóa nhiều thành phố thành công",
+  "Delete_multiple_city_error": "Xóa nhiều thành phố thất bại"
 }

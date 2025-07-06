@@ -1,5 +1,5 @@
 // ** React
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 // ** Mui
@@ -194,7 +194,6 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   })
   const onSubmit = (data: any) => {
     if (!Object.keys(errors).length) {
-      
       if (idProduct) {
         // update
         dispatch(
@@ -732,4 +731,4 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   )
 }
 
-export default CreateEditProduct
+export default memo(CreateEditProduct)
