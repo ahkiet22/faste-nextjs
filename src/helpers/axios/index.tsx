@@ -1,5 +1,5 @@
 // ** lib
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { jwtDecode } from 'jwt-decode'
 
 // ** Config
@@ -49,7 +49,52 @@ const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | 
 }
 
 let isRefreshing = false
-let failedQueue: any[] = []
+let failedQueue: {
+  resolve: (token: string) => void
+  reject: (error: any) => void
+}[] = []
+
+/**
+ * Xử lý tất cả các request đang chờ trong hàng đợi `failedQueue`.
+ * Nếu có token mới thì resolve các promise với token,
+ * nếu không thì reject các promise với lỗi.
+ *
+ * @param error - lỗi xảy ra (nếu không có token)
+ * @param token - token mới nếu refresh thành công, ngược lại là null
+ */
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach(prom => {
+    if (token) {
+      prom.resolve(token)
+    } else {
+      prom.reject(error)
+    }
+  })
+  failedQueue = []
+}
+
+/**
+ * Thêm request bị lỗi 401 vào hàng đợi chờ `refreshToken`.
+ * Khi có token mới, resolve để tiếp tục request đó với token mới.
+ *
+ * @param config - cấu hình Axios của request bị treo
+ * @returns Promise được resolve với config chứa token mới hoặc bị reject nếu refresh fail
+ */
+const addRequestQueue = (config: AxiosRequestConfig): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    failedQueue.push({
+      resolve: (token: string) => {
+        if (config.headers) {
+          config.headers['Authorization'] = `Bearer ${token}`
+        }
+        resolve(config)
+      },
+      reject: (err: any) => {
+        reject(err)
+      }
+    })
+  })
+}
 
 const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
   const router = useRouter()
@@ -88,9 +133,10 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
                     }
                   )
                   .then(res => {
-                    if (res.data.data.access_token) {
-                      const newAccessToken = res.data.data.access_token
+                    const newAccessToken = res.data.data.access_token
+                    if (newAccessToken) {
                       config.headers.Authorization = `Bearer ${newAccessToken}`
+                      processQueue(null, newAccessToken)
                       if (accessToken) {
                         setLocalUserData(JSON.stringify(user), newAccessToken, refreshToken)
                       }
@@ -99,11 +145,14 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
                     }
                   })
                   .catch(e => {
+                    processQueue(e, null)
                     handleRedirectLogin(router, setUser)
                   })
                   .finally(() => {
                     isRefreshing = false
                   })
+              } else {
+                return await addRequestQueue(config)
               }
             } else {
               handleRedirectLogin(router, setUser)
